@@ -12,7 +12,7 @@ def main():
         playerList[i].dealer = False
         playerList[i].lives = 3
 
-    while playerList[0].lives>1 or playerList[1].lives>1 or playerList[2].lives>1 or playerList[3].lives>1 or playerList[4].lives>1: 
+    while playerList[0].lives > 1 or playerList[1].lives > 1 or playerList[2].lives > 1 or playerList[3].lives > 1 or playerList[4].lives > 1:
 
         # setDealer
         playerList[len(playerList)-1].dealer = True
