@@ -14,6 +14,9 @@ def main():
         playerList[i].outOfGame = False
     while playerList[0].lives + playerList[1].lives + playerList[2].lives + playerList[3].lives + playerList[4].lives > 1:
 
+        Action.checkWinner(playerList)
+        break
+
         noOneToTrade = False
 
         # setDealer
@@ -60,6 +63,6 @@ def main():
             if player.lives == 0:
                 player.outOfGame = True
 
-    Action.announceWinner(playerList)
+    # Action.announceWinner(playerList)
 
 main();

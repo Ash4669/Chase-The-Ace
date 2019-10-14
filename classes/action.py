@@ -57,6 +57,17 @@ class Action():
     def loseALife(player):
         player.lives = player.lives - 1
 
+    def checkWinner(players):
+        winnerArray = ["null"]*len(players)
+        winnerMatrix = [winnerArray]*len(players)
+        for i in range(len(players)):
+            for j in range(len(players)):
+                winnerMatrix[i][j] = 0
+        print(winnerMatrix)
+        for i in range(len(players)):
+            print("here")
+            winnerMatrix[i][i] = 1
+
     def announceWinner(players):
         for player in players:
             if player.lives > 0:
