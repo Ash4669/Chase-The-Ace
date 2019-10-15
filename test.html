@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+      <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+      <script type="text/javascript">
+
+        var pusher = new Pusher('7443318dffd154df2e7d', {
+          cluster: 'eu'
+        });
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+          alert('An event was triggered with message: ' + data.message);
+        });
+      </script>
+  </head>
+  <body>
+
+  </body>
+</html>
