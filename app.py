@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from pusher import pusher
 import configparser
 
@@ -16,6 +16,10 @@ pusher = pusher_client = pusher.Pusher(
 )
 
 @app.route('/')
+def reroute():
+    return redirect('/login')
+
+@app.route('/login')
 def signInPage():
     pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
     return render_template('sign-in-page.html')
