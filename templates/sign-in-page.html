@@ -4,13 +4,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/sign-in-page.css') }}">
 <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
 <script type="text/javascript">
-var pusher = new Pusher('7443318dffd154df2e7d', {
-  cluster: 'eu'
-});
-var channel = pusher.subscribe('my-channel');
-channel.bind('my-event', function(data) {
-  alert('Received my-event with message: ' + data.message);
-});
+  var pusher = new Pusher({{pusher_key}}, {
+    cluster: 'eu'
+  });
+  var channel = pusher.subscribe('my-channel');
+  channel.bind('my-event', function(data) {
+    alert('Received my-event with message: ' + data.message);
+  });
 </script>
 </head>
 <body>
