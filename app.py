@@ -1,14 +1,18 @@
 from flask import Flask, render_template
 from pusher import pusher
+import configparser
+
+config = configparser.ConfigParser()
+config.read("settings.conf")
 
 app = Flask(__name__)
 
 pusher = pusher_client = pusher.Pusher(
-  app_id='853461',
-  key='7443318dffd154df2e7d',
-  secret='ddfc4d7fd9521374a4c6',
-  cluster='eu',
-  ssl=True
+  app_id  = config.get('PUSHERDETAILS','app_id'),
+  key     = config.get('PUSHERDETAILS','key'),
+  secret  = config.get('PUSHERDETAILS','secret'),
+  cluster = config.get('PUSHERDETAILS','cluster'),
+  ssl     = bool(config.get('PUSHERDETAILS','ssl'))
 )
 
 @app.route('/')
