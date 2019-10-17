@@ -1,0 +1,9 @@
+[LOGINDETAILS]
+loginPassword: password
+
+[PUSHERDETAILS]
+app_id: id
+key: key
+secret: secret
+cluster: cluster
+ssl: ssl
