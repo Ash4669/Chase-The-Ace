@@ -22,7 +22,9 @@ def reroute():
 @app.route('/login')
 def signInPage():
     pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
-    return render_template('sign-in-page.html')
+    pusher_key = config.get('PUSHERDETAILS','key')
+    pusher_cluster = config.get('PUSHERDETAILS','cluster')
+    return render_template('sign-in-page.html',pusher_key=config.get('PUSHERDETAILS','key') )
 
 @app.route('/play')
 def play():
