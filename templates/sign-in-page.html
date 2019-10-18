@@ -4,8 +4,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/sign-in-page.css') }}">
 <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
 <script type="text/javascript">
-  var pusher = new Pusher({{pusher_key}}, {
-    cluster: 'eu'
+  var pusher = new Pusher("7443318dffd154df2e7d", {
+    cluster: "eu"
   });
   var channel = pusher.subscribe('my-channel');
   channel.bind('my-event', function(data) {
@@ -19,6 +19,8 @@
     <div class="heading">
       <h1>Chase the Ace</h1>
     </div>
+    <!-- {% block content %} -->
+    <!-- {% endblock %} TELLS THE PAGE WHERE TO YIELD THE CONTENT TO. Do the same on other pages and it will insert the code in that block into this slot. -->
 <br>
 <br>
     <div class="authorisation-box">
