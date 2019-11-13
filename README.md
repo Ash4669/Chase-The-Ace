@@ -5,7 +5,9 @@
 - create a chat feature with pusher to allow players to talk to each other
 - do full database and have them sign in and store their wins at different games.
 
-> Switching to python 3
-- set up virtual environment with "python3 -m venv path-to-environment".
-- install flask, flask_login and Flask-SQLAlchemy using "pip3 install 'module_name'".
-- set FLASK_APP using export for mac or . 
+> Switching to python 3/ Setup
+
+- pip3 install virtualenv
+- set up virtual environment with "python3 -m virtualenv path_to_environment".
+- pip3 install flask, flask_login and Flask-SQLAlchemy using "pip3 install 'module_name'".
+- use "export FLASK_APP=project_folder_name" for mac, "set FLASK_APP=project_folder_name" for command line or "$env:FLASK_APP='foo'" for powershell. I believe this is correct.
