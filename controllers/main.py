@@ -14,3 +14,7 @@ def index():
 @login_required
 def profile():
     return render_template('home/profile.html', name = current_user.firstName)
+
+@main.route('/play')
+def play():
+    return render_template('home/play.html')
