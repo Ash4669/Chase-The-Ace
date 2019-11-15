@@ -1,0 +1,12 @@
+<script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+<script>
+
+  var pusher = new Pusher('{{pusher_key}}', {
+    cluster: '{{pusher_cluster}}',
+  });
+
+  var channel = pusher.subscribe('my-channel');
+  channel.bind('first-alert', function(data) {
+    alert(JSON.stringify(data));
+  });
+</script>
