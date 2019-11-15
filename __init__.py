@@ -5,30 +5,21 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from pusher import pusher
 import configparser
 
 # init SQLAlchemy so we can use it later
 
 db = SQLAlchemy()
 
-pusher = pusher_client = pusher.Pusher(
-  app_id  = config.get('PUSHERDETAILS','app_id'),
-  key     = config.get('PUSHERDETAILS','key'),
-  secret  = config.get('PUSHERDETAILS','secret'),
-  cluster = config.get('PUSHERDETAILS','cluster'),
-  ssl     = bool(config.get('PUSHERDETAILS','ssl'))
-)
+config = configparser.ConfigParser()
+config.read("card_games_website/settings.conf")
 
 def create_app():
 
-    config = configparser.ConfigParser()
-    config.read("settings.conf")
-
     app = Flask(__name__)
 
-    app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbs/db.sqlite' # change after I have it working and inputting data
+    app.config['SECRET_KEY'] = config.get('SQLALCHEMY','secret_key')
+    app.config['SQLALCHEMY_DATABASE_URI'] = config.get('SQLALCHEMY','sqlalchemy_database_uri')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
