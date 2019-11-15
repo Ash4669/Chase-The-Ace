@@ -5,10 +5,13 @@
 - create a chat feature with pusher to allow players to talk to each other
 - do full database and have them sign in and store their wins at different games.
 - Change sign up to redirect to profile and sign them in. - at least for the moment. Set up email confirmation later on.
+- add matchmaking system where it can get a game_id that is created but game not ready yet and people can join (do public and private games) (Public games are without signing in. Private is with signing in.)
+- Creating variable pages for game id use url_for('method_name', variable=foo) for url and call method def method_name(variable)
 
 > Switching to python 3/ Setup
 
 - pip3 install virtualenv
-- set up virtual environment with "python3 -m virtualenv path_to_environment".
-- pip3 install flask, flask_login and Flask-SQLAlchemy using "pip3 install 'module_name'".
+- If wanted, set up virtual environment with "python3 -m virtualenv path_to_environment".
+- Activate environment with "source path_to_environment/bin/activate" on mac or "path_to_environment\Scripts\activate" for windows.
+- pip3 install flask, flask_login and flask-sqlalchemy using "pip3 install 'module_name'".
 - use "export FLASK_APP=project_folder_name" for mac, "set FLASK_APP=project_folder_name" for command line or "$env:FLASK_APP='foo'" for powershell. I believe this is correct.
