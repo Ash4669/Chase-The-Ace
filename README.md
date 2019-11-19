@@ -17,3 +17,7 @@
 - Activate environment with "source path_to_environment/bin/activate" on mac or "path_to_environment\Scripts\activate" for windows.
 - pip3 install flask, flask_login, flask-sqlalchemy, configparser and pusher using "pip3 install 'module_name'".
 - use "export FLASK_APP=project_folder_name" for mac, "set FLASK_APP=project_folder_name" for command line or "$env:FLASK_APP='foo'" for powershell. I believe this is correct.
+<<<<<<< HEAD
+=======
+test
+>>>>>>> bf6095bcbb51cd8970d654f0883e446f623603dc
