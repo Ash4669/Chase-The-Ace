@@ -1,0 +1,44 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  color: black;
+  background-color: white;
+}
+.main {
+  padding-top: 80px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-bar{
+display: inline-block;
+width: 100%;
+background-color: #006699;
+}
+.logo{
+  float: left;
+  padding: 15px 30px;
+  padding-left: 150px;
+  color: white;
+  font-size: 20px;
+  font-family: arial;
+}
+.links {
+  float: right;
+  padding-right: 150px;
+}
+.links > a {
+  display: inline-block;
+  color: white;
+  font-size: 20px;
+  font-family: arial;
+  text-decoration: none;
+  padding: 15px 30px;
+}
+.links > a:hover {
+  color: ;
+  text-decoration: underline;
+  background-color: ;
+}

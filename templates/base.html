@@ -2,37 +2,36 @@
 <html lang="en" dir="ltr">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
+    <meta charset="utf-8"
     <title></title>
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='css/basePage.css') }}">
   </head>
   <body>
-    <div class="">
-      <nav>
-        <div class="">
-          <div class="">
-            <a href="{{url_for('main.index')}}">Home</a>
-            {% if current_user.is_authenticated %}
-            <a href="{{url_for('main.profile')}}">Profile</a>
-            {% endif %}
-            {% if not current_user.is_authenticated %}
-            <a href="{{url_for('auth.login')}}">Login</a>
-            <a href="{{url_for('auth.signup')}}">Sign Up</a>
-            {% endif %}
-            {% if current_user.is_authenticated %}
-            <a href="{{url_for('auth.logout')}}">Logout</a>
-            {% endif %}
-          </div>
+    <nav class="nav-bar">
+      <div class="logo">
+        Card Games Online
+      </div>
+      <div class="">
+        <div class="links">
+          <a href="{{url_for('main.index')}}">Home</a>
+          {% if current_user.is_authenticated %}
+          <a href="{{url_for('main.profile')}}">Profile</a>
+          {% endif %}
+          {% if not current_user.is_authenticated %}
+          <a href="{{url_for('auth.login')}}">Login</a>
+          <a href="{{url_for('auth.signup')}}">Sign Up</a>
+          {% endif %}
+          {% if current_user.is_authenticated %}
+          <a href="{{url_for('auth.logout')}}">Logout</a>
+          {% endif %}
         </div>
-      </nav>
-    </div>
-    <div class="">
+      </div>
+    </nav>
+    <div class="main">
       <div class="">
         {% block content%}
         {% endblock %}
       </div>
     </div>
-
-
-
   </body>
 </html>
