@@ -9,6 +9,8 @@
 - add matchmaking system where it can get a game_id that is created but game not ready yet and people can join (do public and private games) (Public games are without signing in. Private is with signing in.)
 - Creating variable pages for game id use url_for('method_name', variable=foo) for url and call method def method_name(variable)
 - yield code in multiple places from the base page or the game pages.
+- Maybe use socket.io instead of pusher? Look at tutorials.
+- SignalR for game chat?
 
 > Switching to python 3/ Setup
 
