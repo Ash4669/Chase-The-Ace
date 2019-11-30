@@ -10,6 +10,15 @@
 - Creating variable pages for game id use url_for('method_name', variable=foo) for url and call method def method_name(variable)
 - yield code in multiple places from the base page or the game pages.
 
+
+- SignalR for game chat?
+
+
+- USE JSON TO KEEP THE GAME STATE AND HAVE THE CLIENTS POLL FOR A CHANGE IN THE GAME (UP IN VERSION?) AND THE MAKE A GET FOR THE INFORMATION AND UPDATE THEIR PERSON GAME STATE.
+ - Regarding polling, simplest way is a while loop that polls, checks for change, renders change, and keeps going. Either throw the whole client logic in a while(true), or break out of it when it's your turn, take your go, and go back into the loop when you've taken your turn
+
+ - make the HTTP request to the site end point and handle that in the controller. Set up the controller for that game to handle everything. Each controller should be spanned off its own game id.
+
 > Switching to python 3/ Setup
 
 - pip3 install virtualenv
