@@ -6,4 +6,4 @@ shed = Blueprint('shed',__name__)
 
 @shed.route('/play/shed')
 def shed_index():
-    return render_template('games/shed.html')
+    return render_template('games/shed/index.html')
