@@ -13,6 +13,8 @@
 
 - SignalR for game chat?
 
+- NAME ALL IMAGES BY THE NAME THEY WILL USE IN THE END SO THE IMAGE JUST NEEDS SWITCHING OUT, NOT THE CODE AS WELL.
+
 
 - USE JSON TO KEEP THE GAME STATE AND HAVE THE CLIENTS POLL FOR A CHANGE IN THE GAME (UP IN VERSION?) AND THE MAKE A GET FOR THE INFORMATION AND UPDATE THEIR PERSON GAME STATE.
  - Regarding polling, simplest way is a while loop that polls, checks for change, renders change, and keeps going. Either throw the whole client logic in a while(true), or break out of it when it's your turn, take your go, and go back into the loop when you've taken your turn
