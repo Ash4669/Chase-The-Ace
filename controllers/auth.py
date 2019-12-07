@@ -3,8 +3,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
-from .models import User
-from .. import db
+from card_games_website import models
+from app import db
 
 auth = Blueprint('auth', __name__)
 
@@ -36,13 +36,13 @@ def signup_post():
     firstName = request.form.get('firstName')
     lastName = request.form.get('lastName')
 
-    user = User.query.filter_by(email = email).first()
+    user = models.User.query.filter_by(email = email).first()
 
     if user:
         flash('Email address already exists')
         return redirect(url_for('auth.signup'))
 
-    newUser = User(email = email, username = username, password = generate_password_hash(password, method='sha256'), firstName = firstName, lastName = lastName)
+    newUser = models.User(email = email, username = username, password = generate_password_hash(password, method='sha256'), firstName = firstName, lastName = lastName)
 
     db.session.add(newUser)
     db.session.commit()
@@ -57,7 +57,7 @@ def login_post():
     username = request.form.get('username')
     remember = True if request.form.get('remember') else False
 
-    user = User.query.filter_by(email = email).first()
+    user = models.User.query.filter_by(email = email).first()
 
     if user:
         if check_password_hash(user.password, password):

@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Play</h1>
-<h2>Select a game below</h2>
-<a href="{{url_for('chase_the_ace.chase_the_ace_index')}}">
-  <img src="{{ url_for('static', filename='images/chase_the_ace.jpg') }}" alt="">
-</a>
-<a href="{{url_for('shed.shed_index')}}">
-  <img src="{{ url_for('static', filename='images/chase_the_ace.jpg') }}" alt="">
-</a>
+<div class="">
+  <h1>Play</h1>
+  <h2>Select a game below</h2>
+  <a href="{{url_for('chase_the_ace.chase_the_ace_index')}}">
+    <img src="{{ url_for('static', filename='images/chase_the_ace.jpg') }}" alt="">
+  </a>
+  <a href="{{url_for('shed.shed_index')}}">
+    <img src="{{ url_for('static', filename='images/chase_the_ace.jpg') }}" alt="">
+  </a>
+  </div>
 {% endblock %}
