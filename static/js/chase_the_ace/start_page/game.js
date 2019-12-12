@@ -14,7 +14,8 @@ var config = {
         }
     },
     scene: [
-        StartPage
+        StartPage,
+        JoinPage
     ],
     pixelArt: true,
     roundPixels: true

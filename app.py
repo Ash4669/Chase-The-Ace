@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 # maybe delete above line
-# __init__.py
+# app.py
 
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import configparser
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 
 config = configparser.ConfigParser()
@@ -21,7 +21,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # init SQLAlchemy so we can use it later
 db = SQLAlchemy(app)
 
-socketio = SocketIO(app)
+socketio = SocketIO()
+
+socketio.init_app(app)
+
+
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -52,6 +56,9 @@ from controllers.games.shed import shed as shed_blueprint
 app.register_blueprint(shed_blueprint)
 
 
+@socketio.on('my event')
+def handle_my_custom_event(json):
+    print('received json: ' + str(json))
 
 if __name__ == '__main__':
     socketio.run(app)
