@@ -30,7 +30,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
-from card_games_website import models
+import models
 
 @login_manager.user_loader
 def load_user(user_id):
