@@ -29,3 +29,16 @@
 
 - install windows visual studio and C++ build tools inside it.
 (Windows Python needs Visual C++ libraries installed via the SDK to build code, such as via setuptools.extension.Extension or numpy.distutils.core.Extension. On Linux and Mac, the C++ libraries are installed with the compiler.)
+
+> Notes about SocketIO
+https://socket.io/docs/emit-cheatsheet/
+https://socket.io/get-started/chat
+- For server side javascript:
+- io.on(connection(socket.emit)) - self
+- io.on(connection(socket.broadcast.emit)) - all but self
+- io.on(conection(io.emit)) - all including self
+
+- User flask's request.sid to get session id and target individual clients.
+https://flask-socketio.readthedocs.io/en/latest/ - use Rooms section to group together for games. Send and Emit functions also accept room argument to broadcast to just that room. Using room = sid when passing the room argument can emit something to a specific client.
+
+Add client sid to store in rooms to then loop over for the game. io.to(room).emit(). The actual game mechanics can just send with sid that are stored within the room. use socket.emit within connection to send to specific clients and use broadcasts when sending the information to everyone to update. Need to map out types fo connections that need to happen when.
