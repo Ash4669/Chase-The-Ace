@@ -41,4 +41,5 @@ https://socket.io/get-started/chat
 - User flask's request.sid to get session id and target individual clients.
 https://flask-socketio.readthedocs.io/en/latest/ - use Rooms section to group together for games. Send and Emit functions also accept room argument to broadcast to just that room. Using room = sid when passing the room argument can emit something to a specific client.
 
-Add client sid to store in rooms to then loop over for the game. io.to(room).emit(). The actual game mechanics can just send with sid that are stored within the room. use socket.emit within connection to send to specific clients and use broadcasts when sending the information to everyone to update. Need to map out types fo connections that need to happen when.
+Add client sid to store in rooms to then loop over for the game. io.to(room/socketId).emit(). The actual game mechanics can just send with sid that are stored within the room. use socket.emit within connection to send to specific clients and use broadcasts when sending the information to everyone to update. Need to map out types fo connections that need to happen when.
+- for Flask, use emit but set room=sid_id. get sessionid with request.sid.
