@@ -6,7 +6,7 @@ from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import configparser
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
 
 
 config = configparser.ConfigParser()
@@ -58,6 +58,8 @@ app.register_blueprint(shed_blueprint)
 @socketio.on('my event')
 def handle_my_custom_event(json):
     print('received json: ' + str(json))
+
+from controllers.games import chase_the_ace_gameplay
 
 if __name__ == '__main__':
     socketio.run(app)
