@@ -17,10 +17,5 @@
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
     });
-
-    socket.on('redirect', function (data) {
-      console.log('here');
-      window.location = data.url;
-    });
 </script>
 <script src="{{ url_for('static', filename='js/phaser.min.js') }}"></script>

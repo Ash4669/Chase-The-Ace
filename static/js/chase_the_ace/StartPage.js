@@ -1,3 +1,6 @@
+
+var socket = io();
+
 class StartPage extends Phaser.Scene {
     constructor() {
         super({ key: "StartPage" });
@@ -21,7 +24,6 @@ class StartPage extends Phaser.Scene {
     }
 
     onHostButtonClicked() {
-      var socket = io();
       socket.emit('host game send');
     }
 
@@ -29,3 +31,7 @@ class StartPage extends Phaser.Scene {
       this.scene.start("JoinPage")
     }
 }
+socket.on('redirect', function (data) {
+  console.log('here');
+  window.location = data.url;
+});
