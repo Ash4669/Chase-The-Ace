@@ -15,4 +15,4 @@ def chase_the_ace_index():
 
 @chase_the_ace.route('/play/chase_the_ace/<game_id>')
 def chase_the_ace_instance(game_id):
-    return render_template('games/chase_the_ace/index.html', game_id = game_id)
+    return render_template('games/chase_the_ace/game.html', game_id = game_id)

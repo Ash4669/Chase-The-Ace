@@ -22,10 +22,11 @@ class StartPage extends Phaser.Scene {
 
     onHostButtonClicked() {
       socket.emit('host game send');
+      this.scene.start('GamePage');
     }
 
     onJoinButtonClicked() {
-      this.scene.start("JoinPage")
+      this.scene.start("JoinPage");
     }
 }
 
