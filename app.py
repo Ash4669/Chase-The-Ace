@@ -55,9 +55,9 @@ from controllers.games.shed import shed as shed_blueprint
 app.register_blueprint(shed_blueprint)
 
 
-@socketio.on('my event')
-def handle_my_custom_event(json):
-    print('received json: ' + str(json))
+@socketio.on('connect')
+def handle_my_custom_event():
+    print('connected')
 
 from controllers.games import chase_the_ace_gameplay
 
