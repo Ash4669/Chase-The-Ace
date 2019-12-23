@@ -3,7 +3,6 @@
 from flask import Blueprint, render_template, redirect, url_for, session
 import configparser
 from controllers.auth import auth as auth_blueprint
-from flask_login import current_user
 
 config = configparser.ConfigParser()
 config.read("card_games_website/settings.conf")

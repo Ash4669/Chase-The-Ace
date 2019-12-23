@@ -31,7 +31,6 @@ socket.on('connect', function() {
 });
 
 socket.on('joined', function(response) {
-  players.push()
   console.log(response);
 })
 // Make a emit that triggers what would have triggered for a normal connect functions. Manually trigger it and get it to send the player data to all players and update their game.
