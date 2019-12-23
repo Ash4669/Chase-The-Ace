@@ -6,7 +6,7 @@ from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import configparser
-from flask_socketio import SocketIO, emit, send
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
 
 
 config = configparser.ConfigParser()
@@ -58,6 +58,10 @@ app.register_blueprint(shed_blueprint)
 @socketio.on('connect')
 def handle_my_custom_event():
     print('connected')
+
+@socketio.on('disconnect')
+def handle_my_custom_event():
+    print('disconnected')
 
 from controllers.games import chase_the_ace_gameplay
 
