@@ -14,23 +14,56 @@ class GamePage extends Phaser.Scene {
         playersListBox.setStrokeStyle(2, 0x000000)
 
         this.add.text(820, 20, 'Players');
-
     }
+
     update() {
-      for (var i = 0; i < players.length; i++) {
-        this.add.text(820, 50 + (i * 40), players[i]);
-      }
+      this.writePlayerNames()
     }
 
+    playerListText = []
+
+    writePlayerNames() {
+        for (var i = 0; i < playerList.length; i++) {
+            this.add.text(820, 50 + (i * 40), playerList[i]);
+        }
+    }
+
+    deletePlayerName() {
+
+    }
 }
 
-var players = new Array();
+
+
+
+var playerList = new Array();
 
 socket.on('connect', function() {
-    socket.emit('join');
+    socket.emit('join chase the ace');
 });
 
-socket.on('joined', function(response) {
-  console.log(response);
+socket.on('disconnect', function() {
+    socket.emit('quit chase the ace');
 })
+
+socket.on('joined chase the ace announcement', function(response) {
+    console.log(response);
+})
+
+socket.on('update chase the ace playerList', function(response) {
+    console.log('here2');
+    playerList = response
+    GamePage.writePlayerNames();
+})
+
+// socket.on('getting playerList', function(response) {
+//     playerList = response;
+// })
+//
+// socket.on('remove player', function(response) {
+//     var index  = playerList.indexOf(response);
+//     if (index > -1) {
+//       playerList.splice(index, 1);
+//     }
+// })
 // Make a emit that triggers what would have triggered for a normal connect functions. Manually trigger it and get it to send the player data to all players and update their game.

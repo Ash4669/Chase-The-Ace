@@ -4,6 +4,9 @@ from __main__ import send, emit
 from __main__ import join_room, leave_room
 import random
 from flask_login import current_user
+from classes.Room import Room
+
+gameInstances = {}
 
 def generateId():
     return random.randint(100,999)
@@ -11,13 +14,31 @@ def generateId():
 @socketio.on('host game send')
 def generate_and_host_redirect():
     gameId = generateId()
-    session['gameId'] = gameId
+    gameInstances[str(gameId)] = Room(gameId)
     emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', gameId = gameId)})
 
-@socketio.on('join')
+@socketio.on('join chase the ace')
 def on_join():
     room = session.get('gameId')
-    join_room(room)
     playerName = session.get('playerName')
-    # roomData['players'].push(playerName);
-    emit('joined', playerName + ' has entered the room.', room = room)
+    emit('joined chase the ace announcement', playerName + ' has entered the room.', room = room)
+
+    roomPlayerList = gameInstances[str(room)].playerList
+    print(roomPlayerList)
+    roomPlayerList.append(session.get('playerName'))
+    print(roomPlayerList)
+    join_room(room)
+    emit('update chase the ace playerList', roomPlayerList, room = room)
+
+@socketio.on('quit chase the ace')
+def on_quit():
+    print('HEREEEE!!!')
+    room = session.get('gameId')
+    playerName = session.get('playerName')
+    roomPlayerList = gameInstances[str(room)].playerList
+    print(roomPlayerList)
+    roomPlayerList.remove(playerName)
+    print(roomPlayerList)
+    emit('update chase the ace playerList', roomPlayerList, room = room)
+
+# careful with removing players from playerList as they may have the same name.

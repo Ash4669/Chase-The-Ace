@@ -56,11 +56,11 @@ app.register_blueprint(shed_blueprint)
 
 
 @socketio.on('connect')
-def handle_my_custom_event():
+def handle_my_connect_event():
     print('connected')
 
 @socketio.on('disconnect')
-def handle_my_custom_event():
+def handle_my_disconnect_event():
     print('disconnected')
 
 from controllers.games import chase_the_ace_gameplay
