@@ -29,5 +29,24 @@
 - pip3 install flask, flask_login, flask-sqlalchemy, configparser and pusher using "pip3 install 'module_name'".
 - use "export FLASK_APP=project_folder_name" for mac, "set FLASK_APP=project_folder_name" for command line or "$env:FLASK_APP='foo'" for powershell. I believe this is correct.
 
+- install windows visual studio and C++ build tools inside it.
+(Windows Python needs Visual C++ libraries installed via the SDK to build code, such as via setuptools.extension.Extension or numpy.distutils.core.Extension. On Linux and Mac, the C++ libraries are installed with the compiler.)
+
+> Notes about SocketIO
+https://socket.io/docs/emit-cheatsheet/
+https://socket.io/get-started/chat
+- For server side javascript:
+- io.on(connection(socket.emit)) - self
+- io.on(connection(socket.broadcast.emit)) - all but self
+- io.on(conection(io.emit)) - all including self
+
+- User flask's request.sid to get session id and target individual clients.
+https://flask-socketio.readthedocs.io/en/latest/ - use Rooms section to group together for games. Send and Emit functions also accept room argument to broadcast to just that room. Using room = sid when passing the room argument can emit something to a specific client.
+
+Add client sid to store in rooms to then loop over for the game. io.to(room/socketId).emit(). The actual game mechanics can just send with sid that are stored within the room. use socket.emit within connection to send to specific clients and use broadcasts when sending the information to everyone to update. Need to map out types fo connections that need to happen when.
+- for Flask, use emit but set room=sid_id. get sessionid with request.sid.
+
+- Note for disconnecting: Have it where the pop up appears before they leave the page and then record the page url. If they click leave the page, it triggers them leaving the room or just have the pop up as something to stall while the url is recorded and then on disconnect, they can remove themselves, update the others in the room and then leave the room.
+
 > Notes for self
 - Use Page Objects method of testing. Not UI JourneySteps. Read into it.
