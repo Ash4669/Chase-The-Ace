@@ -43,3 +43,5 @@ https://flask-socketio.readthedocs.io/en/latest/ - use Rooms section to group to
 
 Add client sid to store in rooms to then loop over for the game. io.to(room/socketId).emit(). The actual game mechanics can just send with sid that are stored within the room. use socket.emit within connection to send to specific clients and use broadcasts when sending the information to everyone to update. Need to map out types fo connections that need to happen when.
 - for Flask, use emit but set room=sid_id. get sessionid with request.sid.
+
+- Note for disconnecting: Have it where the pop up appears before they leave the page and then record the page url. If they click leave the page, it triggers them leaving the room or just have the pop up as something to stall while the url is recorded and then on disconnect, they can remove themselves, update the others in the room and then leave the room.
