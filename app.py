@@ -55,6 +55,9 @@ from controllers.games.shed import shed as shed_blueprint
 app.register_blueprint(shed_blueprint)
 
 
+# Game sockets import game mechanics and socketio listeners.
+from controllers.games import chase_the_ace_gameplay
+
 @socketio.on('connect')
 def handle_my_connect_event():
     print('connected')
@@ -63,7 +66,6 @@ def handle_my_connect_event():
 def handle_my_disconnect_event():
     print('disconnected')
 
-from controllers.games import chase_the_ace_gameplay
-
+# If running app.py, then run app itself.
 if __name__ == '__main__':
     socketio.run(app)

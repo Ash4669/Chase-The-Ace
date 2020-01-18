@@ -40,5 +40,7 @@ def on_quit():
     roomPlayerList.remove(playerName)
     print(roomPlayerList)
     emit('update chase the ace playerList', roomPlayerList, room = room)
+    leave_room(room)
+    # can't emit to room since thte connection has dropped.
 
 # careful with removing players from playerList as they may have the same name.

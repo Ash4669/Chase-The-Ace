@@ -18,6 +18,14 @@ class StartPage extends Phaser.Scene {
 
       hostButton.setInteractive().on('pointerdown', () => this.onHostButtonClicked());
       joinButton.setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
+
+
+      self.socket = io();
+
+      self.socket.on('redirect', function (data) {
+        window.location = data.url;
+      });
+
     }
 
     onHostButtonClicked() {
@@ -28,7 +36,3 @@ class StartPage extends Phaser.Scene {
       this.scene.start("JoinPage");
     }
 }
-
-socket.on('redirect', function (data) {
-  window.location = data.url;
-});
