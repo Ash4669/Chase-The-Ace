@@ -13,6 +13,8 @@
 
 - SignalR for game chat?
 
+- NAME ALL IMAGES BY THE NAME THEY WILL USE IN THE END SO THE IMAGE JUST NEEDS SWITCHING OUT, NOT THE CODE AS WELL.
+
 
 - USE JSON TO KEEP THE GAME STATE AND HAVE THE CLIENTS POLL FOR A CHANGE IN THE GAME (UP IN VERSION?) AND THE MAKE A GET FOR THE INFORMATION AND UPDATE THEIR PERSON GAME STATE.
  - Regarding polling, simplest way is a while loop that polls, checks for change, renders change, and keeps going. Either throw the whole client logic in a while(true), or break out of it when it's your turn, take your go, and go back into the loop when you've taken your turn
@@ -45,3 +47,6 @@ Add client sid to store in rooms to then loop over for the game. io.to(room/sock
 - for Flask, use emit but set room=sid_id. get sessionid with request.sid.
 
 - Note for disconnecting: Have it where the pop up appears before they leave the page and then record the page url. If they click leave the page, it triggers them leaving the room or just have the pop up as something to stall while the url is recorded and then on disconnect, they can remove themselves, update the others in the room and then leave the room.
+
+> Notes for self
+- Use Page Objects method of testing. Not UI JourneySteps. Read into it.
