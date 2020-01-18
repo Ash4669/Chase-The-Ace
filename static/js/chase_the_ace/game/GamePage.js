@@ -20,15 +20,15 @@ class GamePage extends Phaser.Scene {
 
         self.socket = io();
 
-        self.socket.on('connect', function() {
+        socket.on('connect', function() {
             self.socket.emit('join chase the ace');
         });
 
-        self.socket.on('joined chase the ace announcement', function(response) {
+        socket.on('joined chase the ace announcement', function(response) {
             console.log(response);
         })
 
-        self.socket.on('update chase the ace playerList', function(response) {
+        socket.on('update chase the ace playerList', function(response) {
 
             // Setting the playerlist equal to the server player list.
             playerList = response
