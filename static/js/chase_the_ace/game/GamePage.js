@@ -21,7 +21,6 @@ class GamePage extends Phaser.Scene {
         self.socket = io();
 
         self.socket.on('connect', function() {
-            console.log('heree')
             self.socket.emit('join chase the ace');
         });
 
@@ -30,7 +29,6 @@ class GamePage extends Phaser.Scene {
         })
 
         self.socket.on('update chase the ace playerList', function(response) {
-            console.log('here2');
 
             // Setting the playerlist equal to the server player list.
             playerList = response
@@ -53,7 +51,6 @@ function writePlayerNames(self) {
     for (var i = 0; i < playerList.length; i++) {
         playerListText[i] = self.add.text(820, 50 + (i * 40), playerList[i]);
     }
-    console.log('hereeerr');
 }
 
 function deletePlayerNames(){
@@ -67,19 +64,4 @@ window.onunload = quit;
 
 function quit() {
     socket.emit('quit chase the ace');
-    console.log('here3')
 };
-
-// onUnload trigger disconnect event. with are you sure you want to leave this page? message
-
-// socket.on('getting playerList', function(response) {
-//     playerList = response;
-// })
-//
-// socket.on('remove player', function(response) {
-//     var index  = playerList.indexOf(response);
-//     if (index > -1) {
-//       playerList.splice(index, 1);
-//     }
-// })
-// Make a emit that triggers what would have triggered for a normal connect functions. Manually trigger it and get it to send the player data to all players and update their game.

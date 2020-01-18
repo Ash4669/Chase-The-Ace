@@ -24,21 +24,16 @@ def on_join():
     emit('joined chase the ace announcement', playerName + ' has entered the room.', room = room)
 
     roomPlayerList = gameInstances[str(room)].playerList
-    print(roomPlayerList)
     roomPlayerList.append(session.get('playerName'))
-    print(roomPlayerList)
     join_room(room)
     emit('update chase the ace playerList', roomPlayerList, room = room)
 
 @socketio.on('quit chase the ace')
 def on_quit():
-    print('HEREEEE!!!')
     room = session.get('gameId')
     playerName = session.get('playerName')
     roomPlayerList = gameInstances[str(room)].playerList
-    print(roomPlayerList)
     roomPlayerList.remove(playerName)
-    print(roomPlayerList)
     emit('update chase the ace playerList', roomPlayerList, room = room)
     leave_room(room)
     # can't emit to room since thte connection has dropped.
