@@ -19,11 +19,16 @@ def generate_and_host_redirect():
 
 @socketio.on('join chase the ace')
 def on_join():
+
     room = session.get('gameId')
     playerName = session.get('playerName')
     emit('joined chase the ace announcement', playerName + ' has entered the room.', room = room)
 
     roomPlayerList = gameInstances[str(room)].playerList
+
+    if len(roomPlayerList) == 0:
+        emit('setHost')
+
     roomPlayerList.append(session.get('playerName'))
     join_room(room)
     emit('update chase the ace playerList', roomPlayerList, room = room)
@@ -36,6 +41,5 @@ def on_quit():
     roomPlayerList.remove(playerName)
     emit('update chase the ace playerList', roomPlayerList, room = room)
     leave_room(room)
-    # can't emit to room since thte connection has dropped.
 
 # careful with removing players from playerList as they may have the same name.

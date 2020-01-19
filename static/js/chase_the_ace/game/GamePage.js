@@ -4,10 +4,13 @@ class GamePage extends Phaser.Scene {
     }
     preload() {
         this.load.image("casinoRoom", "../../static/images/greentable1.jpg");
+        this.load.image("startButton","../../static/images/playbutton.png");
     }
     create() {
 
-      const gamepage = this
+        // Lobbying
+        const gamepage = this;
+        var host = false;
         var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
 
         backgroundImage.setDisplaySize(1000, 600);
@@ -20,9 +23,18 @@ class GamePage extends Phaser.Scene {
 
         self.socket = io();
 
+
         socket.on('connect', function() {
             self.socket.emit('join chase the ace');
         });
+
+        console.log(host);
+
+        socket.on('setHost', function(){
+            host = true;
+            displayStartButton(gamepage);
+        });
+
 
         socket.on('joined chase the ace announcement', function(response) {
             console.log(response);
@@ -38,10 +50,6 @@ class GamePage extends Phaser.Scene {
             writePlayerNames(gamepage);
         })
     }
-
-    update() {
-    }
-
 }
 
 var playerList = new Array();
@@ -59,6 +67,17 @@ function deletePlayerNames(){
     }
 }
 
+var startButton;
+
+function displayStartButton(game) {
+  startButton = game.add.image(300, 400, "startButton").setOrigin(0, 0);
+  startButton.setDisplaySize(200, 100);
+  startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
+}
+
+function onStartButtonClicked(game) {
+    startButton.destroy()
+}
 
 window.onunload = quit;
 
