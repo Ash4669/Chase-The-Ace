@@ -14,6 +14,9 @@ config.read("settings.conf")
 
 app = Flask(__name__)
 
+# Ignores slashes on the end of URLs.
+app.url_map.strict_slashes = False
+
 app.config['SECRET_KEY'] = config.get('SQLALCHEMY','secret_key')
 app.config['SQLALCHEMY_DATABASE_URI'] = config.get('SQLALCHEMY','sqlalchemy_database_uri')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
