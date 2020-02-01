@@ -25,7 +25,7 @@ class GamePage extends Phaser.Scene {
 
 
         socket.on('connect', function() {
-            self.socket.emit('join chase the ace');
+            socket.emit('join chase the ace');
         });
 
         console.log(host);
@@ -52,6 +52,12 @@ class GamePage extends Phaser.Scene {
     }
 }
 
+window.onunload = quit;
+
+function quit() {
+    socket.emit('quit chase the ace');
+};
+
 var playerList = new Array();
 var playerListText = new Array();
 
@@ -76,11 +82,6 @@ function displayStartButton(game) {
 }
 
 function onStartButtonClicked(game) {
-    startButton.destroy()
+    startButton.destroy();
+    socket.emit('start game');
 }
-
-window.onunload = quit;
-
-function quit() {
-    socket.emit('quit chase the ace');
-};

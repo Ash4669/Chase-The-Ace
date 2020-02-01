@@ -5,41 +5,84 @@ from __main__ import join_room, leave_room
 import random
 from flask_login import current_user
 from classes.Room import Room
+from classes.player import Player
+from classes.card import Card
+import string
 
 gameInstances = {}
 
-def generateId():
+def generateGameId():
     return random.randint(100,999)
+
+def generatePlayerId():
+    return ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
 
 @socketio.on('host game send')
 def generate_and_host_redirect():
-    gameId = generateId()
+
+    # Generate a game id and a player id and store the player id in the session.
+    gameId = generateGameId()
+    session['playerId'] = generatePlayerId()
+
+    # Instantiate the instace of room with the game id as the room id.
     gameInstances[str(gameId)] = Room(gameId)
+
+    # Emit the redirect for the client to redirect with javascript.
     emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', gameId = gameId)})
 
 @socketio.on('join chase the ace')
 def on_join():
 
+    # Pulling game id, player id and player name from session.
     room = session.get('gameId')
+    playerId = session.get('playerId')
     playerName = session.get('playerName')
+
+    # Send update to say who joined the room.
     emit('joined chase the ace announcement', playerName + ' has entered the room.', room = room)
 
-    roomPlayerList = gameInstances[str(room)].playerList
+    # Setting player list for code simplicity and cleanliness.
+    playerList = gameInstances[str(room)].playerList
 
-    if len(roomPlayerList) == 0:
+    # Setting the first player as the host.
+    # Be careful with people joining and quitting the same room.
+    # Kick out when host leaves and delete instance.
+    if len(playerList) == 0:
         emit('setHost')
 
-    roomPlayerList.append(session.get('playerName'))
+    # Append new player into player list in room in game instances.
+    playerList.append(Player(playerId, playerName))
+
+    # Initialise playerNames and append on new player.
+    playerNames = []
+    for i in range(len(playerList)):
+        playerNames.append(playerList[i].name)
+
+    # Join the flask room.
     join_room(room)
-    emit('update chase the ace playerList', roomPlayerList, room = room)
+
+    # Emit to the room to update all other players of the change to the player name list.
+    emit('update chase the ace playerList', playerNames, room = room)
 
 @socketio.on('quit chase the ace')
 def on_quit():
     room = session.get('gameId')
+    playerId = session.get("playerId")
     playerName = session.get('playerName')
-    roomPlayerList = gameInstances[str(room)].playerList
-    roomPlayerList.remove(playerName)
+    playerList = gameInstances[str(room)].playerList
+    for i in range(0, len(playerList)):
+        if playerList[i].id == playerId:
+            playerList.remove[i]
+
+    for value in variable:
+        playerNames.append(playerList[i].name)
     emit('update chase the ace playerList', roomPlayerList, room = room)
     leave_room(room)
+
+
+@socketio.on('start game')
+def start_game():
+    roomPlayerList = gameInstances[str(room)].playerList
+
 
 # careful with removing players from playerList as they may have the same name.

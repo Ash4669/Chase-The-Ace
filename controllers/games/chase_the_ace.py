@@ -15,6 +15,7 @@ def chase_the_ace_index():
 
 @chase_the_ace.route('/play/chase_the_ace/<gameId>')
 def chase_the_ace_instance(gameId):
-    playerData = {"playerName": session.get('playerName')}
+
+    # Saving the game id into the session.
     session['gameId'] = gameId
-    return render_template('games/chase_the_ace/game.html', gameId = gameId, data = playerData)
+    return render_template('games/chase_the_ace/game.html', gameId = gameId)

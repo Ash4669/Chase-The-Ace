@@ -1,15 +1,6 @@
 {% extends "base.html" %}
 
 {% block head %}
-<script type="text/javascript">
-  function returnPlayerData(param) {
-    json = JSON.parse('{{ data | tojson | safe }}');
-    return json[param];
-  }
-  function returnGameId() {
-    return {{ gameId }};
-  }
-</script>
 {% include "games/chase_the_ace/head/indexHead.html" %}
 {% endblock %}
 

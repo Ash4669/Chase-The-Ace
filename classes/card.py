@@ -1,5 +1,5 @@
-from cards.number import Number
-from cards.suit import Suit
+from classes.cards.number import Number
+from classes.cards.suit import Suit
 
 class Card(object):
 
