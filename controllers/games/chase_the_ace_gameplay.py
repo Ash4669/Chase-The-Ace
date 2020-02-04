@@ -6,7 +6,7 @@ import random
 from flask_login import current_user
 from classes.Room import Room
 from classes.player import Player
-from classes.card import Card
+from classes.chase_the_ace.action import Action
 import string
 
 gameInstances = {}
@@ -98,6 +98,16 @@ def on_quit():
 
 @socketio.on('start game')
 def start_game():
-    roomPlayerList = gameInstances[str(room)].playerList
+    room = session.get('gameId')
+    playerList = gameInstances[str(room)].playerList
+    for i in range(len(playerList)):
+        playerList[i].dealer = False
+        playerList[i].lives = 3
+        playerList[i].outOfGame = False
+
+    Action.dealCards(playerList)
+
+    for i in range(len(playerList)):
+        print(playerList[i].card)
 
 # Check signing in quickly and going straight to a game with the url to check an error, but proabbly wouldn't happen.
