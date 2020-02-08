@@ -5,9 +5,9 @@ import random
 class Action():
 
     def dealCards(players):
+        # print(Card.cards) NEEDS FIXING. Takes card out of original array. Not temporary array. Depletes all original cards.
         currentDeck = Card.cards
         random.shuffle(currentDeck)
-        print(Card.cards)
         for player in players:
             if player.outOfGame == False:
                 player.card = currentDeck.pop(0)

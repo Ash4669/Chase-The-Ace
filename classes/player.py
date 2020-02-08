@@ -87,12 +87,3 @@ class Player(object):
     @outOfGame.deleter
     def outOfGame(self):
         del self._outOfGame
-
-    def getActivePlayer():
-        print("This is a list of the players.")
-
-    def decision():
-        print("This is the decision the player made.")
-
-    def dealerDecision():
-        print("This is the dealers decision.")

@@ -8,6 +8,7 @@ from classes.Room import Room
 from classes.player import Player
 from classes.chase_the_ace.action import Action
 import string
+import json
 
 gameInstances = {}
 
@@ -37,7 +38,7 @@ def on_join():
 
     # Pulling game id, player id and player name from session.
     room = session.get('gameId')
-    playerId = session['playerId']
+    playerId = session.get('playerId')
     playerName = session.get('playerName')
 
     # Send update to say who joined the room.
@@ -65,6 +66,7 @@ def on_join():
 
     # Emit to the room to update all other players of the change to the player name list.
     emit('update chase the ace playerList', playerNames, room = room)
+    emit('receive player id', playerId)
 
 @socketio.on('quit chase the ace')
 def on_quit():
@@ -107,7 +109,11 @@ def start_game():
 
     Action.dealCards(playerList)
 
+    playersJson = []
     for i in range(len(playerList)):
-        print(playerList[i].card)
+        playerData = json.dumps(playerList[i].__dict__)
+        playersJson.append(playerData)
+
+    emit('update player data', playersJson, room = room)
 
 # Check signing in quickly and going straight to a game with the url to check an error, but proabbly wouldn't happen.
