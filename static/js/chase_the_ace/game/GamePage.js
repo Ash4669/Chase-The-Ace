@@ -114,8 +114,10 @@ function updateCards(game) {
       console.log("card not set yet.");
     }
     console.log(playerCardValue);
-    playerCardDisplay = game.add.image(300, 150, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
-    // FIX CARD PIXELATION
+    if (playerCardValue != null) {
+        playerCardDisplay = game.add.image(300, 150, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+        // FIX CARD PIXELATION
+    }
 }
 
 var startButton;
