@@ -4,25 +4,46 @@ class GamePage extends Phaser.Scene {
     }
     preload() {
         this.load.image("casinoRoom", "../../static/images/greentable1.jpg");
+        this.load.image("startButton","../../static/images/playbutton.png");
+
+        const suits = ["Clubs", "Spades", "Hearts", "Diamonds"];
+        const numbers = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10","Jack", "Queen", "King"];
+
+        for (var i = 0; i < suits.length; i++) {
+            for (var j = 0; j < numbers.length; j++) {
+                this.load.image(numbers[j] + suits[i], "../../static/images/cards/" + numbers[j] + suits[i] + ".png");
+            }
+        }
     }
     create() {
 
-      const gamepage = this
+        // Lobbying
+        const gamepage = this;
+        var host = false;
         var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
 
         backgroundImage.setDisplaySize(1000, 600);
 
-        var playersListBox = this.add.rectangle(900, 0, 200, 500, 0x01DF01);
-        playersListBox.setStrokeStyle(2, 0x000000)
+        var playersNamesBox = this.add.rectangle(900, 0, 200, 500, 0x01DF01);
+        playersNamesBox.setStrokeStyle(2, 0x000000)
 
         this.add.text(820, 20, 'Players');
 
 
         self.socket = io();
 
+
         socket.on('connect', function() {
-            self.socket.emit('join chase the ace');
+            socket.emit('join chase the ace');
         });
+
+        console.log(host);
+
+        socket.on('setHost', function() {
+            host = true;
+            displayStartButton(gamepage);
+        });
+
 
         socket.on('joined chase the ace announcement', function(response) {
             console.log(response);
@@ -30,38 +51,84 @@ class GamePage extends Phaser.Scene {
 
         socket.on('update chase the ace playerList', function(response) {
 
-            // Setting the playerlist equal to the server player list.
-            playerList = response
+            // Setting the player names equal to the server player names.
+            playerNames = response
 
-            // Reupdate the playerList
+            // Reupdate the player names
             deletePlayerNames();
             writePlayerNames(gamepage);
         })
-    }
 
-    update() {
-    }
+        socket.on('receive player id', function (response) {
+            playerId = response
+            console.log(playerId);
+        })
 
+        socket.on('update player data', function(playerJson) {
+            for (var i = 0; i < playerNames.length; i++) {
+
+                var playerData = JSON.parse(playerJson[i])
+
+                if (playerData._id == playerId) {
+                    playerCardValue = playerData._card;
+                }
+
+            }
+
+            updateCards(gamepage);
+
+        })
+    }
 }
-
-var playerList = new Array();
-var playerListText = new Array();
-
-function writePlayerNames(self) {
-    for (var i = 0; i < playerList.length; i++) {
-        playerListText[i] = self.add.text(820, 50 + (i * 40), playerList[i]);
-    }
-}
-
-function deletePlayerNames(){
-    for (var i = 0; i < playerListText.length; i++) {
-        playerListText[i].destroy();
-    }
-}
-
 
 window.onunload = quit;
 
 function quit() {
     socket.emit('quit chase the ace');
 };
+
+var playerNames = new Array();
+var playerNamesVariables = new Array();
+
+var playerId = null;
+var playerCardValue = null;
+var playerCardDisplay = null;
+
+
+function writePlayerNames(game) {
+    for (var i = 0; i < playerNames.length; i++) {
+        playerNamesVariables[i] = game.add.text(820, 50 + (i * 40), playerNames[i]);
+    }
+}
+
+function deletePlayerNames() {
+    for (var i = 0; i < playerNamesVariables.length; i++) {
+        playerNamesVariables[i].destroy();
+    }
+}
+
+function updateCards(game) {
+    try {
+      playerCardDisplay.destroy();
+    } catch (e) {
+      console.log("card not set yet.");
+    }
+    console.log(playerCardValue);
+    if (playerCardValue != null) {
+        playerCardDisplay = game.add.image(300, 150, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+        // FIX CARD PIXELATION
+    }
+}
+
+var startButton;
+
+function displayStartButton(game) {
+  startButton = game.add.image(300, 400, "startButton").setOrigin(0, 0);
+  startButton.setDisplaySize(200, 100);
+  startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
+}
+
+function onStartButtonClicked(game) {
+    startButton.destroy();
+    socket.emit('start game');
+}
