@@ -5,6 +5,8 @@ class GamePage extends Phaser.Scene {
     preload() {
         this.load.image("casinoRoom", "../../static/images/greentable1.jpg");
         this.load.image("startButton","../../static/images/playbutton.png");
+        this.load.image("tradeButton","../../static/images/playbutton.png");
+        this.load.image("stickButton","../../static/images/optionsbutton.png");
 
         const suits = ["Clubs", "Spades", "Hearts", "Diamonds"];
         const numbers = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10","Jack", "Queen", "King"];
@@ -78,6 +80,19 @@ class GamePage extends Phaser.Scene {
             updateCards(gamepage);
 
         })
+
+        socket.on('give player choice', function(currentPlayerId) {
+
+            if (currentPlayerId == playerId) {
+                playerStickButton = this.add.image(300, 400, "stickButton").setOrigin(0, 0);
+                playerTradeButton = this.add.image(600, 400, "tradeButton").setOrigin(0, 0);
+
+                playerStickButton.setInteractive().on('pointerdown', () => this.onStickButtonClicked());
+                playerTradeButton.setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
+
+            }
+
+        })
     }
 }
 
@@ -93,6 +108,10 @@ var playerNamesVariables = new Array();
 var playerId = null;
 var playerCardValue = null;
 var playerCardDisplay = null;
+
+var startButton;
+var playerStickButton;
+var playerTradeButton;
 
 
 function writePlayerNames(game) {
@@ -120,15 +139,23 @@ function updateCards(game) {
     }
 }
 
-var startButton;
-
 function displayStartButton(game) {
   startButton = game.add.image(300, 400, "startButton").setOrigin(0, 0);
   startButton.setDisplaySize(200, 100);
   startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
 }
 
-function onStartButtonClicked(game) {
+function onStartButtonClicked() {
     startButton.destroy();
     socket.emit('start game');
+}
+
+function onStickButtonClicked() {
+    playerStickButton.destroy();
+    socket.emit('stick card', playerId)
+}
+
+function onTradeButtonClicked() {
+    playerTradeButton.destroy();
+    socket.emit('trade card', playerId)
 }

@@ -102,6 +102,8 @@ def on_quit():
 def start_game():
     room = session.get('gameId')
     playerList = gameInstances[str(room)].playerList
+
+    # Setting the dealer, lives of the players and their out of game statuses.
     for i in range(len(playerList)):
         playerList[i].dealer = False
         playerList[i].lives = 3
@@ -109,11 +111,58 @@ def start_game():
 
     Action.dealCards(playerList)
 
+    # Extracts the playerData and to send a json.
     playersJson = []
+    jsonifyPlayerData(playerList, playersJson)
+
+    # Setting the current player
+    currentPlayerId = playerList[getCurrentPlayer(room)].id
+
+    # Updating the player data on client side
+    emit('update player data', playersJson, room = room)
+
+    # Giving the current player the choice.
+    emit('give player choice', currentPlayerId, room = room)
+
+@socketio.on('stick card')
+def stick_card(playerId):
+
+    # incremements the player as their choice doesn't make a change.
+    incrementPlayerid(getCurrentPlayer(room))
+
+    # Gets the player list to extract the playerData and send a json.
+    playerList = gameInstances[str(room)].playerList
+
+    # Extracts the playerData and to send a json.
+    playersJson = []
+    jsonifyPlayerData(playerList, playersJson)
+
+    # Updating the player data on client side
+    emit('update player data', playersJson, room = room)
+
+    # Setting the new current player
+    currentPlayerId = playerList[getCurrentPlayer(room)].id
+
+    # Giving the new current player the choice.
+    emit('give player choice', currentPlayerId, room = room)
+
+# Check signing in quickly and going straight to a game with the url to check an error, but proabbly wouldn't happen.
+def jsonifyPlayerData(playerList, playersJson):
     for i in range(len(playerList)):
         playerData = json.dumps(playerList[i].__dict__)
         playersJson.append(playerData)
 
-    emit('update player data', playersJson, room = room)
+def incrementPlayerid(currentPlayerNo):
+    playerList = gameInstances[str(room)].playerList
 
-# Check signing in quickly and going straight to a game with the url to check an error, but proabbly wouldn't happen.
+    currentPlayerNo += 1
+
+
+    if currentPlayerNo == len(PlayerList):
+        currentPlayerNo = 0
+
+    # Do something with the database
+
+def getCurrentPlayer(room):
+    pass
+    # Do something with the database
