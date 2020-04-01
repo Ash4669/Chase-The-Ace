@@ -1,0 +1,54 @@
+body {
+  padding-top: 80px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+h1 {
+
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.authorisation-box{
+  background-color: purple;
+  display: block;
+  position: relative;
+  height: 180px;
+  width: 400px;
+  padding-top: 30px;
+}
+.color1{
+background-color: green;
+}
+.color2{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 10%;
+  padding: 15px 0px;
+  background-color: maroon;
+}
+.color3{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 10%;
+  padding: 15px 0px;
+  background-color: pink;
+}
+.color4{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 10%;
+  padding: 15px 0px;
+  background-color: grey;
+}
