@@ -10,7 +10,7 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 
 
 config = configparser.ConfigParser()
-config.read("settings.conf")
+config.read("../settings.conf")
 
 app = Flask(__name__)
 

@@ -31,8 +31,10 @@
 
 - install windows visual studio and C++ build tools inside it.
 (Windows Python needs Visual C++ libraries installed via the SDK to build code, such as via setuptools.extension.Extension or numpy.distutils.core.Extension. On Linux and Mac, the C++ libraries are installed with the compiler.)
+- install pytest to run unit tests.
 
 > Notes about SocketIO
+
 https://socket.io/docs/emit-cheatsheet/
 https://socket.io/get-started/chat
 - For server side javascript:
@@ -49,4 +51,5 @@ Add client sid to store in rooms to then loop over for the game. io.to(room/sock
 - Note for disconnecting: Have it where the pop up appears before they leave the page and then record the page url. If they click leave the page, it triggers them leaving the room or just have the pop up as something to stall while the url is recorded and then on disconnect, they can remove themselves, update the others in the room and then leave the room.
 
 > Notes for self
+
 - Use Page Objects method of testing. Not UI JourneySteps. Read into it.
