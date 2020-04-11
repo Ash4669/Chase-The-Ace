@@ -1,3 +1,6 @@
+# models.py
+
+from flask_login import UserMixin
 from app import db
 
 class User(UserMixin, db.Model):
@@ -11,6 +14,7 @@ class User(UserMixin, db.Model):
 
 class ChaseTheAce(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    userId = db.Column(db.Integer, unique = True)
     roomId = db.Column(db.Integer, unique = True)
     playerId = db.Column(db.String(100), unique = True)
     card = db.Column(db.String(10), unique = True)
