@@ -2,13 +2,12 @@
 
 - Use Ionic framework to get the game onto mobile for the app store.
 - create a chat feature with pusher to allow players to talk to each other
-- Change sign up to redirect to profile and sign them in. - at least for the moment. Set up email confirmation later on.
-- add matchmaking system where it can get a game_id that is created but game not ready yet and people can join (do public and private games) (Public games are without signing in. Private is with signing in.) Add in private tickbox to not allow others to join.
+- Set up email confirmation later on.
+- Add matchmaking system where it can get a game_id that is created but game not ready yet and people can join (do public and private games) (Public games are without signing in. Private is with signing in.) Add in private tickbox to not allow others to join.
+- Need database markers to say if game is public or private and locked or not.
 
 - SignalR for game chat?
 
-- USE JSON TO KEEP THE GAME STATE AND HAVE THE CLIENTS POLL FOR A CHANGE IN THE GAME (UP IN VERSION?) AND THE MAKE A GET FOR THE INFORMATION AND UPDATE THEIR PERSON GAME STATE.
- - Regarding polling, simplest way is a while loop that polls, checks for change, renders change, and keeps going. Either throw the whole client logic in a while(true), or break out of it when it's your turn, take your go, and go back into the loop when you've taken your turn
 
 > Switching to python 3/ Setup
 
@@ -38,10 +37,21 @@ https://socket.io/get-started/chat
 - User flask's request.sid to get session id and target individual clients.
 https://flask-socketio.readthedocs.io/en/latest/ - use Rooms section to group together for games. Send and Emit functions also accept room argument to broadcast to just that room. Using room = sid when passing the room argument can emit something to a specific client.
 
-Add client sid to store in rooms to then loop over for the game. io.to(room/socketId).emit(). The actual game mechanics can just send with sid that are stored within the room. use socket.emit within connection to send to specific clients and use broadcasts when sending the information to everyone to update. Need to map out types fo connections that need to happen when.
+Add client sid to store in rooms to then loop over for the game. io.to(room/socketId).emit(). The actual game mechanics can just send with sid that are stored within the room. use socket.emit within connection to send to specific clients and use broadcasts when sending the information to everyone to update. Need to map out types of connections that need to happen when.
 - for Flask, use emit but set room=sid_id. get sessionid with request.sid.
 
 - Note for disconnecting: Have it where the pop up appears before they leave the page and then record the page url. If they click leave the page, it triggers them leaving the room or just have the pop up as something to stall while the url is recorded and then on disconnect, they can remove themselves, update the others in the room and then leave the room.
 
 > Notes for self
 - Use Page Objects method of testing. Not UI JourneySteps. Read into it.
+
+
+> Game Notes
+
+When first person joins, set as host in db.
+When someone joins they are given a player id which is stored in the db.
+When host clicks start, set the room current player
+When game starts, lock down joining.
+When someone quits, they are deleted from the database
+When host quits, boot everyone
+When person wins, if signed in, add one to their count.

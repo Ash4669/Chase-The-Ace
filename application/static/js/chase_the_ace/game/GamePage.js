@@ -63,16 +63,18 @@ class GamePage extends Phaser.Scene {
 
         socket.on('receive player id', function (response) {
             playerId = response
-            console.log(playerId);
         })
 
         socket.on('update player data', function(playerJson) {
             for (var i = 0; i < playerNames.length; i++) {
 
                 var playerData = JSON.parse(playerJson[i])
+                console.log(playerData)
+                console.log(playerData[0])
 
-                if (playerData._id == playerId) {
-                    playerCardValue = playerData._card;
+
+                if (playerData.id == playerId) {
+                    playerCardValue = playerData.card;
                 }
 
             }

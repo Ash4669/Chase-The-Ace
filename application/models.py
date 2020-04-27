@@ -14,15 +14,19 @@ class User(UserMixin, db.Model):
 
 class Player(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    userId = db.Column(db.Integer, unique = True)
-    roomId = db.Column(db.Integer, unique = True)
-    gameType = db.Column(db.String(20))
+    userId = db.Column(db.Integer)
+    roomId = db.Column(db.Integer)
     generatedPlayerId = db.Column(db.String(100), unique = True)
+    name = db.Column(db.String(100))
     card = db.Column(db.String(10), unique = True)
+    dealer = db.Column(db.Boolean)
+    lives = db.Column(db.Integer)
+    outOfGame = db.Column(db.Boolean)
 
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     roomId = db.Column(db.Integer, unique = True)
     gameType = db.Column(db.String(20))
     currentPlayer = db.Column(db.String(100))
-    host = db.Column(db.Integer)
+    host = db.Column(db.String(100))
+    locked = db.Column(db.Boolean)

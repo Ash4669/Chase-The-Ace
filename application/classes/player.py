@@ -41,18 +41,6 @@ class Player(object):
         del self._card
 
     @property
-    def choice(self):
-        return self._choice
-
-    @choice.setter
-    def choice(self, choice):
-        self._choice = choice
-
-    @choice.deleter
-    def choice(self):
-        del self._choice
-
-    @property
     def dealer(self):
         return self._dealer
 

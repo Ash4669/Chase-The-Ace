@@ -13,9 +13,9 @@ chase_the_ace = Blueprint('chase_the_ace',__name__)
 def chase_the_ace_index():
     return render_template('games/chase_the_ace/index.html')
 
-@chase_the_ace.route('/play/chase_the_ace/<gameId>')
-def chase_the_ace_instance(gameId):
+@chase_the_ace.route('/play/chase_the_ace/<roomId>')
+def chase_the_ace_instance(roomId):
 
     # Saving the game id into the session.
-    session['gameId'] = gameId
-    return render_template('games/chase_the_ace/game.html', gameId = gameId)
+    session['roomId'] = roomId
+    return render_template('games/chase_the_ace/game.html', roomId = roomId)
