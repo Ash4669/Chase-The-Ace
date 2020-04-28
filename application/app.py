@@ -60,6 +60,7 @@ app.register_blueprint(shed_blueprint)
 # Game sockets import game mechanics and socketio listeners.
 from controllers.games import chase_the_ace_gameplay
 
+
 @socketio.on('connect')
 def handle_my_connect_event():
     print('connected')

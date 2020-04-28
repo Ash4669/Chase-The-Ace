@@ -54,4 +54,4 @@ When host clicks start, set the room current player
 When game starts, lock down joining.
 When someone quits, they are deleted from the database
 When host quits, boot everyone
-When person wins, if signed in, add one to their count.
+When person wins, if signed in, add one to their count with their userId.

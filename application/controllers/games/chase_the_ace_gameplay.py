@@ -110,32 +110,44 @@ def on_quit():
 
 @socketio.on('start game')
 def start_game():
-    # When host clicks start, set the room current player
-    # When game starts, lock down joining.
+
     roomId = session.get('roomId')
-    playerList = models.Player.query.filter_by(roomId = roomId).all()
+
+    # locking the game in the db to not allow others to join mid game.
+    room = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
+    room.locked = True
+    db.session.commit()
 
     # Setting the dealer, lives of the players and their out of game statuses.
+    playerList = models.Player.query.filter_by(roomId = roomId).all()
     for i in range(len(playerList)):
-        playerList[i].dealer = False
         playerList[i].lives = 3
         playerList[i].outOfGame = False
-
-    Action.dealCards(playerList)
     db.session.commit()
+
+    # Dealing the cards to the players.
+    Action.dealCards(roomId)
+
+    # Setting the host as the dealer and current player.
+    roomHost = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first().host
+    room.dealer = roomHost
+    room.currentPlayer = roomHost # Setting now and updating after to reuse code.
+    db.session.commit()
+    emit('setDealer', roomHost, room = roomId)
+
+    # Updating the current player as it cannot be the dealer
+    Action.updateCurrentPlayer(roomId)
 
     # Extracts the playerData and to send a json.
     playerList = models.Player.query.filter_by(roomId = roomId).all()
     playersJson = []
     jsonifyPlayerData(playerList, playersJson)
 
-    # Setting the current player as the host
-    currentPlayerId = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first().host
-
     # Updating the player data on client side
     emit('update player data', playersJson, room = roomId)
 
     # Giving the current player the choice.
+    currentPlayerId = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first().currentPlayer
     emit('give player choice', currentPlayerId, room = roomId)
 
 @socketio.on('stick card')
@@ -171,7 +183,6 @@ def jsonifyPlayerData(playerList, playersJson):
         playerData['id'] = player.generatedPlayerId
         playerData['name'] = player.name
         playerData['card'] = player.card
-        playerData['dealer'] = player.dealer
         playerData['lives'] = player.lives
         playerData['outOfGame'] = player.outOfGame
         jsonData = json.dumps(playerData)
