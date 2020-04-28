@@ -118,7 +118,7 @@ def start_game():
     room.locked = True
     db.session.commit()
 
-    # Setting the dealer, lives of the players and their out of game statuses.
+    # Setting the lives of the players and their out of game statuses.
     playerList = models.Player.query.filter_by(roomId = roomId).all()
     for i in range(len(playerList)):
         playerList[i].lives = 3
