@@ -37,10 +37,10 @@ class Action():
             player = playerList[i]
 
             # Getting the generated id of the player next to the dealer.
-            if player.generatedPlayerId == room.currentPlayer:
+            if player.generatedPlayerId == room.currentPlayerId:
                 if i == len(playerList) - 1:
                     i -= len(playerList)
                 nextPlayerId = playerList[i+1].generatedPlayerId
-                room.currentPlayer = nextPlayerId
+                room.currentPlayerId = nextPlayerId
                 break
         db.session.commit()

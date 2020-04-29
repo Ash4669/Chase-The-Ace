@@ -25,13 +25,13 @@ def generate_and_host_redirect():
     # Generate a game id.
     roomId = generateRoomId()
 
-    room = models.Room.query.filter_by(roomId = roomId).first()
+    room = getRoom(roomId)
     while room != None:
         roomId = generateRoomId()
-        room = models.Room.query.filter_by(roomId = roomId).first()
+        room = getRoom(roomId)
 
     # Instantiate the Room with the room id as game id and store it within the database.
-    newGame = models.Room(roomId = roomId, gameType = 'chase_the_ace', currentPlayer = None, host = None)
+    newGame = models.Room(roomId = roomId, gameType = 'chase_the_ace', currentPlayerId = None, hostPlayerId = None)
     db.session.add(newGame)
     db.session.commit()
 
@@ -54,22 +54,26 @@ def on_join():
     # Need a way to allow players to make up a name on the spot if they're not signed in.
 
     # Send update to say who joined the room.
+    emit('receive player id', playerId)
     emit('joined chase the ace announcement', playerName + ' has entered the room.', room = roomId)
 
-    playerList = models.Player.query.filter_by(roomId = roomId).first()
-
-    if playerList == None:
-        setPlayerHost = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
-        setPlayerHost.host = playerId
+    # Setting the host if no players are in the game.
+    playerList = getPlayerList(roomId)
+    if playerList == []:
+        room = getRoom(roomId)
+        room.hostPlayerId = playerId
         db.session.commit()
-        emit('setHost')
 
+    # Added new player to db.
     newPlayer = models.Player(userId = userId, roomId = roomId, generatedPlayerId = playerId, name = playerName, card = None)
     db.session.add(newPlayer)
     db.session.commit()
 
+    hostId = getGameHostId(roomId)
+    emit('setHost', hostId)
+
     # Construct playerNames to send to clients.
-    playerList = models.Player.query.filter_by(roomId = roomId).all()
+    playerList = getPlayerList(roomId)
     playerNames = []
     for i in range(len(playerList)):
         playerNames.append(playerList[i].name)
@@ -79,7 +83,6 @@ def on_join():
 
     # Emit to the room to update all other players of the change to the player name list.
     emit('update chase the ace playerList', playerNames, room = roomId)
-    emit('receive player id', playerId)
 
 @socketio.on('quit chase the ace')
 def on_quit():
@@ -90,13 +93,19 @@ def on_quit():
     playerId = session.get('playerId')
     playerName = session.get('userFullName')
 
+    hostId = getGameHostId(roomId)
+    if playerId == hostId:
+        # Emit the redirect for the client to redirect with javascript.
+        emit('close game', {'url': url_for('chase_the_ace.chase_the_ace_index')})
+
+
     # Remove the player from playerList that matches their player id.
     quittingPlayer = models.Player.query.filter_by(userId = userId, roomId = roomId, generatedPlayerId = playerId, name = playerName).one()
     db.session.delete(quittingPlayer)
     db.session.commit()
 
     # Construct playerNames to send to clients.
-    playerList = models.Player.query.filter_by(roomId = roomId).all()
+    playerList = getPlayerList(roomId)
     playerNames = []
     for i in range(len(playerList)):
         playerNames.append(playerList[i].name)
@@ -114,12 +123,12 @@ def start_game():
     roomId = session.get('roomId')
 
     # locking the game in the db to not allow others to join mid game.
-    room = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
+    room = getRoom(roomId)
     room.locked = True
     db.session.commit()
 
     # Setting the lives of the players and their out of game statuses.
-    playerList = models.Player.query.filter_by(roomId = roomId).all()
+    playerList = getPlayerList(roomId)
     for i in range(len(playerList)):
         playerList[i].lives = 3
         playerList[i].outOfGame = False
@@ -129,9 +138,10 @@ def start_game():
     Action.dealCards(roomId)
 
     # Setting the host as the dealer and current player.
-    roomHost = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first().host
-    room.dealer = roomHost
-    room.currentPlayer = roomHost # Setting now and updating after to reuse code.
+    roomHost = getGameHostId(roomId)
+    room = getRoom(roomId)
+    room.dealerPlayerId = roomHost
+    room.currentPlayerId = roomHost # Setting now and updating after to reuse code.
     db.session.commit()
     emit('setDealer', roomHost, room = roomId)
 
@@ -139,7 +149,7 @@ def start_game():
     Action.updateCurrentPlayer(roomId)
 
     # Extracts the playerData and to send a json.
-    playerList = models.Player.query.filter_by(roomId = roomId).all()
+    playerList = getPlayerList(roomId)
     playersJson = []
     jsonifyPlayerData(playerList, playersJson)
 
@@ -147,17 +157,19 @@ def start_game():
     emit('update player data', playersJson, room = roomId)
 
     # Giving the current player the choice.
-    currentPlayerId = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first().currentPlayer
+    currentPlayerId = getCurrentPlayerId(roomId)
     emit('give player choice', currentPlayerId, room = roomId)
 
 @socketio.on('stick card')
 def stick_card(playerId):
 
+    roomId = session.get('roomId')
+
     # incremements the player as their choice doesn't make a change.
-    incrementPlayerid(getCurrentPlayer(room))
+    Action.updateCurrentPlayer(roomId)
 
     # Gets the player list to extract the playerData and send a json.
-    playerList = gameInstances[str(room)].playerList
+    playerList = getPlayerList(roomId)
 
     # Extracts the playerData and to send a json.
     playersJson = []
@@ -166,10 +178,8 @@ def stick_card(playerId):
     # Updating the player data on client side
     emit('update player data', playersJson, room = room)
 
-    # Setting the new current player
-    currentPlayerId = playerList[getCurrentPlayer(room)].id
-
     # Giving the new current player the choice.
+    currentPlayerId = getCurrentPlayerId(roomId)
     emit('give player choice', currentPlayerId, room = room)
 
 
@@ -188,17 +198,14 @@ def jsonifyPlayerData(playerList, playersJson):
         jsonData = json.dumps(playerData)
         playersJson.append(jsonData)
 
-def incrementPlayerid(currentPlayerNo):
-    playerList = gameInstances[str(room)].playerList
+def getRoom(roomId):
+    return models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
 
-    currentPlayerNo += 1
+def getPlayerList(roomId):
+    return models.Player.query.filter_by(roomId = roomId).all()
 
+def getGameHostId(roomId):
+    return getRoom(roomId).hostPlayerId
 
-    if currentPlayerNo == len(PlayerList):
-        currentPlayerNo = 0
-
-    # Do something with the database
-
-def getCurrentPlayer(room):
-    pass
-    # Do something with the database
+def getCurrentPlayerId(roomId):
+    return getRoom(roomId).currentPlayerId
