@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template, redirect, url_for, session
 import configparser
-from controllers.auth import auth as auth_blueprint
+from ..auth import auth as auth_blueprint
 
 config = configparser.ConfigParser()
 config.read("card_games_website/settings.conf")

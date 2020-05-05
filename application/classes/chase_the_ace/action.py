@@ -1,5 +1,4 @@
-from classes.card import Card
-from classes.player import Player
+from ..card import Card
 import random
 
 class Action():
