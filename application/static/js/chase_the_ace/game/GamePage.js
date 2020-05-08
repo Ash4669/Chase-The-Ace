@@ -108,8 +108,8 @@ var playerCardValue = null;
 var playerCardDisplay = null;
 
 var startButton;
-var playerStickButton;
-var playerTradeButton;
+var stickButton;
+var tradeButton;
 
 
 function writePlayerNames(game) {
@@ -132,25 +132,25 @@ function updateCards(game) {
     }
     console.log(playerCardValue);
     if (playerCardValue != null) {
-        playerCardDisplay = game.add.image(300, 50, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+        playerCardDisplay = game.add.image(340, 80, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
         // FIX CARD PIXELATION
     }
 }
 
 function displayStartButton(game) {
-  startButton = game.add.image(300, 400, "startButton").setOrigin(0, 0);
+  startButton = game.add.image(340, 430, "startButton").setOrigin(0, 0);
   startButton.setDisplaySize(200, 100);
   startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
 }
 
 function displayStickButton(game) {
-  stickButton = game.add.image(175, 400, "stickButton").setOrigin(0, 0);
+  stickButton = game.add.image(215, 430, "stickButton").setOrigin(0, 0);
   stickButton.setDisplaySize(200, 100);
   stickButton.setInteractive().on('pointerdown', () => this.onStickButtonClicked());
 }
 
 function displayTradeButton(game) {
-  tradeButton = game.add.image(425, 400, "tradeButton").setOrigin(0, 0);
+  tradeButton = game.add.image(465, 430, "tradeButton").setOrigin(0, 0);
   tradeButton.setDisplaySize(200, 100);
   tradeButton.setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
 }
@@ -161,13 +161,13 @@ function onStartButtonClicked() {
 }
 
 function onStickButtonClicked() {
-    playerStickButton.destroy();
-    playerTradeButton.destroy();
+    stickButton.destroy();
+    tradeButton.destroy();
     socket.emit('stick card', playerId)
 }
 
 function onTradeButtonClicked() {
-    playerStickButton.destroy();
-    playerTradeButton.destroy();
+    stickButton.destroy();
+    tradeButton.destroy();
     socket.emit('trade card', playerId)
 }

@@ -44,3 +44,24 @@ class Action():
                 room.currentPlayerId = nextPlayerId
                 break
         db.session.commit()
+
+    def tradeCards(roomId):
+
+        # Retrieving the list of players and the room data.
+        playerList = models.Player.query.filter_by(roomId = roomId).all()
+        room = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
+
+        for i in range(len(playerList)):
+            player = playerList[i]
+
+            # Getting the generated id of the player next to the dealer.
+            if player.generatedPlayerId == room.currentPlayerId:
+                if i == len(playerList) - 1:
+                    i -= len(playerList)
+                nextPlayer = playerList[i+1]
+                playerCard = player.card
+                nextPlayerCard = nextPlayer.card
+                player.card = nextPlayerCard
+                nextPlayer.card = playerCard
+                break
+        db.session.commit()

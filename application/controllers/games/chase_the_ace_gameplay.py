@@ -20,7 +20,7 @@ def generatePlayerId():
 
 # Initialisation of the game room.
 @socketio.on('host game send')
-def generate_and_host_redirect():
+def generateAndHostRedirect():
 
     # Generate a game id.
     roomId = generateRoomId()
@@ -41,7 +41,7 @@ def generate_and_host_redirect():
 
 # Managing players joining the game.
 @socketio.on('join chase the ace')
-def on_join():
+def onJoin():
 
     # Generating a player id for the player.
     session['playerId'] = generatePlayerId()
@@ -85,7 +85,7 @@ def on_join():
     emit('update chase the ace playerList', playerNames, room = roomId)
 
 @socketio.on('quit chase the ace')
-def on_quit():
+def onQuit():
 
     # Pulling game id, player id and player name from session.
     roomId = session.get('roomId')
@@ -97,7 +97,6 @@ def on_quit():
     if playerId == hostId:
         # Emit the redirect for the client to redirect with javascript.
         emit('close game', {'url': url_for('chase_the_ace.chase_the_ace_index')})
-
 
     # Remove the player from playerList that matches their player id.
     quittingPlayer = models.Player.query.filter_by(userId = userId, roomId = roomId, generatedPlayerId = playerId, name = playerName).one()
@@ -118,7 +117,7 @@ def on_quit():
 
 
 @socketio.on('start game')
-def start_game():
+def startGame():
 
     roomId = session.get('roomId')
 
@@ -161,7 +160,7 @@ def start_game():
     emit('give player choice', currentPlayerId, room = roomId)
 
 @socketio.on('stick card')
-def stick_card(playerId):
+def stickCard(playerId):
 
     roomId = session.get('roomId')
 
@@ -176,11 +175,37 @@ def stick_card(playerId):
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
-    emit('update player data', playersJson, room = room)
+    emit('update player data', playersJson, room = roomId)
 
     # Giving the new current player the choice.
     currentPlayerId = getCurrentPlayerId(roomId)
-    emit('give player choice', currentPlayerId, room = room)
+    emit('give player choice', currentPlayerId, room = roomId)
+
+
+@socketio.on('trade card')
+def tradeCard(arg):
+
+    roomId = session.get('roomId')
+
+    # Trades cards with the next person in the game.
+    Action.tradeCards(roomId)
+
+    # Incremements the player as their choice doesn't make a change.
+    Action.updateCurrentPlayer(roomId)
+
+    # Gets the player list to extract the playerData and send a json.
+    playerList = getPlayerList(roomId)
+
+    # Extracts the playerData and to send a json.
+    playersJson = []
+    jsonifyPlayerData(playerList, playersJson)
+
+    # Updating the player data on client side
+    emit('update player data', playersJson, room = roomId)
+
+    # Giving the new current player the choice.
+    currentPlayerId = getCurrentPlayerId(roomId)
+    emit('give player choice', currentPlayerId, room = roomId)
 
 
 # Extract methods into a global methods file.
