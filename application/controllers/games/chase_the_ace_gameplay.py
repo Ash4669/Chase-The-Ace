@@ -1,14 +1,10 @@
 from flask import url_for, session
-from __main__ import socketio
-from __main__ import send, emit
-from __main__ import join_room, leave_room
+from ... import socketio, send, emit, join_room, leave_room
 import random
 from flask_login import current_user
-import models
-from app import db
-from classes.Room import Room
-from classes.player import Player
-from classes.chase_the_ace.action import Action
+from ... import models
+from ... import db
+from ...classes.chase_the_ace.action import Action
 import string
 import json
 

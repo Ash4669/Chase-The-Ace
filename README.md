@@ -25,8 +25,10 @@ Note: might need to comment out chase the ace imports in the blueprints in app.p
 
 - install windows visual studio and C++ build tools inside it.
 (Windows Python needs Visual C++ libraries installed via the SDK to build code, such as via setuptools.extension.Extension or numpy.distutils.core.Extension. On Linux and Mac, the C++ libraries are installed with the compiler.)
+- install pytest to run unit tests.
 
 > Notes about SocketIO
+
 https://socket.io/docs/emit-cheatsheet/
 https://socket.io/get-started/chat
 - For server side javascript:

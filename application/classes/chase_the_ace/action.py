@@ -1,8 +1,7 @@
-from classes.card import Card
-from classes.player import Player
+from ..card import Card
 import random
-import models
-from app import db
+from ... import models
+from ... import db
 
 class Action():
 
@@ -71,5 +70,5 @@ class Action():
                 player.card = nextPlayerCard
                 nextPlayer.card = playerCard
                 break
-                
+
         db.session.commit()

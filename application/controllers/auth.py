@@ -3,8 +3,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
-import models
-from app import db
+from .. import models
+from .. import db
 
 auth = Blueprint('auth', __name__)
 
@@ -56,7 +56,7 @@ def login_post():
     password = request.form.get('password')
     username = request.form.get('username')
     remember = True if request.form.get('remember') else False
-    # Investigate above remmber to see if it works. Also look at remembering credentials, not keeping thme signed in. Put two separate checkboxes?
+    # Investigate above remember to see if it works. Also look at remembering credentials, not keeping thme signed in. Put two separate checkboxes?
 
     user = models.User.query.filter_by(email = email).first()
 
