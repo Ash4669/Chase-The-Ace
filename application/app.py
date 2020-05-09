@@ -10,7 +10,7 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 
 
 config = configparser.ConfigParser()
-config.read("settings.conf")
+config.read("../settings.conf")
 
 app = Flask(__name__)
 
@@ -57,9 +57,9 @@ app.register_blueprint(chase_the_ace_blueprint)
 from controllers.games.shed import shed as shed_blueprint
 app.register_blueprint(shed_blueprint)
 
-
 # Game sockets import game mechanics and socketio listeners.
 from controllers.games import chase_the_ace_gameplay
+
 
 @socketio.on('connect')
 def handle_my_connect_event():
