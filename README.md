@@ -55,3 +55,16 @@ When game starts, lock down joining.
 When someone quits, they are deleted from the database
 When host quits, boot everyone
 When person wins, if signed in, add one to their count with their userId.
+
+> Functionality left to implement
+
+- Cut for the dealer
+- Saying you're the dealer when you are.
+- passing over to the next dealer and deleting last one.
+- Checking who the winner is per round and taking off a life.
+- Displaying of lives.
+- Selection for how many lives you want
+- Displaying whos go it is on player list.
+- Awarding score for winner if they are signed in.
+- Displaying a next round screen and a count down.
+- Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
