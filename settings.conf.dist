@@ -7,3 +7,7 @@ key: key
 secret: secret
 cluster: cluster
 ssl: ssl
+
+[SQLALCHEMY]
+secret_key: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+sqlalchemy_database_uri: sample_uri

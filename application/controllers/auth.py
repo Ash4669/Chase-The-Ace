@@ -56,13 +56,15 @@ def login_post():
     password = request.form.get('password')
     username = request.form.get('username')
     remember = True if request.form.get('remember') else False
+    # Investigate above remember to see if it works. Also look at remembering credentials, not keeping thme signed in. Put two separate checkboxes?
 
     user = models.User.query.filter_by(email = email).first()
 
     if user:
         if check_password_hash(user.password, password):
             login_user(user, remember = remember)
-            session['playerName'] = current_user.firstName + ' ' + current_user.lastName
+            session['userFullName'] = current_user.firstName + ' ' + current_user.lastName
+            session['userId'] = current_user.id
             return redirect(url_for('main.profile'))
         else:
             flash('Incorrect password')
