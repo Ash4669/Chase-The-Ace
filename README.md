@@ -18,8 +18,8 @@
 - use "export FLASK_APP=project_folder_name" for mac, "set FLASK_APP=project_folder_name" for command line or "$env:FLASK_APP='foo'" for powershell. I believe this is correct.
 - Create the database using the following python code in the python REPL.
 ```
->>> from app.py import db
->>> db.create_all()
+>>> from application import db, create_all
+>>> db.create_all(app=create_app())
 ```
 Note: might need to comment out chase the ace imports in the blueprints in app.py. This requires running __main__ variable and it can't be imported. Easier to comment out for creation.
 
