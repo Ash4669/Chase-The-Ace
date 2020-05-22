@@ -4,3 +4,4 @@ settings.conf
 db.sqlite
 .pyc
 .DS_Store
+.idea/
