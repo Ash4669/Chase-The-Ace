@@ -179,7 +179,7 @@ def stickCard(playerId):
 
 
 @socketio.on('trade card')
-def tradeCard(arg):
+def tradeCard():
 
     roomId = session.get('roomId')
 

@@ -2,6 +2,7 @@ from ..card import Card
 import random
 from ... import models
 from ... import db
+from ast import literal_eval
 
 class Action():
 
@@ -15,6 +16,7 @@ class Action():
 
         # Retrieving the list of players.
         playerList = models.Player.query.filter_by(roomId = roomId).all()
+        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
 
         # If the player isn't out of the game, then give them the top card off the deck.
         for player in playerList:
@@ -23,32 +25,37 @@ class Action():
             else:
                 player.card = None
 
+        # Store a serialised version of the deck for later use.
+        room.deck = repr(currentDeck)
+
         # Commit changes
         db.session.commit()
 
     def updateCurrentPlayer(roomId):
 
         # Retrieving the list of players and the room data.
-        playerList = models.Player.query.filter_by(roomId = roomId).all()
-        room = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
+        playerList = models.Player.query.filter_by(roomId=roomId).all()
+        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
 
         for i in range(len(playerList)):
             player = playerList[i]
 
-            # Getting the generated id of the player next to the dealer.
+            # Getting the generated id of the player next to the current player.
             if player.generatedPlayerId == room.currentPlayerId:
                 if i == len(playerList) - 1:
                     i -= len(playerList)
                 nextPlayerId = playerList[i+1].generatedPlayerId
                 room.currentPlayerId = nextPlayerId
                 break
+
+        # Commit changes
         db.session.commit()
 
     def tradeCards(roomId):
 
         # Retrieving the list of players and the room data.
-        playerList = models.Player.query.filter_by(roomId = roomId).all()
-        room = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
+        playerList = models.Player.query.filter_by(roomId=roomId).all()
+        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
 
         for i in range(len(playerList)):
             # Getting the current player.
@@ -71,4 +78,27 @@ class Action():
                 nextPlayer.card = playerCard
                 break
 
+        # Commit changes
         db.session.commit()
+
+    def cutTheDeck(roomId):
+
+        # Retrieving the list of players and the room data.
+        playerList = models.Player.query.filter_by(roomId=roomId).all()
+        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
+
+        # Retrieve the current deck.
+        currentDeck = room.deck
+
+        # Loop over all players, find the dealer give them a new card of the top of the deck.
+        for i in range(len(playerList)):
+            player = playerList[i]
+
+            if player.generatedPlayerId == room.dealerPlayerId:
+                player.card = currentDeck.pop(0)
+                break
+
+        # Commit changes
+        db.session.commit()
+
+

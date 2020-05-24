@@ -30,3 +30,4 @@ class Room(db.Model):
     currentPlayerId = db.Column(db.String(100))
     dealerPlayerId = db.Column(db.String(100))
     locked = db.Column(db.Boolean)
+    deck = db.column(db.String(1000))
