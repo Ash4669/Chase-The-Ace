@@ -113,7 +113,7 @@ class GamePage extends Phaser.Scene {
             // Reveal all cards
             displayAllPlayerCards(gamePage, playerData)
 
-            emit('calculate winner')
+            socket.emit('calculate winner')
 
         })
 
@@ -171,18 +171,11 @@ function updateCards(game) {
 }
 
 function displayAllPlayerCards(game, playerData) {
-    try {
-      playerCardDisplay.destroy();
-    } catch (e) {
-      console.log("card not set yet.");
-    }
-    console.log(playerCardValue);
     if (playerCardValue != null) {
-    console.log(playerData)
-    console.log(playerData[0])
 
         for (var i = 0; i < playerNames.length; i++) {
-            allPlayerCardDisplays[i] = game.add.image(820, 50 + (i * 40), playerData[i].card).setDisplaySize(20, 32);
+            playerCard = JSON.parse(playerData[i]).card
+            allPlayerCardDisplays[i] = game.add.image(800, 60 + (i * 40), playerCard).setDisplaySize(20, 32);
         }
         // FIX CARD PIXELATION
     }
