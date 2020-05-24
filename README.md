@@ -60,7 +60,7 @@ When person wins, if signed in, add one to their count with their userId.
 
 > Functionality left to implement
 
-- Cut for the dealer
+- Cut for the dealer - Need to find way to pass cards through or use database. Give options to choose the card they want to cut? A button from 1 to 52 - len(players) for them to choose their card?
 - Saying you're the dealer when you are.
 - passing over to the next dealer and deleting last one.
 - Checking who the winner is per round and taking off a life.

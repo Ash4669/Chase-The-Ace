@@ -156,7 +156,7 @@ def startGame():
     emit('give player choice', currentPlayerId, room = roomId)
 
 @socketio.on('stick card')
-def stickCard(playerId):
+def stickCard():
 
     roomId = session.get('roomId')
 
@@ -177,9 +177,8 @@ def stickCard(playerId):
     currentPlayerId = getCurrentPlayerId(roomId)
     emit('give player choice', currentPlayerId, room = roomId)
 
-
 @socketio.on('trade card')
-def tradeCard(arg):
+def tradeCard():
 
     roomId = session.get('roomId')
 
@@ -203,6 +202,31 @@ def tradeCard(arg):
     currentPlayerId = getCurrentPlayerId(roomId)
     emit('give player choice', currentPlayerId, room = roomId)
 
+@socketio.on('cut card')
+def tradeCard():
+
+    roomId = session.get('roomId')
+
+    # Trades cards with the next person in the game.
+    Action.cutCard(roomId)
+
+    # Incremements the player as their choice doesn't make a change.
+    Action.updateCurrentPlayer(roomId)
+
+    # Gets the player list to extract the playerData and send a json.
+    playerList = getPlayerList(roomId)
+
+    # Extracts the playerData and to send a json.
+    playersJson = []
+    jsonifyPlayerData(playerList, playersJson)
+
+    # Updating the player data on client side
+    emit('update player data', playersJson, room = roomId)
+
+
+@socketio.on('start new round')
+def newRound():
+    pass
 
 # Extract methods into a global methods file.
 
