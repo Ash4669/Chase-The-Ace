@@ -203,12 +203,12 @@ def tradeCard():
     emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('cut card')
-def tradeCard():
+def cutCard():
 
     roomId = session.get('roomId')
 
     # Trades cards with the next person in the game.
-    Action.cutCard(roomId)
+    Action.cutTheDeck(roomId)
 
     # Increments the player as their choice doesn't make a change.
     Action.updateCurrentPlayer(roomId)

@@ -13,7 +13,7 @@ class GamePage extends Phaser.Scene {
         this.load.image("startButton","../../static/images/playbutton.png");
         this.load.image("stickButton","../../static/images/playbutton.png");
         this.load.image("tradeButton","../../static/images/optionsbutton.png");
-        this.load.image("cutButton","../../static/images/optionsbutton.png");
+        this.load.image("cutButton","../../static/images/cutButton.png");
 
         for (var i = 0; i < suits.length; i++)
         {
@@ -29,7 +29,6 @@ class GamePage extends Phaser.Scene {
         const gamepage = this;
         self.socket = io();
         var hostId = null;
-        var dealerId = null;
 
         // Setting up the initial game screen: Background, players and player title.
         var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
@@ -50,8 +49,8 @@ class GamePage extends Phaser.Scene {
             }
         });
 
-        socket.on('setDealer', function(dealerId){
-            this.dealerId = dealerId;
+        socket.on('setDealer', function(response){
+            dealerId = response;
         });
 
         socket.on('close game', function(data){
@@ -64,7 +63,7 @@ class GamePage extends Phaser.Scene {
 
         socket.on('joined chase the ace announcement', function(response){
             console.log(response);
-            // need to have popup for a few seconds and destory it.
+            // need to have popup for a few seconds and destroy it.
         })
 
         socket.on('update chase the ace playerList', function(response){
@@ -93,7 +92,9 @@ class GamePage extends Phaser.Scene {
         {
             if (currentPlayerId == playerId)
             {
-                if (currentPlayerId == this.dealerId)
+            console.log(dealerId)
+            console.log(playerId)
+                if (currentPlayerId == dealerId)
                 {
                     displayStickButton(gamepage);
                     displayCutButton(gamepage);
@@ -118,6 +119,7 @@ var playerNames = new Array();
 var playerNamesVariables = new Array();
 
 var playerId = null;
+var dealerId = null;
 var playerCardValue = null;
 var playerCardDisplay = null;
 
@@ -125,7 +127,6 @@ var startButton;
 var stickButton;
 var tradeButton;
 var cutButton;
-
 
 function writePlayerNames(game) {
     for (var i = 0; i < playerNames.length; i++) {
@@ -181,23 +182,27 @@ function onStartButtonClicked() {
     socket.emit('start game');
 }
 
-function onStickButtonClicked() {
+function onStickButtonClicked(game) {
     stickButton.destroy();
-    tradeButton.destroy();
-    socket.emit('stick card', playerId)
-    if (playerId == dealerId) {
-        //  Need something for ending the game for final stick or cut
+    if (playerId == dealerId){
+        cutButton.destroy();
+    } else {
+        tradeButton.destroy();
     }
+    socket.emit('stick card')
+//    if (playerId == dealerId) {
+//        //  Need something for ending the game for final stick or cut
+//    }
 }
 
 function onTradeButtonClicked() {
     stickButton.destroy();
     tradeButton.destroy();
-    socket.emit('trade card', playerId)
+    socket.emit('trade card')
 }
 
 function onCutButtonClicked() {
     stickButton.destroy();
     cutButton.destroy();
-    socket.emit('cut card', playerId)
+    socket.emit('cut card')
 }
