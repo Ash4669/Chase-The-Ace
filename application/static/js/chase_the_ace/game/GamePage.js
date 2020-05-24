@@ -26,7 +26,7 @@ class GamePage extends Phaser.Scene {
     create(){
 
         // Lobbying
-        const gamepage = this;
+        const gamePage = this;
         self.socket = io();
         var hostId = null;
 
@@ -45,7 +45,7 @@ class GamePage extends Phaser.Scene {
             this.hostId = hostId
             if (playerId == this.hostId)
             {
-                displayStartButton(gamepage);
+                displayStartButton(gamePage);
             }
         });
 
@@ -72,7 +72,7 @@ class GamePage extends Phaser.Scene {
 
             // Reupdate the player names
             deletePlayerNames();
-            writePlayerNames(gamepage);
+            writePlayerNames(gamePage);
         })
 
         socket.on('update player data', function(playerJson)
@@ -85,26 +85,42 @@ class GamePage extends Phaser.Scene {
                     playerCardValue = playerData.card;
                 }
             }
-            updateCards(gamepage);
+            updateCards(gamePage);
         })
 
         socket.on('give player choice', function(currentPlayerId)
         {
             if (currentPlayerId == playerId)
             {
-            console.log(dealerId)
-            console.log(playerId)
                 if (currentPlayerId == dealerId)
                 {
-                    displayStickButton(gamepage);
-                    displayCutButton(gamepage);
+                    displayStickButton(gamePage);
+                    displayCutButton(gamePage);
                 }
                 else
                 {
-                    displayStickButton(gamepage);
-                    displayTradeButton(gamepage);
+                    displayStickButton(gamePage);
+                    displayTradeButton(gamePage);
                 }
             }
+        })
+
+        socket.on('reveal cards and trigger results', function(playerData)
+        {
+            console.log('doing alright so far.')
+
+
+            // Reveal all cards
+            displayAllPlayerCards(gamePage, playerData)
+
+            emit('calculate winner')
+
+        })
+
+        socket.on('display new round button', function()
+        {
+//            display winner, display updated lives, display start button for dealer
+//            on start button click, delete all card images in front of names and main card on page.
         })
     }
 }
@@ -117,6 +133,7 @@ function quit() {
 
 var playerNames = new Array();
 var playerNamesVariables = new Array();
+var allPlayerCardDisplays = new Array();
 
 var playerId = null;
 var dealerId = null;
@@ -149,6 +166,24 @@ function updateCards(game) {
     console.log(playerCardValue);
     if (playerCardValue != null) {
         playerCardDisplay = game.add.image(340, 80, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+        // FIX CARD PIXELATION
+    }
+}
+
+function displayAllPlayerCards(game, playerData) {
+    try {
+      playerCardDisplay.destroy();
+    } catch (e) {
+      console.log("card not set yet.");
+    }
+    console.log(playerCardValue);
+    if (playerCardValue != null) {
+    console.log(playerData)
+    console.log(playerData[0])
+
+        for (var i = 0; i < playerNames.length; i++) {
+            allPlayerCardDisplays[i] = game.add.image(820, 50 + (i * 40), playerData[i].card).setDisplaySize(20, 32);
+        }
         // FIX CARD PIXELATION
     }
 }
@@ -190,9 +225,6 @@ function onStickButtonClicked(game) {
         tradeButton.destroy();
     }
     socket.emit('stick card')
-//    if (playerId == dealerId) {
-//        //  Need something for ending the game for final stick or cut
-//    }
 }
 
 function onTradeButtonClicked() {

@@ -159,8 +159,10 @@ def startGame():
 def stickCard():
 
     roomId = session.get('roomId')
+    currentPlayerId = getCurrentPlayerId(roomId)
+    dealerId = getDealerId(roomId)
 
-    # incremements the player as their choice doesn't make a change.
+    # increments the player as their choice doesn't make a change.
     Action.updateCurrentPlayer(roomId)
 
     # Gets the player list to extract the playerData and send a json.
@@ -171,11 +173,15 @@ def stickCard():
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
-    emit('update player data', playersJson, room = roomId)
+    emit('update player data', playersJson, room=roomId)
 
-    # Giving the new current player the choice.
-    currentPlayerId = getCurrentPlayerId(roomId)
-    emit('give player choice', currentPlayerId, room = roomId)
+    updatedCurrentPlayerId = getCurrentPlayerId(roomId)
+    if currentPlayerId == dealerId:
+        # Dealer just stuck so end round.
+        emit('reveal cards and trigger results', playersJson, room=roomId)
+    else:
+        # Giving the new current player the choice.
+        emit('give player choice', updatedCurrentPlayerId, room=roomId)
 
 @socketio.on('trade card')
 def tradeCard():
@@ -223,10 +229,14 @@ def cutCard():
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
 
+    # Dealer just stuck so end round.
+    emit('reveal cards and trigger results', playersJson, room=roomId)
 
-@socketio.on('start new round')
-def newRound():
+@socketio.on('calculate winner')
+def calculateWinner():
     pass
+    # calculate winner, calculate lives, change dealer, send display start button
+    # emit('display new round button')
 
 # Extract methods into a global methods file.
 
@@ -254,3 +264,6 @@ def getGameHostId(roomId):
 
 def getCurrentPlayerId(roomId):
     return getRoom(roomId).currentPlayerId
+
+def getDealerId(roomId):
+    return getRoom(roomId).dealerPlayerId
