@@ -11,8 +11,9 @@ class GamePage extends Phaser.Scene {
         // Loading the game buttons, background and all of the cards.
         this.load.image("casinoRoom", "../../static/images/greentable1.jpg");
         this.load.image("startButton","../../static/images/playbutton.png");
-        this.load.image("tradeButton","../../static/images/playbutton.png");
-        this.load.image("stickButton","../../static/images/optionsbutton.png");
+        this.load.image("stickButton","../../static/images/playbutton.png");
+        this.load.image("tradeButton","../../static/images/optionsbutton.png");
+        this.load.image("cutButton","../../static/images/optionsbutton.png");
 
         for (var i = 0; i < suits.length; i++)
         {
@@ -28,6 +29,7 @@ class GamePage extends Phaser.Scene {
         const gamepage = this;
         self.socket = io();
         var hostId = null;
+        var dealerId = null;
 
         // Setting up the initial game screen: Background, players and player title.
         var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
@@ -46,6 +48,10 @@ class GamePage extends Phaser.Scene {
             {
                 displayStartButton(gamepage);
             }
+        });
+
+        socket.on('setDealer', function(dealerId){
+            this.dealerId = dealerId;
         });
 
         socket.on('close game', function(data){
@@ -87,8 +93,16 @@ class GamePage extends Phaser.Scene {
         {
             if (currentPlayerId == playerId)
             {
-                displayStickButton(gamepage);
-                displayTradeButton(gamepage);
+                if (currentPlayerId == this.dealerId)
+                {
+                    displayStickButton(gamepage);
+                    displayCutButton(gamepage);
+                }
+                else
+                {
+                    displayStickButton(gamepage);
+                    displayTradeButton(gamepage);
+                }
             }
         })
     }
@@ -110,6 +124,7 @@ var playerCardDisplay = null;
 var startButton;
 var stickButton;
 var tradeButton;
+var cutButton;
 
 
 function writePlayerNames(game) {
@@ -155,6 +170,12 @@ function displayTradeButton(game) {
   tradeButton.setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
 }
 
+function displayCutButton(game) {
+  cutButton = game.add.image(465, 430, "cutButton").setOrigin(0, 0);
+  cutButton.setDisplaySize(200, 100);
+  cutButton.setInteractive().on('pointerdown', () => this.onCutButtonClicked());
+}
+
 function onStartButtonClicked() {
     startButton.destroy();
     socket.emit('start game');
@@ -164,10 +185,19 @@ function onStickButtonClicked() {
     stickButton.destroy();
     tradeButton.destroy();
     socket.emit('stick card', playerId)
+    if (playerId == dealerId) {
+        //  Need something for ending the game for final stick or cut
+    }
 }
 
 function onTradeButtonClicked() {
     stickButton.destroy();
     tradeButton.destroy();
     socket.emit('trade card', playerId)
+}
+
+function onCutButtonClicked() {
+    stickButton.destroy();
+    cutButton.destroy();
+    socket.emit('cut card', playerId)
 }

@@ -88,7 +88,7 @@ class Action():
         room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
 
         # Retrieve the current deck.
-        currentDeck = room.deck
+        currentDeck = literal_eval(room.deck)
 
         # Loop over all players, find the dealer give them a new card of the top of the deck.
         for i in range(len(playerList)):
@@ -100,5 +100,3 @@ class Action():
 
         # Commit changes
         db.session.commit()
-
-
