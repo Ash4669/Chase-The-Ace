@@ -196,11 +196,11 @@ def tradeCard():
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
-    emit('update player data', playersJson, room = roomId)
+    emit('update player data', playersJson, room=roomId)
 
     # Giving the new current player the choice.
     currentPlayerId = getCurrentPlayerId(roomId)
-    emit('give player choice', currentPlayerId, room = roomId)
+    emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('cut card')
 def tradeCard():
@@ -210,7 +210,7 @@ def tradeCard():
     # Trades cards with the next person in the game.
     Action.cutCard(roomId)
 
-    # Incremements the player as their choice doesn't make a change.
+    # Increments the player as their choice doesn't make a change.
     Action.updateCurrentPlayer(roomId)
 
     # Gets the player list to extract the playerData and send a json.
@@ -221,7 +221,7 @@ def tradeCard():
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
-    emit('update player data', playersJson, room = roomId)
+    emit('update player data', playersJson, room=roomId)
 
 
 @socketio.on('start new round')
