@@ -14,6 +14,8 @@ class GamePage extends Phaser.Scene {
         this.load.image("stickButton","../../static/images/playbutton.png");
         this.load.image("tradeButton","../../static/images/optionsbutton.png");
         this.load.image("cutButton","../../static/images/cutButton.png");
+        this.load.image("heart","../../static/images/heart.png");
+        this.load.image("emptyHeart","../../static/images/heart-empty.png");
 
         for (var i = 0; i < suits.length; i++)
         {
@@ -146,7 +148,11 @@ var playerId = null;
 var dealerId = null;
 var playerCardValue = null;
 var playerCardDisplay = null;
+var playerLivesDisplay = new Array();
 var playerLives = null;
+var maxPlayerLives = 3;
+
+//if the dealer then blank out the card - display the face down card.
 
 var startButton;
 var stickButton;
@@ -178,14 +184,25 @@ function updateCards(game) {
 }
 
 function updateLives(game) {
-    try {
-//      playerCardDisplay.destroy();
-    } catch (e) {
-      console.log("card not set yet.");
+    try
+    {
+        for (var i = 0; i < maxPlayerLives; i++)
+        {
+            playerLivesDisplay[i].destroy();
+        }
+    } catch (e)
+    {
+      console.log("lives not set yet.");
     }
-    if (playerCardValue != null) {
-//        playerCardDisplay = game.add.image(340, 80, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
-        // FIX CARD PIXELATION
+    for (var i = 0; i < maxPlayerLives; i++)
+    {
+        if (i < playerLives)
+        {
+            playerLivesDisplay[i] = game.add.image(40 + (i * 50), 40, 'heart').setDisplaySize(40, 40);
+        } else
+        {
+            playerLivesDisplay[i] = game.add.image(40 + (i * 50), 40, 'emptyHeart').setDisplaySize(40, 40);
+        }
     }
 }
 
@@ -196,7 +213,6 @@ function displayAllPlayerCards(game, playerData) {
             playerCard = JSON.parse(playerData[i]).card
             allPlayerCardDisplays[i] = game.add.image(800, 60 + (i * 40), playerCard).setDisplaySize(20, 32);
         }
-        // FIX CARD PIXELATION
     }
 }
 

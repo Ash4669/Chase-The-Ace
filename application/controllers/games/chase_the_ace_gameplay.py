@@ -153,6 +153,7 @@ def startGame():
 
     # Updating the player data on client side
     emit('update player data', playersJson, room = roomId)
+    emit('update player lives', playersJson, room = roomId)
 
     # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
@@ -183,7 +184,7 @@ def stickCard():
         # Dealer just stuck so end round.
         emit('reveal cards and trigger results', playersJson, room=roomId)
 
-        endRound(roomId, playersJson)
+        endRound(roomId)
     else:
         # Giving the new current player the choice.
         emit('give player choice', updatedCurrentPlayerId, room=roomId)
@@ -237,7 +238,7 @@ def cutCard():
     # Dealer just stuck so end round.
     emit('reveal cards and trigger results', playersJson, room=roomId)
 
-    endRound(roomId, playersJson)
+    endRound(roomId)
 
 # Check signing in quickly and going straight to a game with the url to check an error, but probably wouldn't happen.
 def jsonifyPlayerData(playerList, playersJson):
@@ -252,15 +253,23 @@ def jsonifyPlayerData(playerList, playersJson):
         jsonData = json.dumps(playerData)
         playersJson.append(jsonData)
 
-def endRound(roomId, playersJson):
+def endRound(roomId):
     # Calculate the winner and adjust lives accordingly.
     Action.calculateWinner(roomId)
+
+    # Extracts the playerData and to send a json.
+    playerList = dbUtils.getPlayerList(roomId)
+    playersJson = []
+    jsonifyPlayerData(playerList, playersJson)
 
     # Update players with their live count.
     emit('update player lives', playersJson, room=roomId)
 
     # Display new round button for the player to the left.
     emit('display new round button')
+
+
+
 
     #     NEED TO UPDATE DEALER AND START NEW ROUND (GO BACK INTO THE LOOP AFTER NEW ROUND BUTTON CLICK)
 
