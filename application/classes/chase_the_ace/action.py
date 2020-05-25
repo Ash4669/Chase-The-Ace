@@ -1,8 +1,10 @@
 from ..card import Card
 import random
-from ... import models
 from ... import db
+from .databaseUtils import DatabaseUtils
 from ast import literal_eval
+
+dbUtils = DatabaseUtils()
 
 class Action():
 
@@ -15,8 +17,8 @@ class Action():
         random.shuffle(currentDeck)
 
         # Retrieving the list of players.
-        playerList = models.Player.query.filter_by(roomId = roomId).all()
-        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
 
         # If the player isn't out of the game, then give them the top card off the deck.
         for player in playerList:
@@ -34,8 +36,8 @@ class Action():
     def updateCurrentPlayer(roomId):
 
         # Retrieving the list of players and the room data.
-        playerList = models.Player.query.filter_by(roomId=roomId).all()
-        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
 
         for i in range(len(playerList)):
             player = playerList[i]
@@ -54,8 +56,8 @@ class Action():
     def tradeCards(roomId):
 
         # Retrieving the list of players and the room data.
-        playerList = models.Player.query.filter_by(roomId=roomId).all()
-        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
 
         for i in range(len(playerList)):
             # Getting the current player.
@@ -84,8 +86,8 @@ class Action():
     def cutTheDeck(roomId):
 
         # Retrieving the list of players and the room data.
-        playerList = models.Player.query.filter_by(roomId=roomId).all()
-        room = models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
 
         # Retrieve the current deck.
         currentDeck = literal_eval(room.deck)
@@ -100,3 +102,33 @@ class Action():
 
         # Commit changes
         db.session.commit()
+
+    def calculateWinner(roomId):
+        playerList = dbUtils.getPlayerList(roomId)
+
+        idsAndCards = {}
+
+        for i in range(len(playerList)):
+            card = playerList[i].card
+            id = playerList[i].generatedPlayerId
+
+            if 'ace' in card:
+                idsAndCards[id] = 1
+            elif 'jack' in card:
+                idsAndCards[id] = 11
+            elif 'queen' in card:
+                idsAndCards[id] = 12
+            elif 'king' in card:
+                idsAndCards[id] = 13
+            elif '10' in card:
+                idsAndCards[id] = 10
+            else:
+                idsAndCards[id] = int(card[0])
+
+        minimumCardValue = idsAndCards[min(idsAndCards.keys(), key=(lambda k: idsAndCards[k]))]
+
+        losingPlayerIds = []
+        for playerId, cardValue in idsAndCards.items():
+            if cardValue == minimumCardValue:
+                dbUtils.getSpecificPlayer(roomId, playerId).lives -= 1;
+                db.session.commit()

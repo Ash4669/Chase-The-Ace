@@ -6,7 +6,7 @@ class GamePage extends Phaser.Scene {
     {
         // Setting up suits and cards numbers to loop over for loading.
         const suits = ["Clubs", "Spades", "Hearts", "Diamonds"];
-        const numbers = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10","Jack", "Queen", "King"];
+        const numbers = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10","jack", "queen", "king"];
 
         // Loading the game buttons, background and all of the cards.
         this.load.image("casinoRoom", "../../static/images/greentable1.jpg");
@@ -88,6 +88,19 @@ class GamePage extends Phaser.Scene {
             updateCards(gamePage);
         })
 
+        socket.on('update player lives', function(playerJson)
+        {
+            for (var i = 0; i < playerNames.length; i++)
+            {
+                var playerData = JSON.parse(playerJson[i])
+                if (playerData.id == playerId)
+                {
+                    playerLives = playerData.lives;
+                }
+            }
+            updateLives(gamePage);
+        })
+
         socket.on('give player choice', function(currentPlayerId)
         {
             if (currentPlayerId == playerId)
@@ -107,14 +120,8 @@ class GamePage extends Phaser.Scene {
 
         socket.on('reveal cards and trigger results', function(playerData)
         {
-            console.log('doing alright so far.')
-
-
             // Reveal all cards
             displayAllPlayerCards(gamePage, playerData)
-
-            socket.emit('calculate winner')
-
         })
 
         socket.on('display new round button', function()
@@ -139,6 +146,7 @@ var playerId = null;
 var dealerId = null;
 var playerCardValue = null;
 var playerCardDisplay = null;
+var playerLives = null;
 
 var startButton;
 var stickButton;
@@ -163,9 +171,20 @@ function updateCards(game) {
     } catch (e) {
       console.log("card not set yet.");
     }
-    console.log(playerCardValue);
     if (playerCardValue != null) {
         playerCardDisplay = game.add.image(340, 80, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+        // FIX CARD PIXELATION
+    }
+}
+
+function updateLives(game) {
+    try {
+//      playerCardDisplay.destroy();
+    } catch (e) {
+      console.log("card not set yet.");
+    }
+    if (playerCardValue != null) {
+//        playerCardDisplay = game.add.image(340, 80, playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
         // FIX CARD PIXELATION
     }
 }
