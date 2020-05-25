@@ -53,6 +53,26 @@ class Action():
         # Commit changes
         db.session.commit()
 
+    def updateCurrentDealer(roomId):
+
+        # Retrieving the list of players and the room data.
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
+
+        for i in range(len(playerList)):
+            player = playerList[i]
+
+            # Getting the generated id of the player next to the current dealer.
+            if player.generatedPlayerId == room.dealerPlayerId:
+                if i == len(playerList) - 1:
+                    i -= len(playerList)
+                nextPlayerId = playerList[i+1].generatedPlayerId
+                room.dealerPlayerId = nextPlayerId
+                break
+
+        # Commit changes
+        db.session.commit()
+
     def tradeCards(roomId):
 
         # Retrieving the list of players and the room data.

@@ -128,6 +128,10 @@ class GamePage extends Phaser.Scene {
 
         socket.on('display new round button', function()
         {
+            if (playerId == dealerId)
+            {
+                displayStartButton(gamePage);
+            }
 //            display winner, display updated lives, display start button for dealer
 //            on start button click, delete all card images in front of names and main card on page.
         })
@@ -208,7 +212,6 @@ function updateLives(game) {
 
 function displayAllPlayerCards(game, playerData) {
     if (playerCardValue != null) {
-
         for (var i = 0; i < playerNames.length; i++) {
             playerCard = JSON.parse(playerData[i]).card
             allPlayerCardDisplays[i] = game.add.image(800, 60 + (i * 40), playerCard).setDisplaySize(20, 32);
@@ -243,6 +246,15 @@ function displayCutButton(game) {
 function onStartButtonClicked() {
     startButton.destroy();
     socket.emit('start game');
+    try {
+        for (var i = 0; i < playerNames.length; i++)
+        {
+            allPlayerCardDisplays[i].destroy();
+        }
+    } catch (e)
+    {
+      console.log("all player cards not set yet.");
+    }
 }
 
 function onStickButtonClicked(game) {

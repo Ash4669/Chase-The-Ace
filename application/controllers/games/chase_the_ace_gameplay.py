@@ -120,28 +120,30 @@ def startGame():
 
     roomId = session.get('roomId')
 
-    # locking the game in the db to not allow others to join mid game.
-    room = dbUtils.getRoom(roomId)
-    room.locked = True
-    db.session.commit()
+    if dbUtils.getRoom(roomId).locked != True:
+        # locking the game in the db to not allow others to join mid game.
+        room = dbUtils.getRoom(roomId)
+        room.locked = True
+        db.session.commit()
 
-    # Setting the lives of the players and their out of game statuses.
-    playerList = dbUtils.getPlayerList(roomId)
-    for i in range(len(playerList)):
-        playerList[i].lives = 3
-        playerList[i].outOfGame = False
-    db.session.commit()
+        # Setting the lives of the players and their out of game statuses.
+        playerList = dbUtils.getPlayerList(roomId)
+        for i in range(len(playerList)):
+            playerList[i].lives = 3
+            playerList[i].outOfGame = False
+        db.session.commit()
+
+        # Setting the host as the dealer and current player.
+        roomHost = dbUtils.getGameHostId(roomId)
+        room = dbUtils.getRoom(roomId)
+        room.dealerPlayerId = roomHost
+        room.currentPlayerId = roomHost
+        db.session.commit()
+        currentDealer = dbUtils.getDealerId(roomId)
+        emit('setDealer', currentDealer, room = roomId)
 
     # Dealing the cards to the players.
     Action.dealCards(roomId)
-
-    # Setting the host as the dealer and current player.
-    roomHost = dbUtils.getGameHostId(roomId)
-    room = dbUtils.getRoom(roomId)
-    room.dealerPlayerId = roomHost
-    room.currentPlayerId = roomHost # Setting now and updating after to reuse code.
-    db.session.commit()
-    emit('setDealer', roomHost, room = roomId)
 
     # Updating the current player as it cannot be the dealer
     Action.updateCurrentPlayer(roomId)
@@ -265,12 +267,12 @@ def endRound(roomId):
     # Update players with their live count.
     emit('update player lives', playersJson, room=roomId)
 
+    Action.updateCurrentDealer(roomId)
+    currentDealer = dbUtils.getDealerId(roomId)
+    emit('setDealer', currentDealer, roomId)
+
     # Display new round button for the player to the left.
-    emit('display new round button')
+    emit('display new round button', room=roomId)
 
-
-
-
-    #     NEED TO UPDATE DEALER AND START NEW ROUND (GO BACK INTO THE LOOP AFTER NEW ROUND BUTTON CLICK)
 
     #     NEED CONTINGENCY FOR WHEN BOTH PLAYER HAVE THE SAME CARD ON THE LAST ROUND AND BOTH LOSE.
