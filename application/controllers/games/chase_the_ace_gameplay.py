@@ -221,10 +221,10 @@ def cutCard():
 
     roomId = session.get('roomId')
 
-    # Trades cards with the next person in the game.
+    # Cut the deck for another card.
     Action.cutTheDeck(roomId)
 
-    # Increments the player as their choice doesn't make a change.
+    # Increments the player too match stick card functionality to line up ending the round regardless of choice.
     Action.updateCurrentPlayer(roomId)
 
     # Gets the player list to extract the playerData and send a json.
@@ -245,12 +245,11 @@ def cutCard():
 @socketio.on('delete all player cards')
 def deletePlayerCardsDisplay():
 
+    # Get room and send update to delete the all cards from previous round displayed by the playerList
     roomId = session.get('roomId')
-
     emit('delete player cards', room=roomId)
 
 
-# Check signing in quickly and going straight to a game with the url to check an error, but probably wouldn't happen.
 def jsonifyPlayerData(playerList, playersJson):
     for i in range(len(playerList)):
         player = playerList[i]
@@ -275,12 +274,12 @@ def endRound(roomId):
     # Update players with their live count.
     emit('update player lives', playersJson, room=roomId)
 
+    # Updates the dealer and sends it to all clients.
     Action.updateCurrentDealer(roomId)
     currentDealer = dbUtils.getDealerId(roomId)
     emit('setDealer', currentDealer, roomId)
 
     # Display new round button for the player to the left.
     emit('display new round button', room=roomId)
-
 
     #     NEED CONTINGENCY FOR WHEN BOTH PLAYER HAVE THE SAME CARD ON THE LAST ROUND AND BOTH LOSE.
