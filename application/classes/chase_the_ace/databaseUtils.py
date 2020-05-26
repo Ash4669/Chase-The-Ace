@@ -7,6 +7,7 @@ class DatabaseUtils():
 
     def getPlayerList(self, roomId):
         return models.Player.query.filter_by(roomId=roomId).all()
+    #     Need to be careful because shed players could have the same room id. Need gameType parameter.
 
     def getSpecificPlayer(self, roomId, playerId):
         return models.Player.query.filter_by(roomId=roomId, generatedPlayerId=playerId).first()
