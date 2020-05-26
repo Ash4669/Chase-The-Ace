@@ -242,6 +242,14 @@ def cutCard():
 
     endRound(roomId)
 
+@socketio.on('delete all player cards')
+def deletePlayerCardsDisplay():
+
+    roomId = session.get('roomId')
+
+    emit('delete player cards', room=roomId)
+
+
 # Check signing in quickly and going straight to a game with the url to check an error, but probably wouldn't happen.
 def jsonifyPlayerData(playerList, playersJson):
     for i in range(len(playerList)):

@@ -70,3 +70,10 @@ When person wins, if signed in, add one to their count with their userId.
 - Awarding score for winner if they are signed in.
 - Displaying a next round screen and a count down.
 - Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
+
+
+- Cannot swap a king.
+- Dealer shouldn't see their card.
+- Can swap a king if it's the dealers card because they haven't see it.
+  So if not equal to dealer then don't swap and give a message back, or don't give option.
+  Check next card in deck and if king then skip options and update current player.

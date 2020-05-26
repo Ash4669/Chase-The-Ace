@@ -135,6 +135,12 @@ class GamePage extends Phaser.Scene {
 //            display winner, display updated lives, display start button for dealer
 //            on start button click, delete all card images in front of names and main card on page.
         })
+
+//        Deletes all the playerCards on the side of the screen after reveal.
+        socket.on('delete player cards', function()
+        {
+            deleteAllPlayerCards();
+        })
     }
 }
 
@@ -246,6 +252,12 @@ function displayCutButton(game) {
 function onStartButtonClicked() {
     startButton.destroy();
     socket.emit('start game');
+
+//    Need to trigger the server to send to all clients to delete the cards from the previous round.
+    socket.emit('delete all player cards')
+}
+
+function deleteAllPlayerCards() {
     try {
         for (var i = 0; i < playerNames.length; i++)
         {
