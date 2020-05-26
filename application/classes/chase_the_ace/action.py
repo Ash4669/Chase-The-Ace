@@ -124,10 +124,15 @@ class Action():
         db.session.commit()
 
     def calculateWinner(roomId):
+
+        # Get the list of players
         playerList = dbUtils.getPlayerList(roomId)
 
+        # Create storage for the playerIds and the card values.
         idsAndCards = {}
 
+        # Setting the dictionary key as the playerId and value as the card numerical value
+        # by parsing the string to an int and adjusting for special cards.
         for i in range(len(playerList)):
             card = playerList[i].card
             id = playerList[i].generatedPlayerId
@@ -145,10 +150,11 @@ class Action():
             else:
                 idsAndCards[id] = int(card[0])
 
+        # Getting the minimum of the card values.
         minimumCardValue = idsAndCards[min(idsAndCards.keys(), key=(lambda k: idsAndCards[k]))]
 
-        losingPlayerIds = []
+        # Subtracting a life off of all players with lowest cards.
         for playerId, cardValue in idsAndCards.items():
             if cardValue == minimumCardValue:
-                dbUtils.getSpecificPlayer(roomId, playerId).lives -= 1;
+                dbUtils.getSpecificPlayer(roomId, playerId).lives -= 1
                 db.session.commit()
