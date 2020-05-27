@@ -44,19 +44,19 @@ When host quits, boot everyone
 When person wins, if signed in, add one to their count with their userId.
 
 > Functionality left to implement
-
-- Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
-- Saying you're the dealer when you are.
-- Selection for how many lives you want
-- Displaying whos go it is on player list.
-- Maybe change display to have it across the top and display the current player for all players to see.
-- Awarding score for winner if they are signed in.
-- Display start new round button and dealer icon above name which moves after finishing the previous round.
-- Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
-
-
+- Out of game functionality
+- Winning scenario
 - Cannot swap a king.
 - Dealer shouldn't see their card.
 - Can swap a king if it's the dealers card because they haven't see it.
   So if not equal to dealer then don't swap and give a message back, or don't give option.
   Check next card in deck and if king then skip options and update current player.
+
+- Awarding score for winner if they are signed in.
+- Saying you're the dealer when you are.
+- Selection for how many lives you want
+- Displaying whos go it is on player list.
+- Maybe change display to have it across the top and display the current player for all players to see.
+- Display start new round button and dealer icon above name which moves after finishing the previous round.
+- Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
+- Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
