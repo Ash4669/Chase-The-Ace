@@ -44,13 +44,13 @@ When host quits, boot everyone
 When person wins, if signed in, add one to their count with their userId.
 
 > Functionality left to implement
-- Out of game functionality
 - Winning scenario
 - Cannot swap a king.
 - Dealer shouldn't see their card.
 - Can swap a king if it's the dealers card because they haven't see it.
   So if not equal to dealer then don't swap and give a message back, or don't give option.
   Check next card in deck and if king then skip options and update current player.
+- Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
 
 - Awarding score for winner if they are signed in.
 - Saying you're the dealer when you are.
