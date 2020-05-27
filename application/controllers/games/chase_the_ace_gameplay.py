@@ -30,12 +30,12 @@ def generateAndHostRedirect():
         room = dbUtils.getRoom(roomId)
 
     # Instantiate the Room with the room id as game id and store it within the database.
-    newGame = models.Room(roomId = roomId, gameType = 'chase_the_ace', currentPlayerId = None, hostPlayerId = None)
+    newGame = models.Room(roomId=roomId, gameType='chase_the_ace', currentPlayerId=None, hostPlayerId=None)
     db.session.add(newGame)
     db.session.commit()
 
     # Emit the redirect for the client to redirect with javascript.
-    emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId = roomId)})
+    emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId=roomId)})
 
 
 # Managing players joining the game.
@@ -54,7 +54,7 @@ def onJoin():
 
     # Send update to say who joined the room.
     emit('receive player id', playerId)
-    emit('joined chase the ace announcement', playerName + ' has entered the room.', room = roomId)
+    emit('joined chase the ace announcement', playerName + ' has entered the room.', room=roomId)
 
     # Setting the host if no players are in the game.
     playerList = dbUtils.getPlayerList(roomId)
@@ -64,7 +64,7 @@ def onJoin():
         db.session.commit()
 
     # Added new player to db.
-    newPlayer = models.Player(userId = userId, roomId = roomId, generatedPlayerId = playerId, name = playerName, card = None)
+    newPlayer = models.Player(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName, card=None)
     db.session.add(newPlayer)
     db.session.commit()
 
@@ -81,7 +81,7 @@ def onJoin():
     join_room(roomId)
 
     # Emit to the room to update all other players of the change to the player name list.
-    emit('update chase the ace playerList', playerNames, room = roomId)
+    emit('update chase the ace playerList', playerNames, room=roomId)
 
 @socketio.on('quit chase the ace')
 def onQuit():
@@ -95,10 +95,10 @@ def onQuit():
     hostId = dbUtils.getGameHostId(roomId)
     if playerId == hostId:
         # Emit the redirect for the client to redirect with javascript.
-        emit('close game', {'url': url_for('chase_the_ace.chase_the_ace_index')})
+        emit('close game', {'url': url_for('chase_the_ace.chase_the_ace_index')}, room=roomId)
 
     # Remove the player from playerList that matches their player id.
-    quittingPlayer = models.Player.query.filter_by(userId = userId, roomId = roomId, generatedPlayerId = playerId, name = playerName).one()
+    quittingPlayer = models.Player.query.filter_by(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName).one()
     db.session.delete(quittingPlayer)
     db.session.commit()
 
@@ -109,7 +109,7 @@ def onQuit():
         playerNames.append(playerList[i].name)
 
     # Emit to the room to update all other players of the change to the player name list.
-    emit('update chase the ace playerList', playerNames, room = roomId)
+    emit('update chase the ace playerList', playerNames, room=roomId)
 
     # Leave the flask room.
     leave_room(roomId)

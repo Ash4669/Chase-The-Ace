@@ -1,24 +1,33 @@
 class GamePage extends Phaser.Scene {
 
+    // Game Role Ids
+    hostId;
+    dealerId;
+    playerId;
+
+    // Player Names
     playerNames = new Array();
-    playerNamesVariables = new Array();
+    playerNamesDisplays = new Array();
+
+    // Player Lives
+    maxPlayerLives = 3;
+    playerLives;
+    playerLivesDisplays = new Array();
+
+    // Player Cards
+    playerCardValue;
+    playerCardDisplay;
     allPlayerCardDisplays = new Array();
 
-    hostId = null;
-    dealerId = null;
-    playerId = null;
-    playerCardValue = null;
-    playerCardDisplay = null;
-    playerLivesDisplay = new Array();
-    playerLives = null;
-    maxPlayerLives = 3;
-
+    // Game Buttons
     startButton;
     stickButton;
     tradeButton;
     cutButton;
 
-    constructor() {
+    // Phaser structure for constructor, preload and create methods.
+    constructor()
+    {
         super({ key: "GamePage" });
     }
     preload()
@@ -44,24 +53,28 @@ class GamePage extends Phaser.Scene {
             }
         }
     }
-    create(){
-
-        // Lobbying
+    create()
+    {
+        // Storing GamePage this variable for methods to call to access class variables and methods.
         const gamePage = this;
+
+        // Initialisation of socket variable into the global scope.
         self.socket = io();
 
-        // Setting up the initial game screen: Background, players and player title.
-        var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
-        backgroundImage.setDisplaySize(1000, 600);
-        var playersNamesBox = this.add.rectangle(900, 0, 200, 500, 0x01DF01);
-        playersNamesBox.setStrokeStyle(2, 0x000000)
+        // Setting up the initial game screen: background, players and player title.
+        var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0).setDisplaySize(1000, 600);
+        var playersNamesBox = this.add.rectangle(900, 0, 200, 500, 0x01DF01).setStrokeStyle(2, 0x000000)
         this.add.text(820, 20, 'Players');
 
-        socket.on('connect', function(){
+        // Triggering server response to someone joining the game.
+        socket.on('connect', function()
+        {
             socket.emit('join chase the ace');
         });
 
-        socket.on('setHost', function(hostId){
+        // Setting the host id for the client to display the start button.
+        socket.on('setHost', function(hostId)
+        {
             gamePage.hostId = hostId
             if (gamePage.playerId == gamePage.hostId)
             {
@@ -69,24 +82,35 @@ class GamePage extends Phaser.Scene {
             }
         });
 
-        socket.on('setDealer', function(response){
+        // Setting the dealer of the round.
+        socket.on('setDealer', function(response)
+        {
             gamePage.dealerId = response;
         });
 
-        socket.on('close game', function(data){
+        // Closing the game
+        socket.on('close game', function(data)
+        {
+            /* Create popup instead which then redirects after */
             window.location = data.url;
         });
 
-        socket.on('receive player id', function (response){
+        // Setting playerId for this client.
+        socket.on('receive player id', function (response)
+        {
             gamePage.playerId = response
         })
 
-        socket.on('joined chase the ace announcement', function(response){
+        // Letting other plays know when someone else has joined the game.
+        socket.on('joined chase the ace announcement', function(response)
+        {
+            /* Need to have popup for a few seconds and destroy it. */
             console.log(response);
-            // need to have popup for a few seconds and destroy it.
         })
 
-        socket.on('update chase the ace playerList', function(response){
+        // Updating the player list of the game when people join or quit the game.
+        socket.on('update chase the ace playerList', function(response)
+        {
             // Setting the player names equal to the server player names.
             gamePage.playerNames = response
 
@@ -95,6 +119,7 @@ class GamePage extends Phaser.Scene {
             gamePage.writePlayerNames();
         })
 
+        // Updating the player's card and displaying it.
         socket.on('update player data', function(playerJson)
         {
             for (var i = 0; i < gamePage.playerNames.length; i++)
@@ -108,6 +133,7 @@ class GamePage extends Phaser.Scene {
             gamePage.updateCards();
         })
 
+        // Updating the lives of the player and displaying them.
         socket.on('update player lives', function(playerJson)
         {
             for (var i = 0; i < gamePage.playerNames.length; i++)
@@ -121,6 +147,7 @@ class GamePage extends Phaser.Scene {
             gamePage.updateLives();
         })
 
+        // Displaying the correct game buttons for the player.
         socket.on('give player choice', function(currentPlayerId)
         {
             if (currentPlayerId == gamePage.playerId)
@@ -138,76 +165,85 @@ class GamePage extends Phaser.Scene {
             }
         })
 
+        // Reveals all cards to everyone by the player names after the dealer's decision is made.
         socket.on('reveal cards and trigger results', function(playerData)
         {
-            // Reveal all cards
             gamePage.displayAllPlayerCards(playerData)
         })
 
+        // Deletes all the card displayed next to the player list after the round starts.
+        socket.on('delete player cards', function()
+        {
+            gamePage.deleteAllPlayerCards();
+        })
+
+        // Displays start button for the dealer.
         socket.on('display new round button', function()
         {
             if (gamePage.playerId == gamePage.dealerId)
             {
                 gamePage.displayStartButton();
             }
-//            display winner, display updated lives, display start button for dealer
-//            on start button click, delete all card images in front of names and main card on page.
-        })
-
-//        Deletes all the playerCards on the side of the screen after reveal.
-        socket.on('delete player cards', function()
-        {
-            gamePage.deleteAllPlayerCards();
         })
     }
 
-    displayStartButton() {
+    displayStartButton()
+    {
         this.startButton = this.add.image(340, 430, "startButton").setOrigin(0, 0);
         this.startButton.setDisplaySize(200, 100);
         this.startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
     }
 
-
-    onStartButtonClicked() {
+    onStartButtonClicked()
+    {
         this.startButton.destroy();
-        socket.emit('start game');
-
-    //    Need to trigger the server to send to all clients to delete the cards from the previous round.
         socket.emit('delete all player cards')
+        socket.emit('start game');
     }
 
-    deletePlayerNames() {
-        for (var i = 0; i < this.playerNamesVariables.length; i++) {
-            this.playerNamesVariables[i].destroy();
+    deletePlayerNames()
+    {
+        for (var i = 0; i < this.playerNamesDisplays.length; i++)
+        {
+            this.playerNamesDisplays[i].destroy();
         }
     }
 
-    writePlayerNames() {
-        for (var i = 0; i < this.playerNames.length; i++) {
-            this.playerNamesVariables[i] = this.add.text(820, 50 + (i * 40), this.playerNames[i]);
+    writePlayerNames()
+    {
+        for (var i = 0; i < this.playerNames.length; i++)
+        {
+            this.playerNamesDisplays[i] = this.add.text(820, 50 + (i * 40), this.playerNames[i]);
         }
     }
 
-    updateCards() {
-        try {
+    updateCards()
+    {
+        try
+        {
             this.playerCardDisplay.destroy();
-        } catch (e) {
+        }
+        catch (e)
+        {
             console.log("card not set yet.");
         }
-        if (this.playerCardValue != null) {
-            this.playerCardDisplay = this.add.image(340, 80, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+        if (this.playerCardValue != null)
+        {
             // FIX CARD PIXELATION
+            this.playerCardDisplay = this.add.image(340, 80, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
         }
     }
 
-    updateLives(game) {
+    updateLives(game)
+    {
         try
         {
             for (var i = 0; i < this.maxPlayerLives; i++)
             {
-                this.playerLivesDisplay[i].destroy();
+                this.playerLivesDisplays[i].destroy();
             }
-        } catch (e)
+        }
+        catch (e)
         {
           console.log("lives not set yet.");
         }
@@ -215,79 +251,95 @@ class GamePage extends Phaser.Scene {
         {
             if (i < this.playerLives)
             {
-                this.playerLivesDisplay[i] = this.add.image(40 + (i * 50), 40, 'heart').setDisplaySize(40, 40);
-            } else
+                this.playerLivesDisplays[i] = this.add.image(40 + (i * 50), 40, 'heart').setDisplaySize(40, 40);
+            }
+            else
             {
-                this.playerLivesDisplay[i] = this.add.image(40 + (i * 50), 40, 'emptyHeart').setDisplaySize(40, 40);
+                this.playerLivesDisplays[i] = this.add.image(40 + (i * 50), 40, 'emptyHeart').setDisplaySize(40, 40);
             }
         }
     }
 
-    displayStickButton() {
+    displayStickButton()
+    {
         this.stickButton = this.add.image(215, 430, "stickButton").setOrigin(0, 0);
         this.stickButton.setDisplaySize(200, 100);
         this.stickButton.setInteractive().on('pointerdown', () => this.onStickButtonClicked());
     }
 
-    displayTradeButton() {
+    displayTradeButton()
+    {
         this.tradeButton = this.add.image(465, 430, "tradeButton").setOrigin(0, 0);
         this.tradeButton.setDisplaySize(200, 100);
         this.tradeButton.setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
     }
 
-    displayCutButton() {
+    displayCutButton()
+    {
         this.cutButton = this.add.image(465, 430, "cutButton").setOrigin(0, 0);
         this.cutButton.setDisplaySize(200, 100);
         this.cutButton.setInteractive().on('pointerdown', () => this.onCutButtonClicked());
     }
 
-    onStickButtonClicked(game) {
+    onStickButtonClicked(game)
+    {
         this.stickButton.destroy();
-        if (this.playerId == this.dealerId){
+        if (this.playerId == this.dealerId)
+        {
             this.cutButton.destroy();
-        } else {
+        }
+        else
+        {
             this.tradeButton.destroy();
         }
         socket.emit('stick card')
     }
 
-    onTradeButtonClicked() {
+    onTradeButtonClicked()
+    {
         this.stickButton.destroy();
         this.tradeButton.destroy();
         socket.emit('trade card')
     }
 
-    onCutButtonClicked() {
+    onCutButtonClicked()
+    {
         this.stickButton.destroy();
         this.cutButton.destroy();
         socket.emit('cut card')
     }
 
-    displayAllPlayerCards(playerData) {
-        if (this.playerCardValue != null) {
-            for (var i = 0; i < this.playerNames.length; i++) {
+    displayAllPlayerCards(playerData)
+    {
+        if (this.playerCardValue != null)
+        {
+            for (var i = 0; i < this.playerNames.length; i++)
+            {
                 this.playerCard = JSON.parse(playerData[i]).card
                 this.allPlayerCardDisplays[i] = this.add.image(800, 60 + (i * 40), this.playerCard).setDisplaySize(20, 32);
             }
         }
     }
 
-    deleteAllPlayerCards() {
-        try {
+    deleteAllPlayerCards()
+    {
+        try
+        {
             for (var i = 0; i < this.playerNames.length; i++)
             {
                 this.allPlayerCardDisplays[i].destroy();
             }
-        } catch (e)
+        }
+        catch (e)
         {
           console.log("all player cards not set yet.");
         }
     }
-
 }
 
 window.onunload = quit;
 
-function quit() {
+function quit()
+{
     socket.emit('quit chase the ace');
 };
