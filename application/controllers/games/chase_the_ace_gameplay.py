@@ -199,7 +199,7 @@ def tradeCard():
     # Trades cards with the next person in the game.
     Action.tradeCards(roomId)
 
-    # Incremements the player as their choice doesn't make a change.
+    # Increments the player as their choice doesn't make a change.
     Action.updateCurrentPlayer(roomId)
 
     # Gets the player list to extract the playerData and send a json.
@@ -276,6 +276,7 @@ def endRound(roomId):
 
     # Updates the dealer and sends it to all clients.
     Action.updateCurrentDealer(roomId)
+
     currentDealer = dbUtils.getDealerId(roomId)
     emit('setDealer', currentDealer, roomId)
 

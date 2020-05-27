@@ -42,12 +42,16 @@ class Action():
         for i in range(len(playerList)):
             player = playerList[i]
 
-            # Getting the generated id of the player next to the current player.
+            # Getting the generated id of the next player to the current player who is still in the game.
             if player.generatedPlayerId == room.currentPlayerId:
-                if i == len(playerList) - 1:
-                    i -= len(playerList)
-                nextPlayerId = playerList[i+1].generatedPlayerId
-                room.currentPlayerId = nextPlayerId
+                while True:
+                    if i == len(playerList) - 1:
+                        i -= len(playerList)
+                    nextPlayer = playerList[i+1]
+                    if not nextPlayer.outOfGame:
+                        break
+                    i += 1
+                room.currentPlayerId = nextPlayer.generatedPlayerId
                 break
 
         # Commit changes
@@ -62,12 +66,16 @@ class Action():
         for i in range(len(playerList)):
             player = playerList[i]
 
-            # Getting the generated id of the player next to the current dealer.
+            # Getting the generated id of the next player to the dealer who is still in the game.
             if player.generatedPlayerId == room.dealerPlayerId:
-                if i == len(playerList) - 1:
-                    i -= len(playerList)
-                nextPlayerId = playerList[i+1].generatedPlayerId
-                room.dealerPlayerId = nextPlayerId
+                while True:
+                    if i == len(playerList) - 1:
+                        i -= len(playerList)
+                    nextPlayer = playerList[i + 1]
+                    if not nextPlayer.outOfGame:
+                        break
+                    i += 1
+                room.dealerPlayerId = nextPlayer.generatedPlayerId
                 break
 
         # Commit changes
@@ -88,10 +96,14 @@ class Action():
 
                 # If the current player is at the edge of the array, then set it back to
                 # before the start so the next player is then the first in the array.
-                if i == len(playerList) - 1:
-                    i -= len(playerList)
+                while True:
+                    if i == len(playerList) - 1:
+                        i -= len(playerList)
+                    nextPlayer = playerList[i+1]
+                    if not nextPlayer.outOfGame:
+                        break
+                    i += 1
 
-                nextPlayer = playerList[i+1]
 
                 playerCard = player.card
                 nextPlayerCard = nextPlayer.card
@@ -134,21 +146,24 @@ class Action():
         # Setting the dictionary key as the playerId and value as the card numerical value
         # by parsing the string to an int and adjusting for special cards.
         for i in range(len(playerList)):
-            card = playerList[i].card
-            id = playerList[i].generatedPlayerId
 
-            if 'ace' in card:
-                idsAndCards[id] = 1
-            elif 'jack' in card:
-                idsAndCards[id] = 11
-            elif 'queen' in card:
-                idsAndCards[id] = 12
-            elif 'king' in card:
-                idsAndCards[id] = 13
-            elif '10' in card:
-                idsAndCards[id] = 10
-            else:
-                idsAndCards[id] = int(card[0])
+            # If the player is not in the game then ignore their (unset) card
+            if not playerList[i].outOfGame:
+                card = playerList[i].card
+                id = playerList[i].generatedPlayerId
+
+                if 'ace' in card:
+                    idsAndCards[id] = 1
+                elif 'jack' in card:
+                    idsAndCards[id] = 11
+                elif 'queen' in card:
+                    idsAndCards[id] = 12
+                elif 'king' in card:
+                    idsAndCards[id] = 13
+                elif '10' in card:
+                    idsAndCards[id] = 10
+                else:
+                    idsAndCards[id] = int(card[0])
 
         # Getting the minimum of the card values.
         minimumCardValue = idsAndCards[min(idsAndCards.keys(), key=(lambda k: idsAndCards[k]))]
@@ -156,5 +171,10 @@ class Action():
         # Subtracting a life off of all players with lowest cards.
         for playerId, cardValue in idsAndCards.items():
             if cardValue == minimumCardValue:
-                dbUtils.getSpecificPlayer(roomId, playerId).lives -= 1
+                player = dbUtils.getSpecificPlayer(roomId, playerId)
+                player.lives -= 1
+
+                # If the player has no lives left, they are set as out of the game.
+                if player.lives == 0:
+                    player.outOfGame = True
                 db.session.commit()

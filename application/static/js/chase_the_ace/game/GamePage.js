@@ -311,10 +311,10 @@ class GamePage extends Phaser.Scene {
 
     displayAllPlayerCards(playerData)
     {
-        if (this.playerCardValue != null)
+        for (var i = 0; i < this.playerNames.length; i++)
         {
-            for (var i = 0; i < this.playerNames.length; i++)
-            {
+            // If a player is out of the game, don't display their card.
+            if (JSON.parse(playerData[i]).outOfGame == false) {
                 this.playerCard = JSON.parse(playerData[i]).card
                 this.allPlayerCardDisplays[i] = this.add.image(800, 60 + (i * 40), this.playerCard).setDisplaySize(20, 32);
             }
@@ -325,7 +325,7 @@ class GamePage extends Phaser.Scene {
     {
         try
         {
-            for (var i = 0; i < this.playerNames.length; i++)
+            for (var i = 0; i < this.allPlayerCardDisplays.length; i++)
             {
                 this.allPlayerCardDisplays[i].destroy();
             }
