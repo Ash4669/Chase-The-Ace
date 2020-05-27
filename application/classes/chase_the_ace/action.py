@@ -173,6 +173,8 @@ class Action():
             if cardValue == minimumCardValue:
                 player = dbUtils.getSpecificPlayer(roomId, playerId)
                 player.lives -= 1
+
+                # If the player has no lives left, they are set as out of the game.
                 if player.lives == 0:
                     player.outOfGame = True
                 db.session.commit()
