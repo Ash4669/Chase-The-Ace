@@ -21,6 +21,7 @@ class Player(db.Model):
     card = db.Column(db.String(10))
     lives = db.Column(db.Integer)
     outOfGame = db.Column(db.Boolean)
+#     Need to be careful because shed players could have the same room id. Need gameType parameter.
 
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -30,3 +31,4 @@ class Room(db.Model):
     currentPlayerId = db.Column(db.String(100))
     dealerPlayerId = db.Column(db.String(100))
     locked = db.Column(db.Boolean)
+    deck = db.Column(db.String(1000))

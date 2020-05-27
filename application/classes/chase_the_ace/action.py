@@ -1,7 +1,10 @@
 from ..card import Card
 import random
-from ... import models
 from ... import db
+from .databaseUtils import DatabaseUtils
+from ast import literal_eval
+
+dbUtils = DatabaseUtils()
 
 class Action():
 
@@ -14,7 +17,8 @@ class Action():
         random.shuffle(currentDeck)
 
         # Retrieving the list of players.
-        playerList = models.Player.query.filter_by(roomId = roomId).all()
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
 
         # If the player isn't out of the game, then give them the top card off the deck.
         for player in playerList:
@@ -23,32 +27,57 @@ class Action():
             else:
                 player.card = None
 
+        # Store a serialised version of the deck for later use.
+        room.deck = repr(currentDeck)
+
         # Commit changes
         db.session.commit()
 
     def updateCurrentPlayer(roomId):
 
         # Retrieving the list of players and the room data.
-        playerList = models.Player.query.filter_by(roomId = roomId).all()
-        room = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
 
         for i in range(len(playerList)):
             player = playerList[i]
 
-            # Getting the generated id of the player next to the dealer.
+            # Getting the generated id of the player next to the current player.
             if player.generatedPlayerId == room.currentPlayerId:
                 if i == len(playerList) - 1:
                     i -= len(playerList)
                 nextPlayerId = playerList[i+1].generatedPlayerId
                 room.currentPlayerId = nextPlayerId
                 break
+
+        # Commit changes
+        db.session.commit()
+
+    def updateCurrentDealer(roomId):
+
+        # Retrieving the list of players and the room data.
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
+
+        for i in range(len(playerList)):
+            player = playerList[i]
+
+            # Getting the generated id of the player next to the current dealer.
+            if player.generatedPlayerId == room.dealerPlayerId:
+                if i == len(playerList) - 1:
+                    i -= len(playerList)
+                nextPlayerId = playerList[i+1].generatedPlayerId
+                room.dealerPlayerId = nextPlayerId
+                break
+
+        # Commit changes
         db.session.commit()
 
     def tradeCards(roomId):
 
         # Retrieving the list of players and the room data.
-        playerList = models.Player.query.filter_by(roomId = roomId).all()
-        room = models.Room.query.filter_by(roomId = roomId, gameType = 'chase_the_ace').first()
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
 
         for i in range(len(playerList)):
             # Getting the current player.
@@ -71,4 +100,61 @@ class Action():
                 nextPlayer.card = playerCard
                 break
 
+        # Commit changes
         db.session.commit()
+
+    def cutTheDeck(roomId):
+
+        # Retrieving the list of players and the room data.
+        playerList = dbUtils.getPlayerList(roomId)
+        room = dbUtils.getRoom(roomId)
+
+        # Retrieve the current deck.
+        currentDeck = literal_eval(room.deck)
+
+        # Loop over all players, find the dealer give them a new card of the top of the deck.
+        for i in range(len(playerList)):
+            player = playerList[i]
+
+            if player.generatedPlayerId == room.dealerPlayerId:
+                player.card = currentDeck.pop(0)
+                break
+
+        # Commit changes
+        db.session.commit()
+
+    def calculateWinner(roomId):
+
+        # Get the list of players
+        playerList = dbUtils.getPlayerList(roomId)
+
+        # Create storage for the playerIds and the card values.
+        idsAndCards = {}
+
+        # Setting the dictionary key as the playerId and value as the card numerical value
+        # by parsing the string to an int and adjusting for special cards.
+        for i in range(len(playerList)):
+            card = playerList[i].card
+            id = playerList[i].generatedPlayerId
+
+            if 'ace' in card:
+                idsAndCards[id] = 1
+            elif 'jack' in card:
+                idsAndCards[id] = 11
+            elif 'queen' in card:
+                idsAndCards[id] = 12
+            elif 'king' in card:
+                idsAndCards[id] = 13
+            elif '10' in card:
+                idsAndCards[id] = 10
+            else:
+                idsAndCards[id] = int(card[0])
+
+        # Getting the minimum of the card values.
+        minimumCardValue = idsAndCards[min(idsAndCards.keys(), key=(lambda k: idsAndCards[k]))]
+
+        # Subtracting a life off of all players with lowest cards.
+        for playerId, cardValue in idsAndCards.items():
+            if cardValue == minimumCardValue:
+                dbUtils.getSpecificPlayer(roomId, playerId).lives -= 1
+                db.session.commit()
