@@ -1,8 +1,9 @@
 # main.py
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session
 from flask_login import login_required, current_user
 from .. import db
+from .. import models
 
 main = Blueprint('main', __name__)
 
@@ -13,7 +14,9 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('home/profile.html', name = current_user.firstName)
+    userId = session.get('userId')
+    chaseTheAceWins = models.User.query.filter_by(id=userId).first().chaseTheAceWins
+    return render_template('home/profile.html', name=current_user.firstName, chaseTheAceWins=chaseTheAceWins)
 
 @main.route('/play')
 def play():

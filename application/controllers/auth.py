@@ -42,7 +42,7 @@ def signup_post():
         flash('Email address already exists')
         return redirect(url_for('auth.signup'))
 
-    newUser = models.User(email = email, username = username, password = generate_password_hash(password, method='sha256'), firstName = firstName, lastName = lastName)
+    newUser = models.User(email = email, username = username, password = generate_password_hash(password, method='sha256'), firstName = firstName, lastName = lastName, chaseTheAceWins = 0)
 
     db.session.add(newUser)
     db.session.commit()

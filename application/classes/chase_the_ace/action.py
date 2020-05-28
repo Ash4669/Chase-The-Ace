@@ -6,7 +6,8 @@ from ast import literal_eval
 
 dbUtils = DatabaseUtils()
 
-class Action():
+
+class Action:
 
     def dealCards(roomId):
 
@@ -47,7 +48,7 @@ class Action():
                 while True:
                     if i == len(playerList) - 1:
                         i -= len(playerList)
-                    nextPlayer = playerList[i+1]
+                    nextPlayer = playerList[i + 1]
                     if not nextPlayer.outOfGame:
                         break
                     i += 1
@@ -99,11 +100,10 @@ class Action():
                 while True:
                     if i == len(playerList) - 1:
                         i -= len(playerList)
-                    nextPlayer = playerList[i+1]
+                    nextPlayer = playerList[i + 1]
                     if not nextPlayer.outOfGame:
                         break
                     i += 1
-
 
                 playerCard = player.card
                 nextPlayerCard = nextPlayer.card
@@ -178,3 +178,33 @@ class Action():
                 if player.lives == 0:
                     player.outOfGame = True
                 db.session.commit()
+
+        # Checking for a winner.
+        idsAndLives = {}
+        playerList = dbUtils.getPlayerList(roomId)
+        for i in range(len(playerList)):
+            outOfGame = playerList[i].outOfGame
+            playerId = playerList[i].generatedPlayerId
+            idsAndLives[playerId] = outOfGame
+
+        # Checking only one is still in the game.
+        counter = 0
+        for playerId, outOfGame in idsAndLives.items():
+            if not outOfGame:
+                counter += 1
+
+        # Set the last surviving player as the winner.
+        if counter == 1:
+            for playerId, outOfGame in idsAndLives.items():
+                if not outOfGame:
+                    winningPlayer = playerId
+                    break
+            room = dbUtils.getRoom(roomId)
+            room.winningPlayerId = winningPlayer
+            db.session.commit()
+
+# Do in winners check:
+# Add 1 win to chaseTheAceWins for that use when they win.
+
+# Do in lives check:
+# Also, need if all players have the same card and only 1 life left, then ignore round.

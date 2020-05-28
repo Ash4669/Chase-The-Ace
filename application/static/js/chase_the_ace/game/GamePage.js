@@ -10,7 +10,7 @@ class GamePage extends Phaser.Scene {
     playerNamesDisplays = new Array();
 
     // Player Lives
-    maxPlayerLives = 3;
+    maxPlayerLives = 2;
     playerLives;
     playerLivesDisplays = new Array();
 
@@ -185,11 +185,23 @@ class GamePage extends Phaser.Scene {
                 gamePage.displayStartButton();
             }
         })
+
+        // Displays winner text for the winning player.
+        socket.on('trigger winner', function(winnerId)
+        {
+            for (var i = 0; i < gamePage.playerNames.length; i++)
+            {
+                if (gamePage.playerId == winnerId)
+                {
+                    gamePage.displayWin();
+                }
+            }
+        })
     }
 
     displayStartButton()
     {
-        this.startButton = this.add.image(340, 430, "startButton").setOrigin(0, 0);
+        this.startButton = this.add.image(340, 450, "startButton").setOrigin(0, 0);
         this.startButton.setDisplaySize(200, 100);
         this.startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
     }
@@ -230,7 +242,7 @@ class GamePage extends Phaser.Scene {
         if (this.playerCardValue != null)
         {
             // FIX CARD PIXELATION
-            this.playerCardDisplay = this.add.image(340, 80, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+            this.playerCardDisplay = this.add.image(340, 110, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
         }
     }
 
@@ -262,21 +274,21 @@ class GamePage extends Phaser.Scene {
 
     displayStickButton()
     {
-        this.stickButton = this.add.image(215, 430, "stickButton").setOrigin(0, 0);
+        this.stickButton = this.add.image(215, 450, "stickButton").setOrigin(0, 0);
         this.stickButton.setDisplaySize(200, 100);
         this.stickButton.setInteractive().on('pointerdown', () => this.onStickButtonClicked());
     }
 
     displayTradeButton()
     {
-        this.tradeButton = this.add.image(465, 430, "tradeButton").setOrigin(0, 0);
+        this.tradeButton = this.add.image(465, 450, "tradeButton").setOrigin(0, 0);
         this.tradeButton.setDisplaySize(200, 100);
         this.tradeButton.setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
     }
 
     displayCutButton()
     {
-        this.cutButton = this.add.image(465, 430, "cutButton").setOrigin(0, 0);
+        this.cutButton = this.add.image(465, 450, "cutButton").setOrigin(0, 0);
         this.cutButton.setDisplaySize(200, 100);
         this.cutButton.setInteractive().on('pointerdown', () => this.onCutButtonClicked());
     }
@@ -334,6 +346,11 @@ class GamePage extends Phaser.Scene {
         {
           console.log("all player cards not set yet.");
         }
+    }
+
+    displayWin()
+    {
+        this.add.text(400, 80, 'Winner!')
     }
 }
 

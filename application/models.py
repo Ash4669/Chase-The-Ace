@@ -30,5 +30,6 @@ class Room(db.Model):
     hostPlayerId = db.Column(db.String(100))
     currentPlayerId = db.Column(db.String(100))
     dealerPlayerId = db.Column(db.String(100))
+    winningPlayerId = db.Column(db.String(100))
     locked = db.Column(db.Boolean)
     deck = db.Column(db.String(1000))
