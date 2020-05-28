@@ -44,7 +44,6 @@ When host quits, boot everyone
 When person wins, if signed in, add one to their count with their userId.
 
 > Functionality left to implement
-- Winning scenario
 - Cannot swap a king.
 - Dealer shouldn't see their card.
 - Can swap a king if it's the dealers card because they haven't see it.
@@ -60,3 +59,8 @@ When person wins, if signed in, add one to their count with their userId.
 - Display start new round button and dealer icon above name which moves after finishing the previous round.
 - Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
 - Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
+Or add a randomiser before pulling off the card.
+
+
+>Bugs
+>- If 3 people play, and the 3rd person is wiped out in 2 round, the dealer is then the first player. If they start the round, they get the cut action immediately and player 2 gets no go.
