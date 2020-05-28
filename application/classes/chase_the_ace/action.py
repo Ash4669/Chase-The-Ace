@@ -43,7 +43,7 @@ class Action:
         for i in range(len(playerList)):
             player = playerList[i]
 
-            # Getting the generated id of the next player to the current player who is still in the game.
+            # Getting the generated id of the next player after the dealer who is still in the game.
             if player.generatedPlayerId == room.dealerPlayerId:
                 while True:
                     if i == len(playerList) - 1:
@@ -67,7 +67,7 @@ class Action:
         for i in range(len(playerList)):
             player = playerList[i]
 
-            # Getting the generated id of the next player to the current player who is still in the game.
+            # Getting the generated id of the next player who is still in the game.
             if player.generatedPlayerId == room.currentPlayerId:
                 while True:
                     if i == len(playerList) - 1:
