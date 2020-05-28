@@ -7,7 +7,7 @@ from ast import literal_eval
 dbUtils = DatabaseUtils()
 
 
-class Action():
+class Action:
 
     def dealCards(roomId):
 
@@ -130,7 +130,6 @@ class Action():
 
             if player.generatedPlayerId == room.dealerPlayerId:
                 player.card = currentDeck.pop(0)
-                # Maybe add a randomiser before popping the card off, or add the functionality for the player to choose a card in this deck?
                 break
 
         # Commit changes

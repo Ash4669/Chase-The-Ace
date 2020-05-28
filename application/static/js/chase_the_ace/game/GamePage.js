@@ -201,7 +201,7 @@ class GamePage extends Phaser.Scene {
 
     displayStartButton()
     {
-        this.startButton = this.add.image(340, 430, "startButton").setOrigin(0, 0);
+        this.startButton = this.add.image(340, 450, "startButton").setOrigin(0, 0);
         this.startButton.setDisplaySize(200, 100);
         this.startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
     }
@@ -274,21 +274,21 @@ class GamePage extends Phaser.Scene {
 
     displayStickButton()
     {
-        this.stickButton = this.add.image(215, 430, "stickButton").setOrigin(0, 0);
+        this.stickButton = this.add.image(215, 450, "stickButton").setOrigin(0, 0);
         this.stickButton.setDisplaySize(200, 100);
         this.stickButton.setInteractive().on('pointerdown', () => this.onStickButtonClicked());
     }
 
     displayTradeButton()
     {
-        this.tradeButton = this.add.image(465, 430, "tradeButton").setOrigin(0, 0);
+        this.tradeButton = this.add.image(465, 450, "tradeButton").setOrigin(0, 0);
         this.tradeButton.setDisplaySize(200, 100);
         this.tradeButton.setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
     }
 
     displayCutButton()
     {
-        this.cutButton = this.add.image(465, 430, "cutButton").setOrigin(0, 0);
+        this.cutButton = this.add.image(465, 450, "cutButton").setOrigin(0, 0);
         this.cutButton.setDisplaySize(200, 100);
         this.cutButton.setInteractive().on('pointerdown', () => this.onCutButtonClicked());
     }
