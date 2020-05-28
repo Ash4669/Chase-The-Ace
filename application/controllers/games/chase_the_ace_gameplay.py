@@ -129,7 +129,7 @@ def startGame():
         # Setting the lives of the players and their out of game statuses.
         playerList = dbUtils.getPlayerList(roomId)
         for i in range(len(playerList)):
-            playerList[i].lives = 3
+            playerList[i].lives = 2
             playerList[i].outOfGame = False
         db.session.commit()
 
@@ -146,7 +146,7 @@ def startGame():
     Action.dealCards(roomId)
 
     # Updating the current player as it cannot be the dealer
-    Action.updateCurrentPlayer(roomId)
+    Action.setCurrentPlayer(roomId)
 
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)

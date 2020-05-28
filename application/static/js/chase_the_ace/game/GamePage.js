@@ -10,7 +10,7 @@ class GamePage extends Phaser.Scene {
     playerNamesDisplays = new Array();
 
     // Player Lives
-    maxPlayerLives = 3;
+    maxPlayerLives = 2;
     playerLives;
     playerLivesDisplays = new Array();
 
