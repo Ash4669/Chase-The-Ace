@@ -34,17 +34,21 @@ class Action:
         # Commit changes
         db.session.commit()
 
-    def updateCurrentPlayer(roomId):
-
+    def updateCurrentPlayer(roomId, previousPlayer):
         # Retrieving the list of players and the room data.
         playerList = dbUtils.getPlayerList(roomId)
         room = dbUtils.getRoom(roomId)
 
+        if previousPlayer == 'dealer':
+            currentPlayerId = room.dealerPlayerId
+        elif previousPlayer == 'player':
+            currentPlayerId = room.currentPlayerId
+
         for i in range(len(playerList)):
             player = playerList[i]
 
-            # Getting the generated id of the next player to the current player who is still in the game.
-            if player.generatedPlayerId == room.currentPlayerId:
+            # Getting the generated id of the next player who is still in the game.
+            if player.generatedPlayerId == currentPlayerId:
                 while True:
                     if i == len(playerList) - 1:
                         i -= len(playerList)
