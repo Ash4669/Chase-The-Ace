@@ -146,7 +146,7 @@ def startGame():
     Action.dealCards(roomId)
 
     # Updating the current player as it cannot be the dealer
-    Action.setCurrentPlayer(roomId)
+    Action.updateCurrentPlayer(roomId, previousPlayer='dealer')
 
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)
@@ -169,7 +169,7 @@ def stickCard():
     dealerId = dbUtils.getDealerId(roomId)
 
     # increments the player as their choice doesn't make a change.
-    Action.updateCurrentPlayer(roomId)
+    Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
     # Gets the player list to extract the playerData and send a json.
     playerList = dbUtils.getPlayerList(roomId)
@@ -200,7 +200,7 @@ def tradeCard():
     Action.tradeCards(roomId)
 
     # Increments the player as their choice doesn't make a change.
-    Action.updateCurrentPlayer(roomId)
+    Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
     # Gets the player list to extract the playerData and send a json.
     playerList = dbUtils.getPlayerList(roomId)
@@ -225,7 +225,7 @@ def cutCard():
     Action.cutTheDeck(roomId)
 
     # Increments the player too match stick card functionality to line up ending the round regardless of choice.
-    Action.updateCurrentPlayer(roomId)
+    Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
     # Gets the player list to extract the playerData and send a json.
     playerList = dbUtils.getPlayerList(roomId)

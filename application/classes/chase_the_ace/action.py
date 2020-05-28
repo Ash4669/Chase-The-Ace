@@ -34,41 +34,21 @@ class Action:
         # Commit changes
         db.session.commit()
 
-    def setCurrentPlayer(roomId):
-
+    def updateCurrentPlayer(roomId, previousPlayer):
         # Retrieving the list of players and the room data.
         playerList = dbUtils.getPlayerList(roomId)
         room = dbUtils.getRoom(roomId)
 
-        for i in range(len(playerList)):
-            player = playerList[i]
-
-            # Getting the generated id of the next player after the dealer who is still in the game.
-            if player.generatedPlayerId == room.dealerPlayerId:
-                while True:
-                    if i == len(playerList) - 1:
-                        i -= len(playerList)
-                    nextPlayer = playerList[i+1]
-                    if not nextPlayer.outOfGame:
-                        break
-                    i += 1
-                room.currentPlayerId = nextPlayer.generatedPlayerId
-                break
-
-        # Commit changes
-        db.session.commit()
-
-    def updateCurrentPlayer(roomId):
-
-        # Retrieving the list of players and the room data.
-        playerList = dbUtils.getPlayerList(roomId)
-        room = dbUtils.getRoom(roomId)
+        if previousPlayer == 'dealer':
+            currentPlayerId = room.dealerPlayerId
+        elif previousPlayer == 'player':
+            currentPlayerId = room.currentPlayerId
 
         for i in range(len(playerList)):
             player = playerList[i]
 
             # Getting the generated id of the next player who is still in the game.
-            if player.generatedPlayerId == room.currentPlayerId:
+            if player.generatedPlayerId == currentPlayerId:
                 while True:
                     if i == len(playerList) - 1:
                         i -= len(playerList)
