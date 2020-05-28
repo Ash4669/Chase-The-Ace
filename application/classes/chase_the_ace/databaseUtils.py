@@ -1,4 +1,6 @@
 from ... import models
+from ... import db
+
 
 class DatabaseUtils():
 
@@ -20,4 +22,13 @@ class DatabaseUtils():
 
     def getDealerId(self, roomId):
         return self.getRoom(roomId).dealerPlayerId
+
+    # Make more generic later when new games are added.
+    def addWinToUser(self, winningPlayerId):
+        userId = models.Player.query.filter_by(generatedPlayerId=winningPlayerId).first().userId
+        user = models.User.query.filter_by(id=userId).first()
+        user.chaseTheAceWins += 1
+        db.session.commit()
+
+
 # Refactor to be generic so I can pass in game type.

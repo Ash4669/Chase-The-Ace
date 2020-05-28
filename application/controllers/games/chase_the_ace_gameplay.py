@@ -274,8 +274,8 @@ def endRound(roomId):
     # Update players with their live count.
     emit('update player lives', playersJson, room=roomId)
 
-    room = dbUtils.getRoom(roomId)
     # If a winner isn't set, continue, otherwise send winner to all players
+    room = dbUtils.getRoom(roomId)
     if room.winningPlayerId is None:
 
         # Updates the dealer and sends it to all clients.
@@ -290,3 +290,4 @@ def endRound(roomId):
     else:
         winningId = room.winningPlayerId
         emit('trigger winner', winningId, room=roomId)
+        dbUtils.addWinToUser(winningId)

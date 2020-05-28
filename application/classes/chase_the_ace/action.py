@@ -204,7 +204,6 @@ class Action:
             db.session.commit()
 
 # Do in winners check:
-# Need if all players but one have no lives then player with > 0 lives wins.
 # Add 1 win to chaseTheAceWins for that use when they win.
 
 # Do in lives check:
