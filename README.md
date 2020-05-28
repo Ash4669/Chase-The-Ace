@@ -62,5 +62,5 @@ When person wins, if signed in, add one to their count with their userId.
 Or add a randomiser before pulling off the card.
 
 
->Bugs
->- If 3 people play, and the 3rd person is wiped out in 2 round, the dealer is then the first player. If they start the round, they get the cut action immediately and player 2 gets no go.
+> Bugs
+- Clear at the moment.
