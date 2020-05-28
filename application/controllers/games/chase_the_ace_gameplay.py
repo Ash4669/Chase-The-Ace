@@ -30,7 +30,7 @@ def generateAndHostRedirect():
         room = dbUtils.getRoom(roomId)
 
     # Instantiate the Room with the room id as game id and store it within the database.
-    newGame = models.Room(roomId=roomId, gameType='chase_the_ace', currentPlayerId=None, hostPlayerId=None)
+    newGame = models.Room(roomId=roomId, gameType='chase_the_ace', currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
     db.session.add(newGame)
     db.session.commit()
 
@@ -129,7 +129,7 @@ def startGame():
         # Setting the lives of the players and their out of game statuses.
         playerList = dbUtils.getPlayerList(roomId)
         for i in range(len(playerList)):
-            playerList[i].lives = 3
+            playerList[i].lives = 2
             playerList[i].outOfGame = False
         db.session.commit()
 
@@ -274,13 +274,19 @@ def endRound(roomId):
     # Update players with their live count.
     emit('update player lives', playersJson, room=roomId)
 
-    # Updates the dealer and sends it to all clients.
-    Action.updateCurrentDealer(roomId)
+    room = dbUtils.getRoom(roomId)
+    # If a winner isn't set, continue, otherwise send winner to all players
+    if room.winningPlayerId is None:
 
-    currentDealer = dbUtils.getDealerId(roomId)
-    emit('setDealer', currentDealer, roomId)
+        # Updates the dealer and sends it to all clients.
+        Action.updateCurrentDealer(roomId)
 
-    # Display new round button for the player to the left.
-    emit('display new round button', room=roomId)
+        currentDealer = dbUtils.getDealerId(roomId)
+        emit('setDealer', currentDealer, roomId)
 
-    #     NEED CONTINGENCY FOR WHEN BOTH PLAYER HAVE THE SAME CARD ON THE LAST ROUND AND BOTH LOSE.
+        # Display new round button for the player to the left.
+        emit('display new round button', room=roomId)
+
+    else:
+        winningId = room.winningPlayerId
+        emit('trigger winner', winningId, room=roomId)

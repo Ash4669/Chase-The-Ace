@@ -10,7 +10,7 @@ class GamePage extends Phaser.Scene {
     playerNamesDisplays = new Array();
 
     // Player Lives
-    maxPlayerLives = 3;
+    maxPlayerLives = 2;
     playerLives;
     playerLivesDisplays = new Array();
 
@@ -185,6 +185,18 @@ class GamePage extends Phaser.Scene {
                 gamePage.displayStartButton();
             }
         })
+
+        // Displays winner text for the winning player.
+        socket.on('trigger winner', function(winnerId)
+        {
+            for (var i = 0; i < gamePage.playerNames.length; i++)
+            {
+                if (gamePage.playerId == winnerId)
+                {
+                    gamePage.displayWin();
+                }
+            }
+        })
     }
 
     displayStartButton()
@@ -230,7 +242,7 @@ class GamePage extends Phaser.Scene {
         if (this.playerCardValue != null)
         {
             // FIX CARD PIXELATION
-            this.playerCardDisplay = this.add.image(340, 80, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+            this.playerCardDisplay = this.add.image(340, 110, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
         }
     }
 
@@ -334,6 +346,11 @@ class GamePage extends Phaser.Scene {
         {
           console.log("all player cards not set yet.");
         }
+    }
+
+    displayWin()
+    {
+        this.add.text(400, 80, 'Winner!')
     }
 }
 
