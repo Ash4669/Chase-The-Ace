@@ -94,7 +94,7 @@ class Action:
             # Getting the current player.
             player = playerList[i]
 
-            # Getting the generated id of the player next to the dealer.
+            # Getting the generated id of the player next to the player.
             if player.generatedPlayerId == room.currentPlayerId:
 
                 # If the current player is at the edge of the array, then set it back to
@@ -112,7 +112,6 @@ class Action:
 
                 if 'king' in nextPlayerCard:
                     emit('Next player has a king')
-                    Action.updateCurrentPlayer(roomId, previousPlayer='player')
                     # Add reveal king emit here for entire room. send position in list ?
                 else:
                     player.card = nextPlayerCard

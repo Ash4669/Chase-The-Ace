@@ -145,9 +145,6 @@ def startGame():
     # Dealing the cards to the players.
     Action.dealCards(roomId)
 
-    # Updating the current player as it cannot be the dealer
-    Action.updateCurrentPlayer(roomId, previousPlayer='dealer')
-
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)
     playersJson = []
@@ -156,6 +153,9 @@ def startGame():
     # Updating the player data on client side.
     emit('update player data', playersJson, room = roomId)
     emit('update player lives', playersJson, room = roomId)
+
+    # Updating the current player as it cannot be the dealer
+    Action.updateCurrentPlayer(roomId, previousPlayer='dealer')
 
     # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
@@ -196,15 +196,15 @@ def tradeCard():
     # Trades cards with the next person in the game.
     Action.tradeCards(roomId)
 
-    # Increments the player as their choice doesn't make a change.
-    Action.updateCurrentPlayer(roomId, previousPlayer='player')
-
     # Gets the player list to extract the playerData and send a json.
     playerList = dbUtils.getPlayerList(roomId)
 
     # Extracts the playerData and to send a json.
     playersJson = []
     jsonifyPlayerData(playerList, playersJson)
+
+    # Increments the player as their choice doesn't make a change.
+    Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
