@@ -178,6 +178,7 @@ class Action:
             if cardValue != minimumCardValue:
                 allEqual = False
                 break
+
         # If the game is not a draw then calculate the loser/s
         if not allEqual:
             # Subtracting a life off of all players with lowest cards.
