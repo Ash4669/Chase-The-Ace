@@ -153,7 +153,7 @@ def startGame():
     playersJson = []
     jsonifyPlayerData(playerList, playersJson)
 
-    # Updating the player data on client side
+    # Updating the player data on client side.
     emit('update player data', playersJson, room = roomId)
     emit('update player lives', playersJson, room = roomId)
 
@@ -264,7 +264,7 @@ def jsonifyPlayerData(playerList, playersJson):
 
 def endRound(roomId):
     # Calculate the winner and adjust lives accordingly.
-    Action.calculateWinner(roomId)
+    Action.calculateRoundWinner(roomId)
 
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)
