@@ -139,7 +139,7 @@ class Action:
         # Commit changes
         db.session.commit()
 
-    def calculateWinner(roomId):
+    def calculateRoundWinner(roomId):
 
         # Get the list of players
         playerList = dbUtils.getPlayerList(roomId)
@@ -172,18 +172,30 @@ class Action:
         # Getting the minimum of the card values.
         minimumCardValue = idsAndCards[min(idsAndCards.keys(), key=(lambda k: idsAndCards[k]))]
 
-        # Subtracting a life off of all players with lowest cards.
-        for playerId, cardValue in idsAndCards.items():
-            if cardValue == minimumCardValue:
-                player = dbUtils.getSpecificPlayer(roomId, playerId)
-                player.lives -= 1
+        # Check whether the round is a draw.
+        allEqual = True
+        for cardValue in idsAndCards.values():
+            if cardValue != minimumCardValue:
+                allEqual = False
+                break
 
-                # If the player has no lives left, they are set as out of the game.
-                if player.lives == 0:
-                    player.outOfGame = True
-                db.session.commit()
+        # If the game is not a draw then calculate the loser/s
+        if not allEqual:
+            # Subtracting a life off of all players with lowest cards.
+            for playerId, cardValue in idsAndCards.items():
+                if cardValue == minimumCardValue:
+                    player = dbUtils.getSpecificPlayer(roomId, playerId)
+                    player.lives -= 1
 
-        # Checking for a winner.
+                    # If the player has no lives left, they are set as out of the game.
+                    if player.lives == 0:
+                        player.outOfGame = True
+                    db.session.commit()
+
+            # Checking for a winner.
+            Action.checkForGameWinner(roomId)
+
+    def checkForGameWinner(roomId):
         idsAndLives = {}
         playerList = dbUtils.getPlayerList(roomId)
         for i in range(len(playerList)):
