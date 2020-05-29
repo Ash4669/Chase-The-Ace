@@ -218,9 +218,3 @@ class Action:
             room = dbUtils.getRoom(roomId)
             room.winningPlayerId = winningPlayer
             db.session.commit()
-
-# Do in winners check:
-# Add 1 win to chaseTheAceWins for that use when they win.
-
-# Do in lives check:
-# Also, need if all players have the same card and only 1 life left, then ignore round.
