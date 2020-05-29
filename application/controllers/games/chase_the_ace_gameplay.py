@@ -168,28 +168,25 @@ def stickCard():
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     dealerId = dbUtils.getDealerId(roomId)
 
-    # increments the player as their choice doesn't make a change.
-    Action.updateCurrentPlayer(roomId, previousPlayer='player')
-
-    # Gets the player list to extract the playerData and send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-
-    # Extracts the playerData and to send a json.
-    playersJson = []
-    jsonifyPlayerData(playerList, playersJson)
-
-    # Updating the player data on client side
-    emit('update player data', playersJson, room=roomId)
-
-    updatedCurrentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     if currentPlayerId == dealerId:
+        # Gets the player list to extract the playerData and send a json.
+        playerList = dbUtils.getPlayerList(roomId)
+
+        # Extracts the playerData and to send a json.
+        playersJson = []
+        jsonifyPlayerData(playerList, playersJson)
+
         # Dealer just stuck so end round.
         emit('reveal cards and trigger results', playersJson, room=roomId)
 
         endRound(roomId)
     else:
+        # increments the player as their choice doesn't make a change.
+        Action.updateCurrentPlayer(roomId, previousPlayer='player')
+        currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+
         # Giving the new current player the choice.
-        emit('give player choice', updatedCurrentPlayerId, room=roomId)
+        emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('trade card')
 def tradeCard():

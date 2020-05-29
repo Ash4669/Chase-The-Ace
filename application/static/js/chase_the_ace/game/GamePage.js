@@ -197,6 +197,11 @@ class GamePage extends Phaser.Scene {
                 }
             }
         })
+
+        socket.on('Next player has a king', function()
+        {
+            console.log('Next player has king')
+        })
     }
 
     displayStartButton()
