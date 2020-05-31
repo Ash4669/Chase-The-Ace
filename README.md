@@ -73,6 +73,8 @@ When person wins, if signed in, add one to their count with their userId.
 - Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
 Or add a randomiser before pulling off the card.
 
+> Testing notes
+- Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
 > Bugs
 - Clear at the moment.
