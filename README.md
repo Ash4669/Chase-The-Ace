@@ -48,13 +48,13 @@ When person wins, if signed in, add one to their count with their userId.
 - If player clicks trade:
   - / Skip trade 
   - / Emit popup trigger just to player
-  - Display popup saying next player has a king.
+  - Display popup saying next playerList has a king.
   - Reveal king next to player to everyone.
 
 - If a person has a king:
-  - Skip to next person before giving them options.
+ - skip player before giving actions, unless they are the dealer, in which case end the round.
 
-- Give person with king option to display their card.
+- Give person with king option to display their card. If it has been revealed already, get rid of button to reveal. If it's revealed by trade, create king revealed array for storing true or false selector for all players on whether their king has been revealed already and if it has then ignore the matching reveal code.
 
 ---
 - Have it so a player, if they have a king can flip it and display it on the side of the game. Have it where it's their place in the playerList times i for its position. Once it's flipped, the next person doesn't have the trade option anymore.
