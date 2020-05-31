@@ -129,7 +129,7 @@ def startGame():
         # Setting the lives of the players and their out of game statuses.
         playerList = dbUtils.getPlayerList(roomId)
         for i in range(len(playerList)):
-            playerList[i].lives = 2
+            playerList[i].lives = 5
             playerList[i].outOfGame = False
         db.session.commit()
 
@@ -159,7 +159,19 @@ def startGame():
 
     # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-    emit('give player choice', currentPlayerId, room = roomId)
+    dealerPlayerId = dbUtils.getDealerId(roomId)
+    currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+    while 'king' in currentPlayerCard:
+        if currentPlayerId == dealerPlayerId:
+            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+            endRound(roomId)
+            break
+        else:
+            Action.updateCurrentPlayer(roomId, previousPlayer='player')
+            currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+    if currentPlayerId != dealerPlayerId or 'king' not in currentPlayerCard:
+        emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('stick card')
 def stickCard():
@@ -183,10 +195,26 @@ def stickCard():
     else:
         # increments the player as their choice doesn't make a change.
         Action.updateCurrentPlayer(roomId, previousPlayer='player')
-        currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+        # currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+        #
+        # # Giving the new current player the choice.
+        # emit('give player choice', currentPlayerId, room=roomId)
 
-        # Giving the new current player the choice.
-        emit('give player choice', currentPlayerId, room=roomId)
+        # Giving the current player the choice.
+        currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+        dealerPlayerId = dbUtils.getDealerId(roomId)
+        currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+        while 'king' in currentPlayerCard:
+            if currentPlayerId == dealerPlayerId:
+                currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+                endRound(roomId)
+                break
+            else:
+                Action.updateCurrentPlayer(roomId, previousPlayer='player')
+                currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+                currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+        if currentPlayerId != dealerPlayerId or 'king' not in currentPlayerCard:
+            emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('trade card')
 def tradeCard():
@@ -203,15 +231,27 @@ def tradeCard():
     playersJson = []
     jsonifyPlayerData(playerList, playersJson)
 
-    # Increments the player as their choice doesn't make a change.
-    Action.updateCurrentPlayer(roomId, previousPlayer='player')
-
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
 
-    # Giving the new current player the choice.
+    # Increments the player as their choice doesn't make a change.
+    Action.updateCurrentPlayer(roomId, previousPlayer='player')
+
+    # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-    emit('give player choice', currentPlayerId, room=roomId)
+    dealerPlayerId = dbUtils.getDealerId(roomId)
+    currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+    while 'king' in currentPlayerCard:
+        if currentPlayerId == dealerPlayerId:
+            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+            endRound(roomId)
+            break
+        else:
+            Action.updateCurrentPlayer(roomId, previousPlayer='player')
+            currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+    if currentPlayerId != dealerPlayerId or 'king' not in currentPlayerCard:
+        emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('cut card')
 def cutCard():
