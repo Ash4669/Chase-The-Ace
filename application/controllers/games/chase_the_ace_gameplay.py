@@ -161,6 +161,8 @@ def startGame():
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     dealerPlayerId = dbUtils.getDealerId(roomId)
     currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+
+    # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
     while 'king' in currentPlayerCard:
         if currentPlayerId == dealerPlayerId:
             currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
@@ -170,7 +172,11 @@ def startGame():
             Action.updateCurrentPlayer(roomId, previousPlayer='player')
             currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
             currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
-    if currentPlayerId != dealerPlayerId or 'king' not in currentPlayerCard:
+
+    # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
+    # round is ended, the player is updated in later code, but the dealer must not get player choice and so
+    # the if statement is necessary.
+    if 'king' not in currentPlayerCard:
         emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('stick card')
@@ -195,15 +201,13 @@ def stickCard():
     else:
         # increments the player as their choice doesn't make a change.
         Action.updateCurrentPlayer(roomId, previousPlayer='player')
-        # currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-        #
-        # # Giving the new current player the choice.
-        # emit('give player choice', currentPlayerId, room=roomId)
 
         # Giving the current player the choice.
         currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
         dealerPlayerId = dbUtils.getDealerId(roomId)
         currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+
+        # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
         while 'king' in currentPlayerCard:
             if currentPlayerId == dealerPlayerId:
                 currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
@@ -213,7 +217,11 @@ def stickCard():
                 Action.updateCurrentPlayer(roomId, previousPlayer='player')
                 currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
                 currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
-        if currentPlayerId != dealerPlayerId or 'king' not in currentPlayerCard:
+
+        # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
+        # round is ended, the player is updated in later code, but the dealer must not get player choice and so
+        # the if statement is necessary.
+        if 'king' not in currentPlayerCard:
             emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('trade card')
@@ -241,6 +249,8 @@ def tradeCard():
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     dealerPlayerId = dbUtils.getDealerId(roomId)
     currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+
+    # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
     while 'king' in currentPlayerCard:
         if currentPlayerId == dealerPlayerId:
             currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
@@ -250,7 +260,11 @@ def tradeCard():
             Action.updateCurrentPlayer(roomId, previousPlayer='player')
             currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
             currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
-    if currentPlayerId != dealerPlayerId or 'king' not in currentPlayerCard:
+
+    # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
+    # round is ended, the player is updated in later code, but the dealer must not get player choice and so
+    # the if statement is necessary.
+    if 'king' not in currentPlayerCard:
         emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('cut card')
