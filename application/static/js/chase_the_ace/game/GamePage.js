@@ -18,14 +18,17 @@ class GamePage extends Phaser.Scene {
     playerCardValue;
     playerCardDisplay;
     allPlayerCardDisplays = new Array();
+    revealedKingsDisplays = new Array();
 
     // Game Buttons
     startButton;
     stickButton;
     tradeButton;
     cutButton;
+    revealKingButton;
 
-    playerHasKing;
+    nextPlayerHasKingText;
+    kingNotRevealed = true;
 
     // Phaser structure for constructor, preload and create methods.
     constructor()
@@ -44,6 +47,7 @@ class GamePage extends Phaser.Scene {
         this.load.image("stickButton","../../static/images/playbutton.png");
         this.load.image("tradeButton","../../static/images/optionsbutton.png");
         this.load.image("cutButton","../../static/images/cutButton.png");
+        this.load.image("revealKingButton","../../static/images/cutButton.png");
         this.load.image("heart","../../static/images/heart.png");
         this.load.image("emptyHeart","../../static/images/heart-empty.png");
 
@@ -130,6 +134,10 @@ class GamePage extends Phaser.Scene {
                 if (playerData.id == gamePage.playerId)
                 {
                     gamePage.playerCardValue = playerData.card;
+                    if (playerData.card.includes('king') && gamePage.kingNotRevealed)
+                    {
+                        gamePage.displayRevealKingButton();
+                    }
                 }
             }
             gamePage.updateCards();
@@ -200,9 +208,30 @@ class GamePage extends Phaser.Scene {
             }
         })
 
-        socket.on('Next player has a king', function()
+        socket.on('next player has a king', function()
         {
             gamePage.displayNextPlayerHasKing()
+        })
+
+        socket.on('reveal king of playerId', function(playerData, playerId)
+        {
+            for (var i = 0; i < gamePage.playerNames.length; i++)
+            {
+                // If a player is out of the game, don't display their card.
+                if (JSON.parse(playerData[i]).id == playerId)
+                {
+                    gamePage.playerCard = JSON.parse(playerData[i]).card
+                    gamePage.revealedKingsDisplays.push(gamePage.add.image(800, 60 + (i * 40), gamePage.playerCard).setDisplaySize(20, 32));
+                }
+            }
+        })
+
+        socket.on('delete reveal button for player', function(currentPlayerId)
+        {
+            if (currentPlayerId == gamePage.playerId)
+            {
+                gamePage.onRevealKingButtonClicked();
+            }
         })
     }
 
@@ -218,6 +247,7 @@ class GamePage extends Phaser.Scene {
         this.startButton.destroy();
         socket.emit('delete all player cards')
         socket.emit('start game');
+        this.kingNotRevealed = true;
     }
 
     deletePlayerNames()
@@ -333,7 +363,8 @@ class GamePage extends Phaser.Scene {
         for (var i = 0; i < this.playerNames.length; i++)
         {
             // If a player is out of the game, don't display their card.
-            if (JSON.parse(playerData[i]).outOfGame == false) {
+            if (JSON.parse(playerData[i]).outOfGame == false)
+            {
                 this.playerCard = JSON.parse(playerData[i]).card
                 this.allPlayerCardDisplays[i] = this.add.image(800, 60 + (i * 40), this.playerCard).setDisplaySize(20, 32);
             }
@@ -353,6 +384,17 @@ class GamePage extends Phaser.Scene {
         {
           console.log("all player cards not set yet.");
         }
+        try
+        {
+            for (var i = 0; i < this.revealedKingsDisplays.length; i++)
+            {
+                this.revealedKingsDisplays[i].destroy();
+            }
+        }
+        catch (e)
+        {
+          console.log("all player cards not set yet.");
+        }
     }
 
     displayWin()
@@ -362,19 +404,40 @@ class GamePage extends Phaser.Scene {
 
     displayNextPlayerHasKing()
     {
-        this.playerHasKing = this.add.text(360, 80, 'Other player has a king!');
+        this.nextPlayerHasKingText = this.add.text(360, 80, 'Other player has a king!');
         this.add.tween(
         {
-            targets: this.playerHasKing,
+            targets: this.nextPlayerHasKingText,
             ease: 'Sine.easeInOut',
             duration: 1000,
             delay: 1000,
             alpha: 0,
             onComplete: () =>
             {
-                this.playerHasKing.destroy();
+                this.nextPlayerHasKingText.destroy();
             }
         });
+    }
+
+    displayRevealKingButton()
+    {
+        if (this.playerId != this.dealerId)
+        {
+            this.kingNotRevealed = false;
+            this.revealKingButton = this.add.image(100, 250, "revealKingButton").setOrigin(0, 0);
+            this.revealKingButton.setDisplaySize(200, 100);
+            this.revealKingButton.setInteractive().on('pointerdown', () => this.onRevealKingButtonClicked());
+        }
+
+    }
+
+    onRevealKingButtonClicked()
+    {
+        if (this.playerId != this.dealerId)
+        {
+            this.revealKingButton.destroy();
+            socket.emit('reveal king')
+        }
     }
 }
 

@@ -164,8 +164,20 @@ def startGame():
 
     # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
     while 'king' in currentPlayerCard:
+        # Destroy the reveal button since the player's king is revealed when they skip their go.
+        emit('delete reveal button for player', currentPlayerId, room=roomId)
         if currentPlayerId == dealerPlayerId:
             currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+
+            # Gets the player list to extract the playerData and send a json.
+            playerList = dbUtils.getPlayerList(roomId)
+
+            # Extracts the playerData and to send a json.
+            playersJson = []
+            jsonifyPlayerData(playerList, playersJson)
+
+            # Revealing all the cards at the end of the round.
+            emit('reveal cards and trigger results', playersJson, room=roomId)
             endRound(roomId)
             break
         else:
@@ -209,8 +221,20 @@ def stickCard():
 
         # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
         while 'king' in currentPlayerCard:
+            # Destroy the reveal button since the player's king is revealed when they skip their go.
+            emit('delete reveal button for player', currentPlayerId, room=roomId)
             if currentPlayerId == dealerPlayerId:
                 currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+
+                # Gets the player list to extract the playerData and send a json.
+                playerList = dbUtils.getPlayerList(roomId)
+
+                # Extracts the playerData and to send a json.
+                playersJson = []
+                jsonifyPlayerData(playerList, playersJson)
+
+                # Revealing all the cards at the end of the round.
+                emit('reveal cards and trigger results', playersJson, room=roomId)
                 endRound(roomId)
                 break
             else:
@@ -252,8 +276,20 @@ def tradeCard():
 
     # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
     while 'king' in currentPlayerCard:
+        # Destroy the reveal button since the player's king is revealed when they skip their go.
+        emit('delete reveal button for player', currentPlayerId, room=roomId)
         if currentPlayerId == dealerPlayerId:
             currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+
+            # Gets the player list to extract the playerData and send a json.
+            playerList = dbUtils.getPlayerList(roomId)
+
+            # Extracts the playerData and to send a json.
+            playersJson = []
+            jsonifyPlayerData(playerList, playersJson)
+
+            # Revealing all the cards at the end of the round.
+            emit('reveal cards and trigger results', playersJson, room=roomId)
             endRound(roomId)
             break
         else:
@@ -292,6 +328,20 @@ def cutCard():
     emit('reveal cards and trigger results', playersJson, room=roomId)
 
     endRound(roomId)
+
+@socketio.on('reveal king')
+def revealKing():
+    roomId = session.get('roomId')
+    playerId = session.get('playerId')
+
+    # Gets the player list to extract the playerData and send a json.
+    playerList = dbUtils.getPlayerList(roomId)
+
+    # Extracts the playerData and to send a json.
+    playersJson = []
+    jsonifyPlayerData(playerList, playersJson)
+
+    emit('reveal king of playerId', (playersJson, playerId), room=roomId)
 
 @socketio.on('delete all player cards')
 def deletePlayerCardsDisplay():
