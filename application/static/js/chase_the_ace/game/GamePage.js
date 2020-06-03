@@ -25,6 +25,8 @@ class GamePage extends Phaser.Scene {
     tradeButton;
     cutButton;
 
+    playerHasKing;
+
     // Phaser structure for constructor, preload and create methods.
     constructor()
     {
@@ -200,7 +202,7 @@ class GamePage extends Phaser.Scene {
 
         socket.on('Next player has a king', function()
         {
-            console.log('Next player has king')
+            gamePage.displayNextPlayerHasKing()
         })
     }
 
@@ -356,6 +358,23 @@ class GamePage extends Phaser.Scene {
     displayWin()
     {
         this.add.text(400, 80, 'Winner!')
+    }
+
+    displayNextPlayerHasKing()
+    {
+        this.playerHasKing = this.add.text(360, 80, 'Other player has a king!');
+        this.add.tween(
+        {
+            targets: this.playerHasKing,
+            ease: 'Sine.easeInOut',
+            duration: 1000,
+            delay: 1000,
+            alpha: 0,
+            onComplete: () =>
+            {
+                this.playerHasKing.destroy();
+            }
+        });
     }
 }
 
