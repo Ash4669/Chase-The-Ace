@@ -174,9 +174,8 @@ def startGame():
             currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
             currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
-    # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
-    # round is ended, the player is updated in later code, but the dealer must not get player choice and so
-    # the if statement is necessary.
+    # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
+    # the current player is on round end and the dealer mustn't get a choice.
     if 'king' not in currentPlayerCard:
         emit('give player choice', currentPlayerId, room=roomId)
 
@@ -210,9 +209,8 @@ def stickCard():
                 currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
                 currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
-        # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
-        # round is ended, the player is updated in later code, but the dealer must not get player choice and so
-        # the if statement is necessary.
+        # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
+        # the current player is on round end and the dealer mustn't get a choice.
         if 'king' not in currentPlayerCard:
             emit('give player choice', currentPlayerId, room=roomId)
 
@@ -252,9 +250,8 @@ def tradeCard():
             currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
             currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
-    # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
-    # round is ended, the player is updated in later code, but the dealer must not get player choice and so
-    # the if statement is necessary.
+    # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
+    # the current player is on round end and the dealer mustn't get a choice.
     if 'king' not in currentPlayerCard:
         emit('give player choice', currentPlayerId, room=roomId)
 
