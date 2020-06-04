@@ -160,7 +160,7 @@ def startGame():
     # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     dealerPlayerId = dbUtils.getDealerId(roomId)
-    currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+    currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
     # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
     while 'king' in currentPlayerCard:
@@ -172,7 +172,7 @@ def startGame():
         else:
             Action.updateCurrentPlayer(roomId, previousPlayer='player')
             currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+            currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
     # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
     # round is ended, the player is updated in later code, but the dealer must not get player choice and so
@@ -196,7 +196,7 @@ def stickCard():
         # Giving the current player the choice.
         currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
         dealerPlayerId = dbUtils.getDealerId(roomId)
-        currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+        currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
         # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
         while 'king' in currentPlayerCard:
@@ -208,7 +208,7 @@ def stickCard():
             else:
                 Action.updateCurrentPlayer(roomId, previousPlayer='player')
                 currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-                currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+                currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
         # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
         # round is ended, the player is updated in later code, but the dealer must not get player choice and so
@@ -238,7 +238,7 @@ def tradeCard():
     # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     dealerPlayerId = dbUtils.getDealerId(roomId)
-    currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+    currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
     # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
     while 'king' in currentPlayerCard:
@@ -250,7 +250,7 @@ def tradeCard():
         else:
             Action.updateCurrentPlayer(roomId, previousPlayer='player')
             currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
+            currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
 
     # If the player has a king, they would be skipped regardless, but if the dealer had a king, then the
     # round is ended, the player is updated in later code, but the dealer must not get player choice and so
