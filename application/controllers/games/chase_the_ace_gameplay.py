@@ -167,17 +167,6 @@ def startGame():
         # Destroy the reveal button since the player's king is revealed when they skip their go.
         emit('delete reveal button for player', currentPlayerId, room=roomId)
         if currentPlayerId == dealerPlayerId:
-            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
-
-            # Gets the player list to extract the playerData and send a json.
-            playerList = dbUtils.getPlayerList(roomId)
-
-            # Extracts the playerData and to send a json.
-            playersJson = []
-            jsonifyPlayerData(playerList, playersJson)
-
-            # Revealing all the cards at the end of the round.
-            emit('reveal cards and trigger results', playersJson, room=roomId)
             endRound(roomId)
             break
         else:
@@ -199,16 +188,6 @@ def stickCard():
     dealerId = dbUtils.getDealerId(roomId)
 
     if currentPlayerId == dealerId:
-        # Gets the player list to extract the playerData and send a json.
-        playerList = dbUtils.getPlayerList(roomId)
-
-        # Extracts the playerData and to send a json.
-        playersJson = []
-        jsonifyPlayerData(playerList, playersJson)
-
-        # Dealer just stuck so end round.
-        emit('reveal cards and trigger results', playersJson, room=roomId)
-
         endRound(roomId)
     else:
         # increments the player as their choice doesn't make a change.
@@ -224,17 +203,6 @@ def stickCard():
             # Destroy the reveal button since the player's king is revealed when they skip their go.
             emit('delete reveal button for player', currentPlayerId, room=roomId)
             if currentPlayerId == dealerPlayerId:
-                currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
-
-                # Gets the player list to extract the playerData and send a json.
-                playerList = dbUtils.getPlayerList(roomId)
-
-                # Extracts the playerData and to send a json.
-                playersJson = []
-                jsonifyPlayerData(playerList, playersJson)
-
-                # Revealing all the cards at the end of the round.
-                emit('reveal cards and trigger results', playersJson, room=roomId)
                 endRound(roomId)
                 break
             else:
@@ -256,11 +224,9 @@ def tradeCard():
     # Trades cards with the next person in the game.
     Action.tradeCards(roomId)
 
-    # Gets the player list to extract the playerData and send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-
-    # Extracts the playerData and to send a json.
+    # Prepare player data to emit it to all players.
     playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
@@ -279,17 +245,6 @@ def tradeCard():
         # Destroy the reveal button since the player's king is revealed when they skip their go.
         emit('delete reveal button for player', currentPlayerId, room=roomId)
         if currentPlayerId == dealerPlayerId:
-            currentPlayerCard = dbUtils.getSpecificPlayer(roomId, currentPlayerId).card
-
-            # Gets the player list to extract the playerData and send a json.
-            playerList = dbUtils.getPlayerList(roomId)
-
-            # Extracts the playerData and to send a json.
-            playersJson = []
-            jsonifyPlayerData(playerList, playersJson)
-
-            # Revealing all the cards at the end of the round.
-            emit('reveal cards and trigger results', playersJson, room=roomId)
             endRound(roomId)
             break
         else:
@@ -314,18 +269,13 @@ def cutCard():
     # Increments the player too match stick card functionality to line up ending the round regardless of choice.
     Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
-    # Gets the player list to extract the playerData and send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-
-    # Extracts the playerData and to send a json.
+    # Prepare player data to emit it to all players.
     playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
-
-    # Dealer just stuck so end round.
-    emit('reveal cards and trigger results', playersJson, room=roomId)
 
     endRound(roomId)
 
@@ -334,11 +284,9 @@ def revealKing():
     roomId = session.get('roomId')
     playerId = session.get('playerId')
 
-    # Gets the player list to extract the playerData and send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-
-    # Extracts the playerData and to send a json.
+    # Prepare player data to emit it to all players.
     playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
     jsonifyPlayerData(playerList, playersJson)
 
     emit('reveal king of playerId', (playersJson, playerId), room=roomId)
@@ -364,6 +312,14 @@ def jsonifyPlayerData(playerList, playersJson):
         playersJson.append(jsonData)
 
 def endRound(roomId):
+    # Prepare player data to emit it to all players.
+    playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
+    jsonifyPlayerData(playerList, playersJson)
+
+    # Revealing all the cards at the end of the round.
+    emit('reveal cards and trigger results', playersJson, room=roomId)
+
     # Calculate the winner and adjust lives accordingly.
     Action.calculateRoundWinner(roomId)
 
