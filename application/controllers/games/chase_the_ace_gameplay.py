@@ -129,7 +129,7 @@ def startGame():
         # Setting the lives of the players and their out of game statuses.
         playerList = dbUtils.getPlayerList(roomId)
         for i in range(len(playerList)):
-            playerList[i].lives = 5
+            playerList[i].lives = 3
             playerList[i].outOfGame = False
         db.session.commit()
 
