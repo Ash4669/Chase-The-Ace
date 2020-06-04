@@ -315,7 +315,7 @@ def endRound(roomId):
     jsonifyPlayerData(playerList, playersJson)
 
     # Revealing all the cards at the end of the round.
-    emit('reveal cards and trigger results', playersJson, room=roomId)
+    emit('reveal all cards', playersJson, room=roomId)
 
     # Calculate the winner and adjust lives accordingly.
     Action.calculateRoundWinner(roomId)

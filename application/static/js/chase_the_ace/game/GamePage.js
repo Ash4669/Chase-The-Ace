@@ -176,7 +176,7 @@ class GamePage extends Phaser.Scene {
         })
 
         // Reveals all cards to everyone by the player names after the dealer's decision is made.
-        socket.on('reveal cards and trigger results', function(playerData)
+        socket.on('reveal all cards', function(playerData)
         {
             gamePage.displayAllPlayerCards(playerData)
         })
