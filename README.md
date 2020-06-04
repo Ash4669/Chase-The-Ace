@@ -44,14 +44,14 @@ When host quits, boot everyone
 When person wins, if signed in, add one to their count with their userId.
 
 > Functionality left to implement
-- Cannot swap a king.
+- Have it so a player, if they have a king can flip it and display it on the side of the game. Have it where it's their place in the playerList times i for its position. Once it's flipped, the next person doesn't have the trade option anymore.
 - Dealer shouldn't see their card.
 - Can swap a king if it's the dealers card because they haven't see it.
   So if not equal to dealer then don't swap and give a message back, or don't give option.
   Check next card in deck and if king then skip options and update current player.
 - Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
 
-- Awarding score for winner if they are signed in.
+- When the host quits a game, have a popup and on clicking 'ok' then redirect.
 - Saying you're the dealer when you are.
 - Selection for how many lives you want
 - Displaying whos go it is on player list.
@@ -61,6 +61,8 @@ When person wins, if signed in, add one to their count with their userId.
 - Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
 Or add a randomiser before pulling off the card.
 
+> Testing notes
+- Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
 > Bugs
 - Clear at the moment.

@@ -23,6 +23,9 @@ class DatabaseUtils():
     def getDealerId(self, roomId):
         return self.getRoom(roomId).dealerPlayerId
 
+    def getPlayerCard(self, roomId, playerId):
+        return self.getSpecificPlayer(roomId, playerId).card
+
     # Make more generic later when new games are added.
     def addWinToUser(self, winningPlayerId):
         userId = models.Player.query.filter_by(generatedPlayerId=winningPlayerId).first().userId

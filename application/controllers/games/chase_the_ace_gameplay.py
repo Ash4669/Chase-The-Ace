@@ -129,7 +129,7 @@ def startGame():
         # Setting the lives of the players and their out of game statuses.
         playerList = dbUtils.getPlayerList(roomId)
         for i in range(len(playerList)):
-            playerList[i].lives = 2
+            playerList[i].lives = 3
             playerList[i].outOfGame = False
         db.session.commit()
 
@@ -145,9 +145,6 @@ def startGame():
     # Dealing the cards to the players.
     Action.dealCards(roomId)
 
-    # Updating the current player as it cannot be the dealer
-    Action.updateCurrentPlayer(roomId, previousPlayer='dealer')
-
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)
     playersJson = []
@@ -157,9 +154,30 @@ def startGame():
     emit('update player data', playersJson, room = roomId)
     emit('update player lives', playersJson, room = roomId)
 
+    # Updating the current player as it cannot be the dealer
+    Action.updateCurrentPlayer(roomId, previousPlayer='dealer')
+
     # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-    emit('give player choice', currentPlayerId, room = roomId)
+    dealerPlayerId = dbUtils.getDealerId(roomId)
+    currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+    # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
+    while 'king' in currentPlayerCard:
+        # Destroy the reveal button since the player's king is revealed when they skip their go.
+        emit('delete reveal button for player', currentPlayerId, room=roomId)
+        if currentPlayerId == dealerPlayerId:
+            endRound(roomId)
+            break
+        else:
+            Action.updateCurrentPlayer(roomId, previousPlayer='player')
+            currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+            currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+    # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
+    # the current player is on round end and the dealer mustn't get a choice.
+    if 'king' not in currentPlayerCard:
+        emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('stick card')
 def stickCard():
@@ -168,28 +186,33 @@ def stickCard():
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     dealerId = dbUtils.getDealerId(roomId)
 
-    # increments the player as their choice doesn't make a change.
-    Action.updateCurrentPlayer(roomId, previousPlayer='player')
-
-    # Gets the player list to extract the playerData and send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-
-    # Extracts the playerData and to send a json.
-    playersJson = []
-    jsonifyPlayerData(playerList, playersJson)
-
-    # Updating the player data on client side
-    emit('update player data', playersJson, room=roomId)
-
-    updatedCurrentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     if currentPlayerId == dealerId:
-        # Dealer just stuck so end round.
-        emit('reveal cards and trigger results', playersJson, room=roomId)
-
         endRound(roomId)
     else:
-        # Giving the new current player the choice.
-        emit('give player choice', updatedCurrentPlayerId, room=roomId)
+        # increments the player as their choice doesn't make a change.
+        Action.updateCurrentPlayer(roomId, previousPlayer='player')
+
+        # Giving the current player the choice.
+        currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+        dealerPlayerId = dbUtils.getDealerId(roomId)
+        currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+        # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
+        while 'king' in currentPlayerCard:
+            # Destroy the reveal button since the player's king is revealed when they skip their go.
+            emit('delete reveal button for player', currentPlayerId, room=roomId)
+            if currentPlayerId == dealerPlayerId:
+                endRound(roomId)
+                break
+            else:
+                Action.updateCurrentPlayer(roomId, previousPlayer='player')
+                currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+                currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+        # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
+        # the current player is on round end and the dealer mustn't get a choice.
+        if 'king' not in currentPlayerCard:
+            emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('trade card')
 def tradeCard():
@@ -199,22 +222,38 @@ def tradeCard():
     # Trades cards with the next person in the game.
     Action.tradeCards(roomId)
 
-    # Increments the player as their choice doesn't make a change.
-    Action.updateCurrentPlayer(roomId, previousPlayer='player')
-
-    # Gets the player list to extract the playerData and send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-
-    # Extracts the playerData and to send a json.
+    # Prepare player data to emit it to all players.
     playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
 
-    # Giving the new current player the choice.
+    # Increments the player as their choice doesn't make a change.
+    Action.updateCurrentPlayer(roomId, previousPlayer='player')
+
+    # Giving the current player the choice.
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-    emit('give player choice', currentPlayerId, room=roomId)
+    dealerPlayerId = dbUtils.getDealerId(roomId)
+    currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+    # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
+    while 'king' in currentPlayerCard:
+        # Destroy the reveal button since the player's king is revealed when they skip their go.
+        emit('delete reveal button for player', currentPlayerId, room=roomId)
+        if currentPlayerId == dealerPlayerId:
+            endRound(roomId)
+            break
+        else:
+            Action.updateCurrentPlayer(roomId, previousPlayer='player')
+            currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+            currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+    # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
+    # the current player is on round end and the dealer mustn't get a choice.
+    if 'king' not in currentPlayerCard:
+        emit('give player choice', currentPlayerId, room=roomId)
 
 @socketio.on('cut card')
 def cutCard():
@@ -227,20 +266,27 @@ def cutCard():
     # Increments the player too match stick card functionality to line up ending the round regardless of choice.
     Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
-    # Gets the player list to extract the playerData and send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-
-    # Extracts the playerData and to send a json.
+    # Prepare player data to emit it to all players.
     playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
     jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
 
-    # Dealer just stuck so end round.
-    emit('reveal cards and trigger results', playersJson, room=roomId)
-
     endRound(roomId)
+
+@socketio.on('reveal king')
+def revealKing():
+    roomId = session.get('roomId')
+    playerId = session.get('playerId')
+
+    # Prepare player data to emit it to all players.
+    playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
+    jsonifyPlayerData(playerList, playersJson)
+
+    emit('reveal king of playerId', (playersJson, playerId), room=roomId)
 
 @socketio.on('delete all player cards')
 def deletePlayerCardsDisplay():
@@ -263,6 +309,14 @@ def jsonifyPlayerData(playerList, playersJson):
         playersJson.append(jsonData)
 
 def endRound(roomId):
+    # Prepare player data to emit it to all players.
+    playersJson = []
+    playerList = dbUtils.getPlayerList(roomId)
+    jsonifyPlayerData(playerList, playersJson)
+
+    # Revealing all the cards at the end of the round.
+    emit('reveal all cards', playersJson, room=roomId)
+
     # Calculate the winner and adjust lives accordingly.
     Action.calculateRoundWinner(roomId)
 
