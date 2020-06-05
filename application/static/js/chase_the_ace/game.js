@@ -13,6 +13,9 @@ var config = {
             gravity: { x: 0, y: 0 }
         }
     },
+    dom: {
+        createContainer: true
+    },
     scene: [
         StartPage,
         JoinPage
@@ -21,3 +24,6 @@ var config = {
     roundPixels: true
 };
 var game = new Phaser.Game(config);
+
+// Initialising socket variable for all js on page.
+self.socket = io();

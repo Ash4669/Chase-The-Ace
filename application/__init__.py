@@ -18,6 +18,7 @@ from . import models
 
 # Game sockets import game mechanics and socketio listeners.
 from .controllers.games import chase_the_ace_gameplay
+from .controllers.games import chase_the_ace_redirects
 
 
 def create_app():

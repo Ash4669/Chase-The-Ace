@@ -11,32 +11,8 @@ import json
 
 dbUtils = DatabaseUtils()
 
-def generateRoomId():
-    return random.randint(1, 999)
-
 def generatePlayerId():
     return ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
-
-# Initialisation of the game room.
-@socketio.on('host game send')
-def generateAndHostRedirect():
-
-    # Generate a game id.
-    roomId = generateRoomId()
-
-    room = dbUtils.getRoom(roomId)
-    while room != None:
-        roomId = generateRoomId()
-        room = dbUtils.getRoom(roomId)
-
-    # Instantiate the Room with the room id as game id and store it within the database.
-    newGame = models.Room(roomId=roomId, gameType='chase_the_ace', currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
-    db.session.add(newGame)
-    db.session.commit()
-
-    # Emit the redirect for the client to redirect with javascript.
-    emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId=roomId)})
-
 
 # Managing players joining the game.
 @socketio.on('join chase the ace')
