@@ -38,6 +38,8 @@ def JoinGameRedirect(roomId):
     room = dbUtils.getRoom(roomId)
     if room == None:
         emit("game doesn't exist")
+    elif room.locked == True:
+        emit("game has already started")
     else:
         # Emit the redirect for the client to redirect with javascript.
         emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId=roomId)})

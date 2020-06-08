@@ -1,4 +1,8 @@
 class JoinPage extends Phaser.Scene {
+
+    gameDoesNotExistText;
+    gameAlreadyStartedText;
+
     constructor()
     {
         super({ key: "JoinPage" });
@@ -32,9 +36,43 @@ class JoinPage extends Phaser.Scene {
         // Triggering server response to someone joining the game.
         socket.on("game doesn't exist", function()
         {
-            console.log("doesn't exist")
+            try
+            {
+                gamePage.gameDoesNotExistText.destroy();
+            }
+            catch (e)
+            {} // Used for when the player repeatedly clicks the join button.
+
+            gamePage.gameDoesNotExistText = gamePage.add.text(320, 230, 'Room does not exist!', {fontSize: '32px'});
+            gamePage.add.tween(
+            {
+                targets: gamePage.gameDoesNotExistText,
+                ease: 'Sine.easeInOut',
+                duration: 1500,
+                delay: 1000,
+                alpha: 0,
+            });
         });
 
+        socket.on("game has already started", function()
+        {
+            try
+            {
+                gamePage.gameAlreadyStartedText.destroy();
+            }
+            catch (e)
+            {} // Used for when the player repeatedly clicks the join button.
+
+            gamePage.gameAlreadyStartedText = gamePage.add.text(220, 230, 'Game that has already started!', {fontSize: '32px'});
+            gamePage.add.tween(
+            {
+                targets: gamePage.gameAlreadyStartedText,
+                ease: 'Sine.easeInOut',
+                duration: 1500,
+                delay: 1000,
+                alpha: 0,
+            });
+        });
     }
 
     onJoinButtonClicked()

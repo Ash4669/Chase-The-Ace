@@ -53,7 +53,7 @@ When person wins, if signed in, add one to their count with their userId.
 
 - When the host quits a game, have a popup and on clicking 'ok' then redirect.
 - Saying you're the dealer when you are.
-- Selection for how many lives you want
+- Selection for how many lives you want.
 - Displaying whos go it is on player list.
 - Maybe change display to have it across the top and display the current player for all players to see.
 - Display start new round button and dealer icon above name which moves after finishing the previous round.
