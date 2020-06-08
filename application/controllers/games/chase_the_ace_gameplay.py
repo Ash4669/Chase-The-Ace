@@ -45,7 +45,7 @@ def onJoin():
     db.session.commit()
 
     hostId = dbUtils.getGameHostId(roomId)
-    emit('setHost', hostId)
+    emit('set host', (hostId, roomId))
 
     # Construct playerNames to send to clients.
     playerList = dbUtils.getPlayerList(roomId)

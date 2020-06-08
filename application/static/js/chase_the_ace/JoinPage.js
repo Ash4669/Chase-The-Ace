@@ -9,8 +9,9 @@ class JoinPage extends Phaser.Scene {
     }
     preload()
     {
-        this.load.image("casinoRoom","../static/images/casinoRoom.jpg");
-        this.load.image("joinButton","../static/images/playbutton.png");
+        this.load.image("casinoRoom", "../../static/images/casinoRoom.jpg");
+        this.load.image("backButton","../../static/images/playbutton.png");
+        this.load.image("joinButton","../../static/images/optionsbutton.png");
     }
     create()
     {
@@ -29,8 +30,12 @@ class JoinPage extends Phaser.Scene {
         document.getElementById("gameCanvas").appendChild(element);
         var domElement = this.add.dom(500, 300, element);
 
-        var joinButton = this.add.image(400, 400, "joinButton").setOrigin(0, 0)
-        joinButton.setDisplaySize(200, 100);;
+        var backButton = this.add.image(250, 400, "backButton").setOrigin(0, 0);
+        backButton.setDisplaySize(200, 100);
+        backButton.setInteractive().on('pointerdown', () => this.onBackButtonClicked());
+
+        var joinButton = this.add.image(550, 400, "joinButton").setOrigin(0, 0);
+        joinButton.setDisplaySize(200, 100);
         joinButton.setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
 
         // Triggering server response to someone joining the game.
@@ -79,6 +84,10 @@ class JoinPage extends Phaser.Scene {
     {
         let roomId = document.getElementById("join-input").value
         socket.emit('join game send', roomId);
+    }
+    onBackButtonClicked()
+    {
+        this.scene.start('StartPage')
     }
 }
 

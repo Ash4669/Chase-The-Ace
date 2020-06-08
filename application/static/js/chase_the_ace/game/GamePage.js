@@ -1,5 +1,7 @@
 class GamePage extends Phaser.Scene {
 
+    roomNumber
+
     // Game Role Ids
     hostId;
     dealerId;
@@ -79,12 +81,13 @@ class GamePage extends Phaser.Scene {
         });
 
         // Setting the host id for the client to display the start button.
-        socket.on('setHost', function(hostId)
+        socket.on('set host', function(hostId, roomId)
         {
             gamePage.hostId = hostId
             if (gamePage.playerId == gamePage.hostId)
             {
                 gamePage.displayStartButton();
+                gamePage.roomNumber = gamePage.add.text(20, 70, "Room Number: " + roomId)
             }
         });
 
@@ -104,7 +107,7 @@ class GamePage extends Phaser.Scene {
         // Setting playerId for this client.
         socket.on('receive player id', function (response)
         {
-            gamePage.playerId = response
+            gamePage.playerId = response;
         })
 
         // Letting other plays know when someone else has joined the game.
@@ -118,7 +121,7 @@ class GamePage extends Phaser.Scene {
         socket.on('update chase the ace playerList', function(response)
         {
             // Setting the player names equal to the server player names.
-            gamePage.playerNames = response
+            gamePage.playerNames = response;
 
             // Re-update the player names
             gamePage.deletePlayerNames();
@@ -247,6 +250,7 @@ class GamePage extends Phaser.Scene {
         this.startButton.destroy();
         socket.emit('delete all player cards')
         socket.emit('start game');
+        this.roomNumber.destroy();
         this.kingNotRevealed = true;
     }
 
