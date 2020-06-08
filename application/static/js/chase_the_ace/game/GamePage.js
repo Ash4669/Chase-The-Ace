@@ -1,6 +1,7 @@
 class GamePage extends Phaser.Scene {
 
-    roomNumber
+    roomNumber;
+    gameStarted;
 
     // Game Role Ids
     hostId;
@@ -86,13 +87,14 @@ class GamePage extends Phaser.Scene {
             gamePage.hostId = hostId
             if (gamePage.playerId == gamePage.hostId)
             {
+                gamePage.gameStarted = false;
                 gamePage.displayStartButton();
                 gamePage.roomNumber = gamePage.add.text(20, 70, "Room Number: " + roomId)
             }
         });
 
         // Setting the dealer of the round.
-        socket.on('setDealer', function(response)
+        socket.on('set dealer', function(response)
         {
             gamePage.dealerId = response;
         });
@@ -250,7 +252,11 @@ class GamePage extends Phaser.Scene {
         this.startButton.destroy();
         socket.emit('delete all player cards')
         socket.emit('start game');
-        this.roomNumber.destroy();
+        if (this.gameStarted == false)
+        {
+            this.roomNumber.destroy();
+            this.gameStarted = true;
+        }
         this.kingNotRevealed = true;
     }
 

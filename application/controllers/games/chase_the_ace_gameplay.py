@@ -116,7 +116,7 @@ def startGame():
         room.currentPlayerId = roomHost
         db.session.commit()
         currentDealer = dbUtils.getDealerId(roomId)
-        emit('setDealer', currentDealer, room = roomId)
+        emit('set dealer', currentDealer, room = roomId)
 
     # Dealing the cards to the players.
     Action.dealCards(roomId)
@@ -312,7 +312,7 @@ def endRound(roomId):
         Action.updateCurrentDealer(roomId)
 
         currentDealer = dbUtils.getDealerId(roomId)
-        emit('setDealer', currentDealer, roomId)
+        emit('set dealer', currentDealer, roomId)
 
         # Display new round button for the player to the left.
         emit('display new round button', room=roomId)
