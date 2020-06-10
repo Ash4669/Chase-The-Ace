@@ -21,22 +21,27 @@ class JoinPage extends Phaser.Scene {
         var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
         backgroundImage.setDisplaySize(1000, 600);
 
+        // Creating and attaching an input field onto the dom.
+        var attributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Room Number Here"}
         var element = document.createElement("INPUT");
-        element.setAttribute("type", "text");
-        element.setAttribute("id", "join-input");
-        element.style.zIndex = "0";
-        element.setAttribute("style", "font-size:32px;");
-        element.setAttribute("placeholder", "Enter Room Number Here");
+        for (var i = 0; i < Object.keys(attributes).length; i++)
+        {
+            element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i])
+        }
         document.getElementById("gameCanvas").appendChild(element);
+
+        // Attaching dom element to phaser.
         var domElement = this.add.dom(500, 300, element);
 
-        var backButton = this.add.image(250, 400, "backButton").setOrigin(0, 0);
-        backButton.setDisplaySize(200, 100);
-        backButton.setInteractive().on('pointerdown', () => this.onBackButtonClicked());
+        var backButton = this.add.image(250, 400, "backButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onBackButtonClicked());
 
-        var joinButton = this.add.image(550, 400, "joinButton").setOrigin(0, 0);
-        joinButton.setDisplaySize(200, 100);
-        joinButton.setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
+        var joinButton = this.add.image(550, 400, "joinButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
 
         // Triggering server response to someone joining the game.
         socket.on("game doesn't exist", function()
