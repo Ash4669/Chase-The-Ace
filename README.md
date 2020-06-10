@@ -50,7 +50,7 @@ When person wins, if signed in, add one to their count with their userId.
   So if not equal to dealer then don't swap and give a message back, or don't give option.
   Check next card in deck and if king then skip options and update current player.
 - Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
-
+- When a host quits the game (happens eventually), delete the room record out of the room db.
 - When the host quits a game, have a popup and on clicking 'ok' then redirect.
 - Saying you're the dealer when you are.
 - Selection for how many lives you want.

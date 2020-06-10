@@ -110,7 +110,7 @@ class Action:
                 playerCard = player.card
                 nextPlayerCard = nextPlayer.card
 
-                if 'king' in nextPlayerCard:
+                if 'king' in nextPlayerCard and nextPlayer.generatedPlayerId != room.dealerPlayerId:
                     emit('next player has a king')
                     # Add reveal king emit here for entire room. send position in list ?
                 else:
