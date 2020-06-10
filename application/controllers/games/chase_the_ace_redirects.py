@@ -14,9 +14,9 @@ def generateRoomId():
 @socketio.on('host game send')
 def generateAndHostRedirect():
 
-    # Generate a game id.
     roomId = generateRoomId()
 
+    # Checking to see if room exists, and if so, generate a new id and retry.
     room = dbUtils.getRoom(roomId)
     while room != None:
         roomId = generateRoomId()
@@ -33,8 +33,9 @@ def generateAndHostRedirect():
 
 # Join an already initialised game room.
 @socketio.on('join game send')
-def JoinGameRedirect(roomId):
+def joinGameRedirect(roomId):
 
+    # Checking to see if room exists, and if so, check it isn't locked and join otherwise.
     room = dbUtils.getRoom(roomId)
     if room == None:
         emit("game doesn't exist")
