@@ -11,16 +11,19 @@ class StartPage extends Phaser.Scene {
     }
     create()
     {
-        var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
-        var hostButton = this.add.image(250, 400, "hostButton").setOrigin(0, 0);
-        var joinButton = this.add.image(550, 400, "joinButton").setOrigin(0, 0);
+        var backgroundImage = this.add.image(0, 0, "casinoRoom")
+        .setOrigin(0,0)
+        .setDisplaySize(1000, 600)
 
-        backgroundImage.setDisplaySize(1000, 600);
-        hostButton.setDisplaySize(200, 100);
-        joinButton.setDisplaySize(200, 100);
+        var hostButton = this.add.image(250, 400, "hostButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onHostButtonClicked());
 
-        hostButton.setInteractive().on('pointerdown', () => this.onHostButtonClicked());
-        joinButton.setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
+        var joinButton = this.add.image(550, 400, "joinButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
 
         socket.on('redirect', function (data)
         {
