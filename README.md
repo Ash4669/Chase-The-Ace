@@ -53,14 +53,18 @@ When person wins, if signed in, add one to their count with their userId.
 
 - When the host quits a game, have a popup and on clicking 'ok' then redirect.
 - Saying you're the dealer when you are.
-- Selection for how many lives you want
+- Selection for how many lives you want.
 - Displaying whos go it is on player list.
+- Add passcode for joining games
+- Refactor the host page to go to a separate scene and have both a choice of lives and password to set and if left black then leave unset. 
+- Add message and redirect for those trying to join a game that doesn't exist from the URL.
 - Maybe change display to have it across the top and display the current player for all players to see.
 - Display start new round button and dealer icon above name which moves after finishing the previous round.
 - Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
 - Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
 Or add a randomiser before pulling off the card.
-
+- Have it so if a player is not authenticated (not logged in and so missing a name), they have a text box pop up where they enter their name, store it in the session and on clicking confirmation for name, send redirect from there. Use this for both start and joining a game. If they do have a name, give them the option but autofill it with their name stored in the session. Should be easy enough to implement. Send it in the socket. 
+- Display game ID on game page for ease of hosters.
 > Testing notes
 - Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
