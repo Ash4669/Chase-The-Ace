@@ -56,6 +56,7 @@ When person wins, if signed in, add one to their count with their userId.
 - Selection for how many lives you want.
 - Displaying whos go it is on player list.
 - Add passcode for joining games
+- Refactor the host page to go to a separate scene and have both a choice of lives and password to set and if left black then leave unset. 
 - Add message and redirect for those trying to join a game that doesn't exist from the URL.
 - Maybe change display to have it across the top and display the current player for all players to see.
 - Display start new round button and dealer icon above name which moves after finishing the previous round.
