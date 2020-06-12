@@ -139,9 +139,12 @@ class GamePage extends Phaser.Scene {
                 if (playerData.id == gamePage.playerId)
                 {
                     gamePage.playerCardValue = playerData.card;
-                    if (playerData.card.includes('king') && gamePage.kingNotRevealed)
+                    if (playerData.card != null)
                     {
-                        gamePage.displayRevealKingButton();
+                        if (playerData.card.includes('king') && gamePage.kingNotRevealed)
+                        {
+                            gamePage.displayRevealKingButton();
+                        }
                     }
                 }
             }
