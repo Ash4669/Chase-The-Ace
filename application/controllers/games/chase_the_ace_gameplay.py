@@ -6,10 +6,11 @@ from ... import models
 from ... import db
 from ...classes.chase_the_ace.action import Action
 from ...classes.chase_the_ace.databaseUtils import DatabaseUtils
+from ...classes.utils.jsonUtils import JsonUtils
 import string
-import json
 
 dbUtils = DatabaseUtils()
+jsonUtils = JsonUtils()
 
 def generatePlayerId():
     return ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
@@ -124,7 +125,7 @@ def startGame():
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)
     playersJson = []
-    jsonifyPlayerData(playerList, playersJson)
+    jsonUtils.jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side.
     emit('update player data', playersJson, room = roomId)
@@ -201,7 +202,7 @@ def tradeCard():
     # Prepare player data to emit it to all players.
     playersJson = []
     playerList = dbUtils.getPlayerList(roomId)
-    jsonifyPlayerData(playerList, playersJson)
+    jsonUtils.jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
@@ -245,7 +246,7 @@ def cutCard():
     # Prepare player data to emit it to all players.
     playersJson = []
     playerList = dbUtils.getPlayerList(roomId)
-    jsonifyPlayerData(playerList, playersJson)
+    jsonUtils.jsonifyPlayerData(playerList, playersJson)
 
     # Updating the player data on client side
     emit('update player data', playersJson, room=roomId)
@@ -260,7 +261,7 @@ def revealKing():
     # Prepare player data to emit it to all players.
     playersJson = []
     playerList = dbUtils.getPlayerList(roomId)
-    jsonifyPlayerData(playerList, playersJson)
+    jsonUtils.jsonifyPlayerData(playerList, playersJson)
 
     emit('reveal king of playerId', (playersJson, playerId), room=roomId)
 
@@ -271,24 +272,11 @@ def deletePlayerCardsDisplay():
     roomId = session.get('roomId')
     emit('delete player cards', room=roomId)
 
-
-def jsonifyPlayerData(playerList, playersJson):
-    for i in range(len(playerList)):
-        player = playerList[i]
-        playerData =\
-            {'id': player.generatedPlayerId,
-             'name': player.name,
-             'card': player.card,
-             'lives': player.lives,
-             'outOfGame': player.outOfGame}
-        jsonData = json.dumps(playerData)
-        playersJson.append(jsonData)
-
 def endRound(roomId):
     # Prepare player data to emit it to all players.
     playersJson = []
     playerList = dbUtils.getPlayerList(roomId)
-    jsonifyPlayerData(playerList, playersJson)
+    jsonUtils.jsonifyPlayerData(playerList, playersJson)
 
     # Revealing all the cards at the end of the round.
     emit('reveal all cards', playersJson, room=roomId)
@@ -299,7 +287,7 @@ def endRound(roomId):
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)
     playersJson = []
-    jsonifyPlayerData(playerList, playersJson)
+    jsonUtils.jsonifyPlayerData(playerList, playersJson)
 
     # Update players with their live count.
     emit('update player lives', playersJson, room=roomId)

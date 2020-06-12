@@ -139,9 +139,12 @@ class GamePage extends Phaser.Scene {
                 if (playerData.id == gamePage.playerId)
                 {
                     gamePage.playerCardValue = playerData.card;
-                    if (playerData.card.includes('king') && gamePage.kingNotRevealed)
+                    if (playerData.card != null)
                     {
-                        gamePage.displayRevealKingButton();
+                        if (playerData.card.includes('king') && gamePage.kingNotRevealed)
+                        {
+                            gamePage.displayRevealKingButton();
+                        }
                     }
                 }
             }
@@ -184,6 +187,15 @@ class GamePage extends Phaser.Scene {
         socket.on('reveal all cards', function(playerData)
         {
             gamePage.displayAllPlayerCards(playerData)
+
+            // Just on the edge case that a user swaps a king from the dealer.
+            try
+            {
+                gamePage.onRevealKingButtonClicked()
+            }
+            catch(e)
+            {
+            }
         })
 
         // Deletes all the card displayed next to the player list after the round starts.
@@ -222,7 +234,6 @@ class GamePage extends Phaser.Scene {
         {
             for (var i = 0; i < gamePage.playerNames.length; i++)
             {
-                // If a player is out of the game, don't display their card.
                 if (JSON.parse(playerData[i]).id == playerId)
                 {
                     gamePage.playerCard = JSON.parse(playerData[i]).card
@@ -250,7 +261,7 @@ class GamePage extends Phaser.Scene {
     onStartButtonClicked()
     {
         this.startButton.destroy();
-        socket.emit('delete all player cards')
+        socket.emit('delete all player cards');
         socket.emit('start game');
         if (this.gameStarted == false)
         {
