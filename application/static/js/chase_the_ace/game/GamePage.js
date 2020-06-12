@@ -2,6 +2,7 @@ class GamePage extends Phaser.Scene {
 
     roomNumber;
     gameStarted;
+    hideDealerCard;
 
     // Game Role Ids
     hostId;
@@ -53,6 +54,7 @@ class GamePage extends Phaser.Scene {
         this.load.image("revealKingButton","../../static/images/cutButton.png");
         this.load.image("heart","../../static/images/heart.png");
         this.load.image("emptyHeart","../../static/images/heart-empty.png");
+        this.load.image("greenBack","../../static/images/cards/green_back.png");
 
         for (var i = 0; i < suits.length; i++)
         {
@@ -172,6 +174,9 @@ class GamePage extends Phaser.Scene {
             {
                 if (currentPlayerId == gamePage.dealerId)
                 {
+                    // When the dealer is given their choice, finally display their card.
+                    gamePage.hideDealerCard = false;
+                    gamePage.updateCards();
                     gamePage.displayStickButton();
                     gamePage.displayCutButton();
                 }
@@ -268,6 +273,8 @@ class GamePage extends Phaser.Scene {
             this.roomNumber.destroy();
             this.gameStarted = true;
         }
+        // Hide the dealer's card and reset the king reveal.
+        this.hideDealerCard = true;
         this.kingNotRevealed = true;
     }
 
@@ -300,7 +307,21 @@ class GamePage extends Phaser.Scene {
         if (this.playerCardValue != null)
         {
             // FIX CARD PIXELATION
-            this.playerCardDisplay = this.add.image(340, 110, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+            if (this.dealerId == this.playerId)
+            {
+                if (this.hideDealerCard == true)
+                {
+                    this.playerCardDisplay = this.add.image(340, 110, "greenBack").setOrigin(0, 0).setDisplaySize(200, 320);
+                }
+                else
+                {
+                    this.playerCardDisplay = this.add.image(340, 110, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+                }
+            }
+            else
+            {
+                this.playerCardDisplay = this.add.image(340, 110, this.playerCardValue).setOrigin(0, 0).setDisplaySize(200, 320);
+            }
         }
     }
 
