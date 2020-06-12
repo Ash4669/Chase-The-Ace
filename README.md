@@ -33,38 +33,31 @@
 - Use Page Objects method of testing. Not UI JourneySteps. Read into it.
 
 
-> Game Notes
-
-When first person joins, set as host in db.
-When someone joins they are given a player id which is stored in the db.
-When host clicks start, set the room current player
-When game starts, lock down joining.
-When someone quits, they are deleted from the database
-When host quits, boot everyone
-When person wins, if signed in, add one to their count with their userId.
-
 > Functionality left to implement
-- Have it so a player, if they have a king can flip it and display it on the side of the game. Have it where it's their place in the playerList times i for its position. Once it's flipped, the next person doesn't have the trade option anymore.
+>> High priority
 - Dealer shouldn't see their card.
-- Can swap a king if it's the dealers card because they haven't see it.
-  So if not equal to dealer then don't swap and give a message back, or don't give option.
-  Check next card in deck and if king then skip options and update current player.
-- Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
-- When a host quits the game (happens eventually), delete the room record out of the room db.
-- When the host quits a game, have a popup and on clicking 'ok' then redirect.
 - Saying you're the dealer when you are.
-- Selection for how many lives you want.
-- Displaying whos go it is on player list.
-- Add passcode for joining games
 - Refactor the host page to go to a separate scene and have both a choice of lives and password to set and if left black then leave unset. 
-- Add message and redirect for those trying to join a game that doesn't exist from the URL.
-- Maybe change display to have it across the top and display the current player for all players to see.
-- Display start new round button and dealer icon above name which moves after finishing the previous round.
-- Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
-- Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
-Or add a randomiser before pulling off the card.
+- Selection for how many lives you want.
+- Add passcode for joining games
+
+>> Medium Priority
+- Display the dealer for all people to see on the right?
+- Displaying who's go it is on player list. (display 'Playing' when their go is triggered. After clicking something, the text is deleted.)
+- Once a king is flipped, the previous person doesn't have the trade option anymore. 
 - Have it so if a player is not authenticated (not logged in and so missing a name), they have a text box pop up where they enter their name, store it in the session and on clicking confirmation for name, send redirect from there. Use this for both start and joining a game. If they do have a name, give them the option but autofill it with their name stored in the session. Should be easy enough to implement. Send it in the socket. 
-- Display game ID on game page for ease of hosters.
+- Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
+
+>> Lower Priority
+- When the host quits a game, have a popup and on clicking 'ok' then redirect.
+- When a host quits the game (happens eventually), delete the room record out of the room db.
+- Add message and redirect for those trying to join a game that doesn't exist from the URL.
+- Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
+- Maybe change display to have it across the top.
+- Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
+Or add a randomiser before pulling off the card. (Not difficult to display 52 cards and then the ith one they choose is the value sent back to the database and pop off that value.)
+
+
 > Testing notes
 - Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
