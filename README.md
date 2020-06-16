@@ -35,7 +35,6 @@
 
 > Functionality left to implement
 >> High priority
-- Saying you're the dealer when you are.
 - Refactor the host page to go to a separate scene and have both a choice of lives and password to set and if left black then leave unset. 
 - Selection for how many lives you want.
 - Add passcode for joining games
