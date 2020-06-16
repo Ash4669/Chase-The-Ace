@@ -133,28 +133,7 @@ def startGame():
     # Updating the current player as it cannot be the dealer
     Action.updateCurrentPlayer(roomId, previousPlayer='dealer')
 
-    # Giving the current player the choice.
-    currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-    dealerPlayerId = dbUtils.getDealerId(roomId)
-    currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
-
-    # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
-    while 'king' in currentPlayerCard:
-        # Destroy the reveal button since the player's king is revealed when they skip their go.
-        emit('delete reveal button for player', currentPlayerId, room=roomId)
-        if currentPlayerId == dealerPlayerId:
-            emit("reveal dealer king", room=roomId)
-            endRound(roomId)
-            break
-        else:
-            Action.updateCurrentPlayer(roomId, previousPlayer='player')
-            currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-            currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
-
-    # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
-    # the current player is on round end and the dealer mustn't get a choice.
-    if 'king' not in currentPlayerCard:
-        emit('give player choice', currentPlayerId, room=roomId)
+    handleKingAndGiveChoice(roomId)
 
 @socketio.on('stick card')
 def stickCard():
@@ -169,28 +148,7 @@ def stickCard():
         # increments the player as their choice doesn't make a change.
         Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
-        # Giving the current player the choice.
-        currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-        dealerPlayerId = dbUtils.getDealerId(roomId)
-        currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
-
-        # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
-        while 'king' in currentPlayerCard:
-            # Destroy the reveal button since the player's king is revealed when they skip their go.
-            emit('delete reveal button for player', currentPlayerId, room=roomId)
-            if currentPlayerId == dealerPlayerId:
-                emit("reveal dealer king", room=roomId)
-                endRound(roomId)
-                break
-            else:
-                Action.updateCurrentPlayer(roomId, previousPlayer='player')
-                currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-                currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
-
-        # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
-        # the current player is on round end and the dealer mustn't get a choice.
-        if 'king' not in currentPlayerCard:
-            emit('give player choice', currentPlayerId, room=roomId)
+        handleKingAndGiveChoice(roomId)
 
 @socketio.on('trade card')
 def tradeCard():
@@ -211,28 +169,7 @@ def tradeCard():
     # Increments the player as their choice doesn't make a change.
     Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
-    # Giving the current player the choice.
-    currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-    dealerPlayerId = dbUtils.getDealerId(roomId)
-    currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
-
-    # While they have a king, they are either skipped or the dealer ends the round (if the dealer has the king).
-    while 'king' in currentPlayerCard:
-        # Destroy the reveal button since the player's king is revealed when they skip their go.
-        emit('delete reveal button for player', currentPlayerId, room=roomId)
-        if currentPlayerId == dealerPlayerId:
-            emit("reveal dealer king", room=roomId)
-            endRound(roomId)
-            break
-        else:
-            Action.updateCurrentPlayer(roomId, previousPlayer='player')
-            currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
-            currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
-
-    # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
-    # the current player is on round end and the dealer mustn't get a choice.
-    if 'king' not in currentPlayerCard:
-        emit('give player choice', currentPlayerId, room=roomId)
+    handleKingAndGiveChoice(roomId)
 
 @socketio.on('cut card')
 def cutCard():
@@ -315,3 +252,26 @@ def endRound(roomId):
         winningId = room.winningPlayerId
         emit('trigger winner', winningId, room=roomId)
         dbUtils.addWinToUser(winningId)
+
+def handleKingAndGiveChoice(roomId):
+    # Giving the current player the choice.
+    currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+    dealerPlayerId = dbUtils.getDealerId(roomId)
+    currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+    while 'king' in currentPlayerCard:
+        # Destroy the reveal button since the player's king is revealed when they skip their go.
+        emit('delete reveal button for player', currentPlayerId, room=roomId)
+        if currentPlayerId == dealerPlayerId:
+            emit("reveal dealer king", room=roomId)
+            endRound(roomId)
+            break
+        else:
+            Action.updateCurrentPlayer(roomId, previousPlayer='player')
+            currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+            currentPlayerCard = dbUtils.getPlayerCard(roomId, currentPlayerId)
+
+    # If the player has a king, they would be skipped regardless, but if the dealer has a king when the round ends
+    # the current player is on round end and the dealer mustn't get a choice.
+    if 'king' not in currentPlayerCard:
+        emit('give player choice', currentPlayerId, room=roomId)
