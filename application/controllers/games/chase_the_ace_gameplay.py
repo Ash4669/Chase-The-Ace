@@ -143,6 +143,7 @@ def startGame():
         # Destroy the reveal button since the player's king is revealed when they skip their go.
         emit('delete reveal button for player', currentPlayerId, room=roomId)
         if currentPlayerId == dealerPlayerId:
+            emit("reveal dealer king", room=roomId)
             endRound(roomId)
             break
         else:
@@ -178,6 +179,7 @@ def stickCard():
             # Destroy the reveal button since the player's king is revealed when they skip their go.
             emit('delete reveal button for player', currentPlayerId, room=roomId)
             if currentPlayerId == dealerPlayerId:
+                emit("reveal dealer king", room=roomId)
                 endRound(roomId)
                 break
             else:
@@ -219,6 +221,7 @@ def tradeCard():
         # Destroy the reveal button since the player's king is revealed when they skip their go.
         emit('delete reveal button for player', currentPlayerId, room=roomId)
         if currentPlayerId == dealerPlayerId:
+            emit("reveal dealer king", room=roomId)
             endRound(roomId)
             break
         else:
@@ -276,6 +279,8 @@ def endRound(roomId):
     playersJson = []
     playerList = dbUtils.getPlayerList(roomId)
     jsonUtils.jsonifyPlayerData(playerList, playersJson)
+
+    emit("delete dealer title", room=roomId)
 
     # Revealing all the cards at the end of the round.
     emit('reveal all cards', playersJson, room=roomId)

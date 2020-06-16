@@ -105,10 +105,7 @@ class GamePage extends Phaser.Scene {
         // Deleting dealer display text
         socket.on('delete dealer title', function()
         {
-            if (gamePage.playerId == gamePage.dealerId)
-            {
-                gamePage.dealerDisplay.destroy();
-            }
+            gamePage.ifDealerDeleteTitle();
         });
 
         // Closing the game
@@ -211,6 +208,12 @@ class GamePage extends Phaser.Scene {
             catch(e)
             {
             }
+        })
+
+        // If dealer had a king, their go is skipped, but card needs revealing
+        socket.on('reveal dealer king', function(){
+            gamePage.hideDealerCard = false;
+            gamePage.updateCards();
         })
 
         // Deletes all the card displayed next to the player list after the round starts.
@@ -386,7 +389,7 @@ class GamePage extends Phaser.Scene {
         this.cutButton.setInteractive().on('pointerdown', () => this.onCutButtonClicked());
     }
 
-    onStickButtonClicked(game)
+    onStickButtonClicked()
     {
         this.stickButton.destroy();
         if (this.playerId == this.dealerId)
@@ -404,14 +407,22 @@ class GamePage extends Phaser.Scene {
     {
         this.stickButton.destroy();
         this.tradeButton.destroy();
-        socket.emit('trade card')
+        socket.emit('trade card');
     }
 
     onCutButtonClicked()
     {
         this.stickButton.destroy();
         this.cutButton.destroy();
-        socket.emit('cut card')
+        socket.emit('cut card');
+    }
+
+    ifDealerDeleteTitle()
+    {
+        if (this.playerId == this.dealerId)
+        {
+            this.dealerDisplay.destroy();
+        }
     }
 
     displayAllPlayerCards(playerData)
