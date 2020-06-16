@@ -105,7 +105,8 @@ class GamePage extends Phaser.Scene {
         // Deleting dealer display text
         socket.on('delete dealer title', function()
         {
-            if (gamePage.playerId == gamePage.dealerId) {
+            if (gamePage.playerId == gamePage.dealerId)
+            {
                 gamePage.dealerDisplay.destroy();
             }
         });
