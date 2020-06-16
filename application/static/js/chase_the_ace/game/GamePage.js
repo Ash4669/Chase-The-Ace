@@ -105,7 +105,10 @@ class GamePage extends Phaser.Scene {
         // Deleting dealer display text
         socket.on('delete dealer title', function()
         {
-            gamePage.ifDealerDeleteTitle();
+            if (gamePage.playerId == gamePage.dealerId)
+            {
+                gamePage.dealerDisplay.destroy();
+            }
         });
 
         // Closing the game
@@ -135,8 +138,14 @@ class GamePage extends Phaser.Scene {
             gamePage.playerNames = response;
 
             // Re-update the player names
-            gamePage.deletePlayerNames();
-            gamePage.writePlayerNames();
+            for (var i = 0; i < gamePage.playerNamesDisplays.length; i++)
+            {
+                gamePage.playerNamesDisplays[i].destroy();
+            }
+            for (var i = 0; i < gamePage.playerNames.length; i++)
+            {
+                gamePage.playerNamesDisplays[i] = gamePage.add.text(820, 50 + (i * 40), gamePage.playerNames[i]);
+            }
         })
 
         // Updating the player's card and displaying it.
@@ -198,7 +207,15 @@ class GamePage extends Phaser.Scene {
         // Reveals all cards to everyone by the player names after the dealer's decision is made.
         socket.on('reveal all cards', function(playerData)
         {
-            gamePage.displayAllPlayerCards(playerData)
+            for (var i = 0; i < gamePage.playerNames.length; i++)
+            {
+                // If a player is out of the game, don't display their card.
+                if (JSON.parse(playerData[i]).outOfGame == false)
+                {
+                    gamePage.playerCard = JSON.parse(playerData[i]).card
+                    gamePage.allPlayerCardDisplays[i] = gamePage.add.image(800, 60 + (i * 40), gamePage.playerCard).setDisplaySize(20, 32);
+                }
+            }
 
             // Just on the edge case that a user swaps a king from the dealer.
             try
@@ -239,14 +256,26 @@ class GamePage extends Phaser.Scene {
             {
                 if (gamePage.playerId == winnerId)
                 {
-                    gamePage.displayWin();
+                    gamePage.add.text(400, 80, 'Winner!')
                 }
             }
         })
 
         socket.on('next player has a king', function()
         {
-            gamePage.displayNextPlayerHasKing()
+            gamePage.nextPlayerHasKingText = gamePage.add.text(360, 80, 'Other player has a king!');
+            gamePage.add.tween(
+            {
+                targets: gamePage.nextPlayerHasKingText,
+                ease: 'Sine.easeInOut',
+                duration: 1000,
+                delay: 1000,
+                alpha: 0,
+                onComplete: () =>
+                {
+                    gamePage.nextPlayerHasKingText.destroy();
+                }
+            });
         })
 
         socket.on('reveal king of playerId', function(playerData, playerId)
@@ -293,22 +322,6 @@ class GamePage extends Phaser.Scene {
         if (this.playerId == this.dealerId)
         {
             this.dealerDisplay = game.add.text(350, 50, "You are the dealer!");
-        }
-    }
-
-    deletePlayerNames()
-    {
-        for (var i = 0; i < this.playerNamesDisplays.length; i++)
-        {
-            this.playerNamesDisplays[i].destroy();
-        }
-    }
-
-    writePlayerNames()
-    {
-        for (var i = 0; i < this.playerNames.length; i++)
-        {
-            this.playerNamesDisplays[i] = this.add.text(820, 50 + (i * 40), this.playerNames[i]);
         }
     }
 
@@ -418,27 +431,6 @@ class GamePage extends Phaser.Scene {
         socket.emit('cut card');
     }
 
-    ifDealerDeleteTitle()
-    {
-        if (this.playerId == this.dealerId)
-        {
-            this.dealerDisplay.destroy();
-        }
-    }
-
-    displayAllPlayerCards(playerData)
-    {
-        for (var i = 0; i < this.playerNames.length; i++)
-        {
-            // If a player is out of the game, don't display their card.
-            if (JSON.parse(playerData[i]).outOfGame == false)
-            {
-                this.playerCard = JSON.parse(playerData[i]).card
-                this.allPlayerCardDisplays[i] = this.add.image(800, 60 + (i * 40), this.playerCard).setDisplaySize(20, 32);
-            }
-        }
-    }
-
     deleteAllPlayerCards()
     {
         try
@@ -463,28 +455,6 @@ class GamePage extends Phaser.Scene {
         {
           console.log("all player cards not set yet.");
         }
-    }
-
-    displayWin()
-    {
-        this.add.text(400, 80, 'Winner!')
-    }
-
-    displayNextPlayerHasKing()
-    {
-        this.nextPlayerHasKingText = this.add.text(360, 80, 'Other player has a king!');
-        this.add.tween(
-        {
-            targets: this.nextPlayerHasKingText,
-            ease: 'Sine.easeInOut',
-            duration: 1000,
-            delay: 1000,
-            alpha: 0,
-            onComplete: () =>
-            {
-                this.nextPlayerHasKingText.destroy();
-            }
-        });
     }
 
     displayRevealKingButton()
