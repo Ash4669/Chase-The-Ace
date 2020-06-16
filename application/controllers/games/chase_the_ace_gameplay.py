@@ -237,8 +237,6 @@ def endRound(roomId):
     room = dbUtils.getRoom(roomId)
     if room.winningPlayerId is None:
 
-        emit('delete dealer title', room=roomId)
-
         # Updates the dealer and sends it to all clients.
         Action.updateCurrentDealer(roomId)
 
