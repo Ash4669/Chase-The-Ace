@@ -47,6 +47,7 @@ def onJoin():
 
     hostId = dbUtils.getGameHostId(roomId)
     emit('set host', (hostId, roomId))
+    emit('set dealer', hostId, room=roomId)
 
     # Construct playerNames to send to clients.
     playerList = dbUtils.getPlayerList(roomId)
@@ -116,8 +117,6 @@ def startGame():
         room.dealerPlayerId = roomHost
         room.currentPlayerId = roomHost
         db.session.commit()
-        currentDealer = dbUtils.getDealerId(roomId)
-        emit('set dealer', currentDealer, room = roomId)
 
     # Dealing the cards to the players.
     Action.dealCards(roomId)
@@ -295,6 +294,8 @@ def endRound(roomId):
     # If a winner isn't set, continue, otherwise send winner to all players
     room = dbUtils.getRoom(roomId)
     if room.winningPlayerId is None:
+
+        emit('delete dealer title', room=roomId)
 
         # Updates the dealer and sends it to all clients.
         Action.updateCurrentDealer(roomId)

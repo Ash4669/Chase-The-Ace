@@ -3,6 +3,7 @@ class GamePage extends Phaser.Scene {
     roomNumber;
     gameStarted;
     hideDealerCard;
+    dealerDisplay;
 
     // Game Role Ids
     hostId;
@@ -90,7 +91,7 @@ class GamePage extends Phaser.Scene {
             if (gamePage.playerId == gamePage.hostId)
             {
                 gamePage.gameStarted = false;
-                gamePage.displayStartButton();
+                gamePage.displayStartButton(gamePage);
                 gamePage.roomNumber = gamePage.add.text(20, 70, "Room Number: " + roomId)
             }
         });
@@ -99,6 +100,14 @@ class GamePage extends Phaser.Scene {
         socket.on('set dealer', function(response)
         {
             gamePage.dealerId = response;
+        });
+
+        // Deleting dealer display text
+        socket.on('delete dealer title', function()
+        {
+            if (gamePage.playerId == gamePage.dealerId) {
+                gamePage.dealerDisplay.destroy();
+            }
         });
 
         // Closing the game
@@ -214,7 +223,7 @@ class GamePage extends Phaser.Scene {
         {
             if (gamePage.playerId == gamePage.dealerId)
             {
-                gamePage.displayStartButton();
+                gamePage.displayStartButton(gamePage);
             }
         })
 
@@ -256,14 +265,14 @@ class GamePage extends Phaser.Scene {
         })
     }
 
-    displayStartButton()
+    displayStartButton(game)
     {
         this.startButton = this.add.image(340, 450, "startButton").setOrigin(0, 0);
         this.startButton.setDisplaySize(200, 100);
-        this.startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked());
+        this.startButton.setInteractive().on('pointerdown', () => this.onStartButtonClicked(game));
     }
 
-    onStartButtonClicked()
+    onStartButtonClicked(game)
     {
         this.startButton.destroy();
         socket.emit('delete all player cards');
@@ -276,6 +285,10 @@ class GamePage extends Phaser.Scene {
         // Hide the dealer's card and reset the king reveal.
         this.hideDealerCard = true;
         this.kingNotRevealed = true;
+        if (this.playerId == this.dealerId)
+        {
+            this.dealerDisplay = game.add.text(350, 50, "You are the dealer!");
+        }
     }
 
     deletePlayerNames()
