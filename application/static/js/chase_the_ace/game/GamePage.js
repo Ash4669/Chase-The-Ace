@@ -211,7 +211,8 @@ class GamePage extends Phaser.Scene {
         })
 
         // If dealer had a king, their go is skipped, but card needs revealing
-        socket.on('reveal dealer king', function(){
+        socket.on('reveal dealer king', function()
+        {
             gamePage.hideDealerCard = false;
             gamePage.updateCards();
         })
