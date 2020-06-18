@@ -1,0 +1,89 @@
+class HostPage extends Phaser.Scene {
+
+    gameDoesNotExistText;
+    gameAlreadyStartedText;
+    inputElement;
+    dropDownElement;
+
+    constructor()
+    {
+        super({ key: "HostPage" });
+    }
+    preload()
+    {
+        this.load.image("casinoRoom", "../../static/images/casinoRoom.jpg");
+        this.load.image("backButton","../../static/images/playbutton.png");
+        this.load.image("hostButton","../../static/images/optionsbutton.png");
+    }
+    create()
+    {
+        // Storing GamePage this variable for methods to call to access class variables and methods.
+        const gamePage = this;
+
+        var backgroundImage = this.add.image(0, 0, "casinoRoom")
+        .setOrigin(0,0)
+        .setDisplaySize(1000, 600);
+
+        var backButton = this.add.image(250, 400, "backButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onBackButtonClicked());
+
+        var hostButton = this.add.image(550, 400, "hostButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onHostButtonClicked());
+
+        // Creating and attaching an input field onto the dom.
+        var inputAttributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Add Room Password"};
+        this.addInputElementToDom(this, this.inputElement, "input", inputAttributes, 500, 300);
+
+        var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px"};
+        var options = ["1","2","3","4","5","6","7","8","9","10"];
+        this.addDropDownElementToDom(this, this.dropDownElement, dropDownAttributes, options, 530, 237)
+
+        var livesText = this.add.text(350, 220, "lives:", {fontSize: '32px'})
+    }
+
+    addDropDownElementToDom(phaserClass, element, attributes, optionValues, x, y)
+    {
+        var select = document.createElement("select");
+        for (var i = 0; i < Object.keys(attributes).length; i++)
+        {
+            select.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i])
+        }
+        for (var i = 0; i < 10; i++)
+        {
+            var option = document.createElement("option");
+            option.value = i.toString();
+            option.selected = "";
+            option.innerHTML = optionValues[i];
+            select.appendChild(option);
+        }
+        document.getElementById("gameCanvas").appendChild(select);
+        element = phaserClass.add.dom(x, y, select);
+    }
+
+    addInputElementToDom(phaserClass, element, elementType, attributes, x, y)
+    {
+        var element = document.createElement(elementType);
+        for (var i = 0; i < Object.keys(attributes).length; i++)
+        {
+            element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i]);
+        }
+        document.getElementById("gameCanvas").appendChild(element);
+        element = phaserClass.add.dom(x, y, element);
+    }
+
+    onHostButtonClicked()
+    {
+//        let password = document.getElementById("password-input").value
+//        let lives = document.getElementById("lives-input").value
+        socket.emit('host game send');
+    }
+
+    onBackButtonClicked()
+    {
+        this.scene.start('StartPage')
+    }
+}
