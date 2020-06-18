@@ -35,9 +35,7 @@
 
 > Functionality left to implement
 >> High priority
-- Refactor the host page to go to a separate scene and have both a choice of lives and password to set and if left black then leave unset. 
-- Selection for how many lives you want.
-- Add passcode for joining games
+- Add passcode for joining games and display it underneath roomId, but if unset then ignore.
 
 >> Medium Priority
 - Display the dealer for all people to see on the right?

@@ -15,7 +15,7 @@ class GamePage extends Phaser.Scene {
     playerNamesDisplays = new Array();
 
     // Player Lives
-    maxPlayerLives = 3;
+    maxPlayerLives;
     playerLives;
     playerLivesDisplays = new Array();
 
@@ -117,6 +117,11 @@ class GamePage extends Phaser.Scene {
             /* Create popup instead which then redirects after */
             window.location = data.url;
         });
+
+        socket.on('set max player lives', function(numberOfLivesSet)
+        {
+            gamePage.maxPlayerLives = numberOfLivesSet;
+        })
 
         // Setting playerId for this client.
         socket.on('receive player id', function (response)
@@ -321,7 +326,7 @@ class GamePage extends Phaser.Scene {
         this.kingNotRevealed = true;
         if (this.playerId == this.dealerId)
         {
-            this.dealerDisplay = game.add.text(350, 50, "You are the dealer!");
+            this.dealerDisplay = game.add.text(350, 70, "You are the dealer!");
         }
     }
 

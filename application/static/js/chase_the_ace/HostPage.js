@@ -35,14 +35,14 @@ class HostPage extends Phaser.Scene {
         .setInteractive().on('pointerdown', () => this.onHostButtonClicked());
 
         // Creating and attaching an input field onto the dom.
-        var inputAttributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Add Room Password"};
-        this.addInputElementToDom(this, this.inputElement, "input", inputAttributes, 500, 300);
+        var inputAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "size":"27", "style":"font-size:32px", "placeholder":"Set Room Password (optional)"};
+        this.addInputElementToDom(this, this.inputElement, "input", inputAttributes, 500, 250);
 
-        var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px"};
+        var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px", "maxlength":"40"};
         var options = ["1","2","3","4","5","6","7","8","9","10"];
-        this.addDropDownElementToDom(this, this.dropDownElement, dropDownAttributes, options, 530, 237)
+        this.addDropDownElementToDom(this, this.dropDownElement, dropDownAttributes, options, 540, 328)
 
-        var livesText = this.add.text(350, 220, "lives:", {fontSize: '32px'})
+        var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'})
     }
 
     addDropDownElementToDom(phaserClass, element, attributes, optionValues, x, y)
@@ -55,7 +55,7 @@ class HostPage extends Phaser.Scene {
         for (var i = 0; i < 10; i++)
         {
             var option = document.createElement("option");
-            option.value = i.toString();
+            option.value = optionValues[i];
             option.selected = "";
             option.innerHTML = optionValues[i];
             select.appendChild(option);
@@ -77,9 +77,11 @@ class HostPage extends Phaser.Scene {
 
     onHostButtonClicked()
     {
-//        let password = document.getElementById("password-input").value
-//        let lives = document.getElementById("lives-input").value
-        socket.emit('host game send');
+        let password = document.getElementById("password-input").value;
+        let livesElement = document.getElementById("lives-input");
+        let lives = livesElement.options[livesElement.selectedIndex].value;
+        console.log(lives);
+        socket.emit('host game send', password, lives);
     }
 
     onBackButtonClicked()

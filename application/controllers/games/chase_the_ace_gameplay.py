@@ -1,7 +1,6 @@
 from flask import url_for, session
 from ... import socketio, send, emit, join_room, leave_room
 import random
-from flask_login import current_user
 from ... import models
 from ... import db
 from ...classes.chase_the_ace.action import Action
@@ -48,6 +47,9 @@ def onJoin():
     hostId = dbUtils.getGameHostId(roomId)
     emit('set host', (hostId, roomId))
     emit('set dealer', hostId)
+
+    numberOfLivesSet = dbUtils.getRoom(roomId).numberOfLivesSet
+    emit('set max player lives', numberOfLivesSet)
 
     # Construct playerNames to send to clients.
     playerList = dbUtils.getPlayerList(roomId)
@@ -106,8 +108,9 @@ def startGame():
 
         # Setting the lives of the players and their out of game statuses.
         playerList = dbUtils.getPlayerList(roomId)
+        numberOfLivesSet = dbUtils.getRoom(roomId).numberOfLivesSet
         for i in range(len(playerList)):
-            playerList[i].lives = 3
+            playerList[i].lives = numberOfLivesSet
             playerList[i].outOfGame = False
         db.session.commit()
 

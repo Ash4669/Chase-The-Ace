@@ -12,7 +12,7 @@ def generateRoomId():
 
 # Initialisation of the game room.
 @socketio.on('host game send')
-def generateAndHostRedirect():
+def generateAndHostRedirect(password, lives):
 
     roomId = generateRoomId()
 
@@ -23,7 +23,7 @@ def generateAndHostRedirect():
         room = dbUtils.getRoom(roomId)
 
     # Instantiate the Room with the room id as game id and store it within the database.
-    newGame = models.Room(roomId=roomId, gameType='chase_the_ace', currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
+    newGame = models.Room(roomId=roomId, password=password, gameType='chase_the_ace', numberOfLivesSet=lives, currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
     db.session.add(newGame)
     db.session.commit()
 
