@@ -18,20 +18,9 @@ class JoinPage extends Phaser.Scene {
         // Storing GamePage this variable for methods to call to access class variables and methods.
         const gamePage = this;
 
-        var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0);
-        backgroundImage.setDisplaySize(1000, 600);
-
-        // Creating and attaching an input field onto the dom.
-        var attributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Room Number Here"}
-        var element = document.createElement("INPUT");
-        for (var i = 0; i < Object.keys(attributes).length; i++)
-        {
-            element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i])
-        }
-        document.getElementById("gameCanvas").appendChild(element);
-
-        // Attaching dom element to phaser.
-        var domElement = this.add.dom(500, 300, element);
+        var backgroundImage = this.add.image(0, 0, "casinoRoom")
+        .setOrigin(0,0)
+        .setDisplaySize(1000, 600);
 
         var backButton = this.add.image(250, 400, "backButton")
         .setOrigin(0, 0)
@@ -42,6 +31,10 @@ class JoinPage extends Phaser.Scene {
         .setOrigin(0, 0)
         .setDisplaySize(200, 100)
         .setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
+
+        // Creating and attaching an input field onto the dom.
+        var attributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Room Number Here"}
+        this.addInputElementToDom(attributes, 500, 300);
 
         // Triggering server response to someone joining the game.
         socket.on("game doesn't exist", function()
@@ -85,11 +78,25 @@ class JoinPage extends Phaser.Scene {
         });
     }
 
+    addInputElementToDom(attributes, x, y)
+    {
+        var element = document.createElement("INPUT");
+        for (var i = 0; i < Object.keys(attributes).length; i++)
+        {
+            element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i])
+        }
+        document.getElementById("gameCanvas").appendChild(element);
+
+        // Attaching dom element to phaser.
+        var domElement = this.add.dom(x, y, element);
+    }
+
     onJoinButtonClicked()
     {
         let roomId = document.getElementById("join-input").value
         socket.emit('join game send', roomId);
     }
+
     onBackButtonClicked()
     {
         this.scene.start('StartPage')

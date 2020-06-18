@@ -166,7 +166,9 @@ class GamePage extends Phaser.Scene {
                     }
                 }
             }
-            gamePage.updateCards();
+//            look at refactoring to reveal dealers card here if they are the dealer. Find the other reveals and condense into one location.
+//            Testing: Dealer has normal cards, twist and stick before, then dealers actions the same to check continuity. Then dealer has king and twist and stick.
+//            gamePage.updateCards();
         })
 
         // Updating the lives of the player and displaying them.
