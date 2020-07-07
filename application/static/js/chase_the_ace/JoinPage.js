@@ -2,6 +2,7 @@ class JoinPage extends Phaser.Scene {
 
     gameDoesNotExistText;
     gameAlreadyStartedText;
+    incorrectPasswordText;
 
     constructor()
     {
@@ -33,49 +34,27 @@ class JoinPage extends Phaser.Scene {
         .setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
 
         // Creating and attaching an input field onto the dom.
-        var attributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Room Number Here"}
-        this.addInputElementToDom(attributes, 500, 300);
+        var roomNumberAttributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Room Number Here"}
+        this.addInputElementToDom(roomNumberAttributes, 500, 250);
+
+        var passwordAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Password (Optional)"}
+        this.addInputElementToDom(passwordAttributes, 500, 325);
 
         // Triggering server response to someone joining the game.
         socket.on("game doesn't exist", function()
         {
-            try
-            {
-                gamePage.gameDoesNotExistText.destroy();
-            }
-            catch (e)
-            {} // Used for when the player repeatedly clicks the join button.
-
-            gamePage.gameDoesNotExistText = gamePage.add.text(320, 230, 'Room does not exist!', {fontSize: '32px'});
-            gamePage.add.tween(
-            {
-                targets: gamePage.gameDoesNotExistText,
-                ease: 'Sine.easeInOut',
-                duration: 1500,
-                delay: 1000,
-                alpha: 0,
-            });
+            gamePage.addFadeAndDeleteText(gamePage.gameDoesNotExistText, 'Room does not exist!')
         });
 
         socket.on("game has already started", function()
         {
-            try
-            {
-                gamePage.gameAlreadyStartedText.destroy();
-            }
-            catch (e)
-            {} // Used for when the player repeatedly clicks the join button.
-
-            gamePage.gameAlreadyStartedText = gamePage.add.text(220, 230, 'Game that has already started!', {fontSize: '32px'});
-            gamePage.add.tween(
-            {
-                targets: gamePage.gameAlreadyStartedText,
-                ease: 'Sine.easeInOut',
-                duration: 1500,
-                delay: 1000,
-                alpha: 0,
-            });
+            gamePage.addFadeAndDeleteText(gamePage.gameAlreadyStartedText, 'That game has already started!')
         });
+
+        socket.on('incorrect password', function()
+        {
+            gamePage.addFadeAndDeleteText(gamePage.incorrectPasswordText, 'Incorrect password for that game!')
+        })
     }
 
     addInputElementToDom(attributes, x, y)
@@ -91,10 +70,31 @@ class JoinPage extends Phaser.Scene {
         var domElement = this.add.dom(x, y, element);
     }
 
+    addFadeAndDeleteText(element, text)
+    {
+        try
+        {
+            element.destroy();
+        }
+        catch (e)
+        {} // Used for when the player repeatedly clicks the join button.
+
+        element = this.add.text(220, 170, text, {fontSize: '32px'});
+        this.add.tween(
+        {
+            targets: element,
+            ease: 'Sine.easeInOut',
+            duration: 1500,
+            delay: 1000,
+            alpha: 0,
+        });
+    }
+
     onJoinButtonClicked()
     {
         let roomId = document.getElementById("join-input").value
-        socket.emit('join game send', roomId);
+        let password = document.getElementById("password-input").value
+        socket.emit('join game send', roomId, password);
     }
 
     onBackButtonClicked()

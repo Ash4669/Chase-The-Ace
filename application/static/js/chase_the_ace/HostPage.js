@@ -80,7 +80,6 @@ class HostPage extends Phaser.Scene {
         let password = document.getElementById("password-input").value;
         let livesElement = document.getElementById("lives-input");
         let lives = livesElement.options[livesElement.selectedIndex].value;
-        console.log(lives);
         socket.emit('host game send', password, lives);
     }
 

@@ -78,6 +78,12 @@ class GamePage extends Phaser.Scene {
         var playersNamesBox = this.add.rectangle(900, 0, 200, 500, 0x01DF01).setStrokeStyle(2, 0x000000)
         this.add.text(820, 20, 'Players');
 
+        socket.on('redirect', function (data)
+        {    password = session.get('gamePassword')
+
+            window.location = data.url;
+        });
+
         // Triggering server response to someone joining the game.
         socket.on('connect', function()
         {
@@ -471,7 +477,6 @@ class GamePage extends Phaser.Scene {
             this.revealKingButton.setDisplaySize(200, 100);
             this.revealKingButton.setInteractive().on('pointerdown', () => this.onRevealKingButtonClicked());
         }
-
     }
 
     onRevealKingButtonClicked()
@@ -489,4 +494,4 @@ window.onunload = quit;
 function quit()
 {
     socket.emit('quit chase the ace');
-};
+}

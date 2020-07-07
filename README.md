@@ -9,7 +9,7 @@
 - pip3 install virtualenv
 - If wanted, set up virtual environment with "python3 -m virtualenv path_to_environment".
 - Activate environment with "source path_to_environment/bin/activate" on mac or "path_to_environment\Scripts\activate" for windows.
-- pip3 install flask, flask_login, flask-sqlalchemy, configparser and pusher using "pip3 install 'module_name'".
+- pip3 install flask, flask_login, flask-sqlalchemy, configparser and flask_session, using "pip3 install 'module_name'".
 - use "export FLASK_APP=project_folder_name" for mac, "set FLASK_APP=project_folder_name" for command line or "$env:FLASK_APP='foo'" for powershell. I believe this is correct.
 - Create the database using the following python code in the python REPL.
 - Install pytest to run unit tests.
@@ -35,6 +35,7 @@
 
 > Functionality left to implement
 >> High priority
+- Need to add in that when all players have same cards and all in game still have lives != 1, then they lose a life. Only skip round if the players all have 1 life because that will end in a draw.
 - Add passcode for joining games and display it underneath roomId, but if unset then ignore.
 
 >> Medium Priority
@@ -58,4 +59,4 @@ Or add a randomiser before pulling off the card. (Not difficult to display 52 ca
 - Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
 > Bugs
-- Clear at the moment.
+- Joining the same room twice doesn't delete and create a new record, it only adds the new record and the name appears twice. Emit doesn't reach server or doesn't send.
