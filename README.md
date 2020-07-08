@@ -36,7 +36,7 @@
 > Functionality left to implement
 >> High priority
 - Need to add in that when all players have same cards and all in game still have lives != 1, then they lose a life. Only skip round if the players all have 1 life because that will end in a draw.
-- Add passcode for joining games and display it underneath roomId, but if unset then ignore.
+- When a host quits the game (happens eventually), delete the room record out of the room db.
 
 >> Medium Priority
 - Display the dealer for all people to see on the right?
@@ -47,7 +47,6 @@
 
 >> Lower Priority
 - When the host quits a game, have a popup and on clicking 'ok' then redirect.
-- When a host quits the game (happens eventually), delete the room record out of the room db.
 - Add message and redirect for those trying to join a game that doesn't exist from the URL.
 - Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
 - Maybe change display to have it across the top.
