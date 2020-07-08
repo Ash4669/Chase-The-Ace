@@ -80,7 +80,7 @@ class GamePage extends Phaser.Scene {
         this.add.text(820, 20, 'Players');
 
         socket.on('redirect', function (data)
-        {    password = session.get('gamePassword')
+        {
 
             window.location = data.url;
         });
