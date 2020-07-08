@@ -1,6 +1,7 @@
 class GamePage extends Phaser.Scene {
 
     roomNumber;
+    roomPassword;
     gameStarted;
     hideDealerCard;
     dealerDisplay;
@@ -91,7 +92,7 @@ class GamePage extends Phaser.Scene {
         });
 
         // Setting the host id for the client to display the start button.
-        socket.on('set host', function(hostId, roomId)
+        socket.on('set host', function(hostId, roomId, password)
         {
             gamePage.hostId = hostId
             if (gamePage.playerId == gamePage.hostId)
@@ -99,6 +100,7 @@ class GamePage extends Phaser.Scene {
                 gamePage.gameStarted = false;
                 gamePage.displayStartButton(gamePage);
                 gamePage.roomNumber = gamePage.add.text(20, 70, "Room Number: " + roomId)
+                gamePage.roomPassword = gamePage.add.text(20, 100, "Room Password: " + (password ? password : 'Not set'))
             }
         });
 
@@ -325,6 +327,7 @@ class GamePage extends Phaser.Scene {
         if (this.gameStarted == false)
         {
             this.roomNumber.destroy();
+            this.roomPassword.destroy();
             this.gameStarted = true;
         }
         // Hide the dealer's card and reset the king reveal.

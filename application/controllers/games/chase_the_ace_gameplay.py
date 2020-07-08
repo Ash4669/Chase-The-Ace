@@ -52,7 +52,7 @@ def onJoin():
         db.session.commit()
 
         hostId = dbUtils.getGameHostId(roomId)
-        emit('set host', (hostId, roomId))
+        emit('set host', (hostId, roomId, gamePassword))
         emit('set dealer', hostId)
 
         numberOfLivesSet = dbUtils.getRoom(roomId).numberOfLivesSet
