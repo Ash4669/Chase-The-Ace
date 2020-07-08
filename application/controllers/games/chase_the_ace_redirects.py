@@ -3,7 +3,6 @@ from ... import socketio, send, emit
 from ... import models
 from ... import db
 import random
-import time
 from ...classes.chase_the_ace.databaseUtils import DatabaseUtils
 
 dbUtils = DatabaseUtils()
