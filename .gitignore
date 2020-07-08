@@ -5,4 +5,4 @@ db.sqlite
 .pyc
 .DS_Store
 .idea/
-flask_session/
+flask_session
