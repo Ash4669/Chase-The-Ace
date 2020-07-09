@@ -71,25 +71,13 @@ class GamePage extends Phaser.Scene {
         // Storing GamePage this variable for methods to call to access class variables and methods.
         const gamePage = this;
 
-        // Initialisation of socket variable into the global scope.
-        self.socket = io();
-
         // Setting up the initial game screen: background, players and player title.
         var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0).setDisplaySize(1000, 600);
         var playersNamesBox = this.add.rectangle(900, 0, 200, 500, 0x01DF01).setStrokeStyle(2, 0x000000)
         this.add.text(820, 20, 'Players');
 
-        socket.on('redirect', function (data)
-        {
-
-            window.location = data.url;
-        });
-
         // Triggering server response to someone joining the game.
-        socket.on('connect', function()
-        {
-            socket.emit('join chase the ace');
-        });
+        socket.emit('join chase the ace');
 
         // Setting the host id for the client to display the start button.
         socket.on('set host', function(hostId, roomId, password)
