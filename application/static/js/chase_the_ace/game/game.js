@@ -26,5 +26,5 @@ self.socket = io();
 
 socket.on('redirect', function (data)
 {
-window.location = data.url;
+    window.location = data.url;
 });
