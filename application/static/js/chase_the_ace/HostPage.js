@@ -34,14 +34,15 @@ class HostPage extends Phaser.Scene {
         .setInteractive().on('pointerdown', () => this.onHostButtonClicked());
 
         // Creating and attaching an input field onto the dom.
-        var inputAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "size":"27", "style":"font-size:32px", "placeholder":"Set Room Password (optional)"};
-        this.addInputElementToDom(this, this.inputElement, "input", inputAttributes, 500, 250);
+        var inputAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "size":"27", "style":"font-size:32px",
+         "placeholder":"Set Room Password (optional)", "maxlength":"40"};
+        this.addInputElementToDom(this, this.inputElement, inputAttributes, 500, 250);
 
-        var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px", "maxlength":"40"};
+        var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px"};
         var options = ["1","2","3","4","5","6","7","8","9","10"];
-        this.addDropDownElementToDom(this, this.dropDownElement, dropDownAttributes, options, 540, 328)
+        this.addDropDownElementToDom(this, this.dropDownElement, dropDownAttributes, options, 540, 328);
 
-        var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'})
+        var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'});
     }
 
     addDropDownElementToDom(phaserClass, element, attributes, optionValues, x, y)
@@ -63,9 +64,9 @@ class HostPage extends Phaser.Scene {
         element = phaserClass.add.dom(x, y, select);
     }
 
-    addInputElementToDom(phaserClass, element, elementType, attributes, x, y)
+    addInputElementToDom(phaserClass, element, attributes, x, y)
     {
-        var element = document.createElement(elementType);
+        var element = document.createElement("input");
         for (var i = 0; i < Object.keys(attributes).length; i++)
         {
             element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i]);
