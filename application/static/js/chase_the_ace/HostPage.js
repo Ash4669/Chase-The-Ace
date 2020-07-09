@@ -11,9 +11,8 @@ class HostPage extends Phaser.Scene {
     }
     preload()
     {
-        this.load.image("casinoRoom", "../../static/images/casinoRoom.jpg");
-        this.load.image("backButton","../../static/images/playbutton.png");
-        this.load.image("hostButton","../../static/images/optionsbutton.png");
+        this.load.image("hostButton","../../static/images/playbutton.png");
+        this.load.image("backButton","../../static/images/optionsbutton.png");
     }
     create()
     {

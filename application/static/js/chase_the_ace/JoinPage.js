@@ -10,7 +10,6 @@ class JoinPage extends Phaser.Scene {
     }
     preload()
     {
-        this.load.image("casinoRoom", "../../static/images/casinoRoom.jpg");
         this.load.image("backButton","../../static/images/playbutton.png");
         this.load.image("joinButton","../../static/images/optionsbutton.png");
     }
