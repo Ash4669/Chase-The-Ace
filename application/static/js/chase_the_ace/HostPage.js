@@ -2,8 +2,8 @@ class HostPage extends Phaser.Scene {
 
     gameDoesNotExistText;
     gameAlreadyStartedText;
-    inputElement;
-    dropDownElement;
+    passwordInput;
+    livesInput;
 
     constructor()
     {
@@ -33,16 +33,19 @@ class HostPage extends Phaser.Scene {
         // Creating and attaching an input field onto the dom.
         var inputAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "size":"27", "style":"font-size:32px",
          "placeholder":"Set Room Password (optional)", "maxlength":"40"};
-        this.addInputElementToDom(this, this.inputElement, inputAttributes, 500, 250);
+        this.passwordInput = this.addInputElementToDom(inputAttributes);
+        this.add.dom(500, 250, this.passwordInput);
+
 
         var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px"};
         var options = ["1","2","3","4","5","6","7","8","9","10"];
-        this.addDropDownElementToDom(this, this.dropDownElement, dropDownAttributes, options, 540, 328);
+        this.livesInput = this.addDropDownElementToDom(dropDownAttributes, options);
+        this.add.dom(540, 328, this.livesInput);
 
         var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'});
     }
 
-    addInputElementToDom(phaserClass, element, attributes, x, y)
+    addInputElementToDom(attributes)
     {
         var element = document.createElement("input");
         for (var i = 0; i < Object.keys(attributes).length; i++)
@@ -50,13 +53,13 @@ class HostPage extends Phaser.Scene {
             element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i]);
         }
         document.getElementById("gameCanvas").appendChild(element);
-        element = phaserClass.add.dom(x, y, element);
+        return element
     }
 
-    addDropDownElementToDom(phaserClass, element, attributes, optionValues, x, y)
+    addDropDownElementToDom(attributes, optionValues)
     {
         var dropDown = document.createElement("select");
-        attachAttributesToElement(dropDown, attributes)
+        this.attachAttributesToElement(dropDown, attributes)
         for (var i = 0; i < 10; i++)
         {
             var option = document.createElement("option");
@@ -66,7 +69,7 @@ class HostPage extends Phaser.Scene {
             dropDown.appendChild(option);
         }
         document.getElementById("gameCanvas").appendChild(dropDown);
-        element = phaserClass.add.dom(x, y, dropDown);
+        return dropDown
     }
 
     attachAttributesToElement(element, attributes)
