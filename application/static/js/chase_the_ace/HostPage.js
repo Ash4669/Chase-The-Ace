@@ -45,25 +45,6 @@ class HostPage extends Phaser.Scene {
         var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'});
     }
 
-    addDropDownElementToDom(phaserClass, element, attributes, optionValues, x, y)
-    {
-        var select = document.createElement("select");
-        for (var i = 0; i < Object.keys(attributes).length; i++)
-        {
-            select.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i])
-        }
-        for (var i = 0; i < 10; i++)
-        {
-            var option = document.createElement("option");
-            option.value = optionValues[i];
-            option.selected = "";
-            option.innerHTML = optionValues[i];
-            select.appendChild(option);
-        }
-        document.getElementById("gameCanvas").appendChild(select);
-        element = phaserClass.add.dom(x, y, select);
-    }
-
     addInputElementToDom(phaserClass, element, attributes, x, y)
     {
         var element = document.createElement("input");
@@ -73,6 +54,30 @@ class HostPage extends Phaser.Scene {
         }
         document.getElementById("gameCanvas").appendChild(element);
         element = phaserClass.add.dom(x, y, element);
+    }
+
+    addDropDownElementToDom(phaserClass, element, attributes, optionValues, x, y)
+    {
+        var dropDown = document.createElement("select");
+        attachAttributesToElement(dropDown, attributes)
+        for (var i = 0; i < 10; i++)
+        {
+            var option = document.createElement("option");
+            option.value = optionValues[i];
+            option.selected = "";
+            option.innerHTML = optionValues[i];
+            dropDown.appendChild(option);
+        }
+        document.getElementById("gameCanvas").appendChild(dropDown);
+        element = phaserClass.add.dom(x, y, dropDown);
+    }
+
+    attachAttributesToElement(element, attributes)
+    {
+        for (var i = 0; i < Object.keys(attributes).length; i++)
+        {
+            element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i]);
+        }
     }
 
     onHostButtonClicked()
