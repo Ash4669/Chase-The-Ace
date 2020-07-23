@@ -39,7 +39,6 @@
 - When a host quits the game (happens eventually), delete the room record out of the room db.
 
 >> Medium Priority
-- When a host quits, it redirects everyone else even when changing page by clicking on the navbar. I think because it yeilds from the same page it doesn't count as an unload which is currently uses. This doesn't trigger quit chase the ace and so it won't delete the db value in both room and player which is a problem.
 - Display the dealer for all people to see on the right?
 - Displaying who's go it is on player list. (display 'Playing' when their go is triggered. After clicking something, the text is deleted.)
 - Once a king is flipped, the previous person doesn't have the trade option anymore. 
@@ -59,4 +58,5 @@ Or add a randomiser before pulling off the card. (Not difficult to display 52 ca
 - Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
 > Bugs
-- Nothing currently.
+- When joining or starting a game, onquit() enacts and tries to quit a game you haven't joined. Works fine when refreshing in a lobby. - don't know why onquit triggers but the session values are different and so it can't find a matching player row since it is a new id.
+- When a host quits, it redirects everyone else even when changing page by clicking on the navbar. I think because it yeilds from the same page it doesn't count as an unload which is currently uses. This doesn't trigger quit chase the ace and so it won't delete the db value in both room and player which is a problem.
