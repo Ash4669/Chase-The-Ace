@@ -16,9 +16,6 @@ class HostPage extends Phaser.Scene {
     }
     create()
     {
-        // Storing GamePage this variable for methods to call to access class variables and methods.
-        const gamePage = this;
-
         var backgroundImage = this.add.image(0, 0, "casinoRoom")
         .setOrigin(0,0)
         .setDisplaySize(1000, 600);
