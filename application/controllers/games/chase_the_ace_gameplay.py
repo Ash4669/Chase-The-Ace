@@ -1,7 +1,6 @@
 from flask import url_for, session
 from ... import socketio, send, emit, join_room, leave_room
 import random
-from flask_login import current_user
 from ... import models
 from ... import db
 from ...classes.chase_the_ace.action import Action
@@ -29,37 +28,47 @@ def onJoin():
     playerName = session.get('userFullName')
     # Need a way to allow players to make up a name on the spot if they're not signed in.
 
-    # Send update to say who joined the room.
-    emit('receive player id', playerId)
-    emit('joined chase the ace announcement', playerName + ' has entered the room.', room=roomId)
+    gamePassword = dbUtils.getRoom(roomId).password
+    password = session.get('ChaseTheAcePassword')
 
-    # Setting the host if no players are in the game.
-    playerList = dbUtils.getPlayerList(roomId)
-    if playerList == []:
-        room = dbUtils.getRoom(roomId)
-        room.hostPlayerId = playerId
+    if gamePassword != "" and password != gamePassword:
+        emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_index')})
+
+    else:
+        # Send update to say who joined the room.
+        emit('receive player id', playerId)
+        emit('joined chase the ace announcement', playerName + ' has entered the room.', room=roomId)
+
+        # Setting the host if no players are in the game.
+        playerList = dbUtils.getPlayerList(roomId)
+        if playerList == []:
+            room = dbUtils.getRoom(roomId)
+            room.hostPlayerId = playerId
+            db.session.commit()
+
+        # Added new player to db.
+        newPlayer = models.Player(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName, card=None)
+        db.session.add(newPlayer)
         db.session.commit()
 
-    # Added new player to db.
-    newPlayer = models.Player(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName, card=None)
-    db.session.add(newPlayer)
-    db.session.commit()
+        hostId = dbUtils.getGameHostId(roomId)
+        emit('set host', (hostId, roomId, gamePassword))
+        emit('set dealer', hostId)
 
-    hostId = dbUtils.getGameHostId(roomId)
-    emit('set host', (hostId, roomId))
-    emit('set dealer', hostId)
+        numberOfLivesSet = dbUtils.getRoom(roomId).numberOfLivesSet
+        emit('set max player lives', numberOfLivesSet)
 
-    # Construct playerNames to send to clients.
-    playerList = dbUtils.getPlayerList(roomId)
-    playerNames = []
-    for i in range(len(playerList)):
-        playerNames.append(playerList[i].name)
+        # Construct playerNames to send to clients.
+        playerList = dbUtils.getPlayerList(roomId)
+        playerNames = []
+        for i in range(len(playerList)):
+            playerNames.append(playerList[i].name)
 
-    # Join the flask room.
-    join_room(roomId)
+        # Join the flask room.
+        join_room(roomId)
 
-    # Emit to the room to update all other players of the change to the player name list.
-    emit('update chase the ace playerList', playerNames, room=roomId)
+        # Emit to the room to update all other players of the change to the player name list.
+        emit('update chase the ace playerList', playerNames, room=roomId)
 
 @socketio.on('quit chase the ace')
 def onQuit():
@@ -106,8 +115,9 @@ def startGame():
 
         # Setting the lives of the players and their out of game statuses.
         playerList = dbUtils.getPlayerList(roomId)
+        numberOfLivesSet = dbUtils.getRoom(roomId).numberOfLivesSet
         for i in range(len(playerList)):
-            playerList[i].lives = 3
+            playerList[i].lives = numberOfLivesSet
             playerList[i].outOfGame = False
         db.session.commit()
 

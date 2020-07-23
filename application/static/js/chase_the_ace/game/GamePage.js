@@ -1,6 +1,7 @@
 class GamePage extends Phaser.Scene {
 
     roomNumber;
+    roomPassword;
     gameStarted;
     hideDealerCard;
     dealerDisplay;
@@ -15,7 +16,7 @@ class GamePage extends Phaser.Scene {
     playerNamesDisplays = new Array();
 
     // Player Lives
-    maxPlayerLives = 3;
+    maxPlayerLives;
     playerLives;
     playerLivesDisplays = new Array();
 
@@ -70,22 +71,16 @@ class GamePage extends Phaser.Scene {
         // Storing GamePage this variable for methods to call to access class variables and methods.
         const gamePage = this;
 
-        // Initialisation of socket variable into the global scope.
-        self.socket = io();
-
         // Setting up the initial game screen: background, players and player title.
         var backgroundImage = this.add.image(0, 0, "casinoRoom").setOrigin(0,0).setDisplaySize(1000, 600);
         var playersNamesBox = this.add.rectangle(900, 0, 200, 500, 0x01DF01).setStrokeStyle(2, 0x000000)
         this.add.text(820, 20, 'Players');
 
         // Triggering server response to someone joining the game.
-        socket.on('connect', function()
-        {
-            socket.emit('join chase the ace');
-        });
+        socket.emit('join chase the ace');
 
         // Setting the host id for the client to display the start button.
-        socket.on('set host', function(hostId, roomId)
+        socket.on('set host', function(hostId, roomId, password)
         {
             gamePage.hostId = hostId
             if (gamePage.playerId == gamePage.hostId)
@@ -93,6 +88,7 @@ class GamePage extends Phaser.Scene {
                 gamePage.gameStarted = false;
                 gamePage.displayStartButton(gamePage);
                 gamePage.roomNumber = gamePage.add.text(20, 70, "Room Number: " + roomId)
+                gamePage.roomPassword = gamePage.add.text(20, 100, "Room Password: " + (password ? password : 'Not set'))
             }
         });
 
@@ -117,6 +113,11 @@ class GamePage extends Phaser.Scene {
             /* Create popup instead which then redirects after */
             window.location = data.url;
         });
+
+        socket.on('set max player lives', function(numberOfLivesSet)
+        {
+            gamePage.maxPlayerLives = numberOfLivesSet;
+        })
 
         // Setting playerId for this client.
         socket.on('receive player id', function (response)
@@ -314,6 +315,7 @@ class GamePage extends Phaser.Scene {
         if (this.gameStarted == false)
         {
             this.roomNumber.destroy();
+            this.roomPassword.destroy();
             this.gameStarted = true;
         }
         // Hide the dealer's card and reset the king reveal.
@@ -321,7 +323,7 @@ class GamePage extends Phaser.Scene {
         this.kingNotRevealed = true;
         if (this.playerId == this.dealerId)
         {
-            this.dealerDisplay = game.add.text(350, 50, "You are the dealer!");
+            this.dealerDisplay = game.add.text(350, 70, "You are the dealer!");
         }
     }
 
@@ -466,7 +468,6 @@ class GamePage extends Phaser.Scene {
             this.revealKingButton.setDisplaySize(200, 100);
             this.revealKingButton.setInteractive().on('pointerdown', () => this.onRevealKingButtonClicked());
         }
-
     }
 
     onRevealKingButtonClicked()
@@ -477,11 +478,12 @@ class GamePage extends Phaser.Scene {
             socket.emit('reveal king')
         }
     }
+
+    quit()
+    {
+        socket.emit('quit chase the ace');
+    }
+
+    onunload = this.quit();
 }
 
-window.onunload = quit;
-
-function quit()
-{
-    socket.emit('quit chase the ace');
-};

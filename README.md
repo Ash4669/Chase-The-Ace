@@ -9,7 +9,7 @@
 - pip3 install virtualenv
 - If wanted, set up virtual environment with "python3 -m virtualenv path_to_environment".
 - Activate environment with "source path_to_environment/bin/activate" on mac or "path_to_environment\Scripts\activate" for windows.
-- pip3 install flask, flask_login, flask-sqlalchemy, configparser and pusher using "pip3 install 'module_name'".
+- pip3 install flask, flask_login, flask-sqlalchemy, configparser and flask_session, using "pip3 install 'module_name'".
 - use "export FLASK_APP=project_folder_name" for mac, "set FLASK_APP=project_folder_name" for command line or "$env:FLASK_APP='foo'" for powershell. I believe this is correct.
 - Create the database using the following python code in the python REPL.
 - Install pytest to run unit tests.
@@ -35,9 +35,8 @@
 
 > Functionality left to implement
 >> High priority
-- Refactor the host page to go to a separate scene and have both a choice of lives and password to set and if left black then leave unset. 
-- Selection for how many lives you want.
-- Add passcode for joining games
+- Need to add in that when all players have same cards and all in game still have lives != 1, then they lose a life. Only skip round if the players all have 1 life because that will end in a draw.
+- When a host quits the game (happens eventually), delete the room record out of the room db.
 
 >> Medium Priority
 - Display the dealer for all people to see on the right?
@@ -48,7 +47,6 @@
 
 >> Lower Priority
 - When the host quits a game, have a popup and on clicking 'ok' then redirect.
-- When a host quits the game (happens eventually), delete the room record out of the room db.
 - Add message and redirect for those trying to join a game that doesn't exist from the URL.
 - Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
 - Maybe change display to have it across the top.
@@ -60,4 +58,6 @@ Or add a randomiser before pulling off the card. (Not difficult to display 52 ca
 - Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
 > Bugs
-- Clear at the moment.
+- When joining or starting a game, onquit() enacts and tries to quit a game you haven't joined. Works fine when refreshing in a lobby. - don't know why onquit triggers but the session values are different and so it can't find a matching player row since it is a new id.
+- When a host quits, it redirects everyone else even when changing page by clicking on the navbar. I think because it yeilds from the same page it doesn't count as an unload which is currently uses. This doesn't trigger quit chase the ace and so it won't delete the db value in both room and player which is a problem.
+  - Might be a problem with having the socket initiated in the game.js. Not sure.

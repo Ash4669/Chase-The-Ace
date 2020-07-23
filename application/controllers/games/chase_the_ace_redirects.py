@@ -12,18 +12,21 @@ def generateRoomId():
 
 # Initialisation of the game room.
 @socketio.on('host game send')
-def generateAndHostRedirect():
+def generateAndHostRedirect(password, lives):
+
+    # Stores password set by host in session to check host against own password.
+    session['ChaseTheAcePassword'] = password
 
     roomId = generateRoomId()
 
     # Checking to see if room exists, and if so, generate a new id and retry.
     room = dbUtils.getRoom(roomId)
-    while room != None:
+    while room is not None:
         roomId = generateRoomId()
         room = dbUtils.getRoom(roomId)
 
     # Instantiate the Room with the room id as game id and store it within the database.
-    newGame = models.Room(roomId=roomId, gameType='chase_the_ace', currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
+    newGame = models.Room(roomId=roomId, password=password, gameType='chase_the_ace', numberOfLivesSet=lives, currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
     db.session.add(newGame)
     db.session.commit()
 
@@ -33,14 +36,19 @@ def generateAndHostRedirect():
 
 # Join an already initialised game room.
 @socketio.on('join game send')
-def joinGameRedirect(roomId):
+def joinGameRedirect(roomId, password):
 
     # Checking to see if room exists, and if so, check it isn't locked and join otherwise.
     room = dbUtils.getRoom(roomId)
-    if room == None:
+    if room is None:
         emit("game doesn't exist")
-    elif room.locked == True:
+    elif room.locked is True:
         emit("game has already started")
     else:
-        # Emit the redirect for the client to redirect with javascript.
-        emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId=roomId)})
+        if password != room.password and password is not None:
+            emit("incorrect password")
+        else:
+            session['ChaseTheAcePassword'] = password
+            # Emit the redirect for the client to redirect with javascript.
+            emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId=roomId)})
+

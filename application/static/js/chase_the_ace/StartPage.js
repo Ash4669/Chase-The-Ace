@@ -24,17 +24,11 @@ class StartPage extends Phaser.Scene {
         .setOrigin(0, 0)
         .setDisplaySize(200, 100)
         .setInteractive().on('pointerdown', () => this.onJoinButtonClicked());
-
-        socket.on('redirect', function (data)
-        {
-            window.location = data.url;
-        });
-
     }
 
     onHostButtonClicked()
     {
-        socket.emit('host game send');
+        this.scene.start("HostPage")
     }
 
     onJoinButtonClicked()
