@@ -60,3 +60,4 @@ Or add a randomiser before pulling off the card. (Not difficult to display 52 ca
 > Bugs
 - When joining or starting a game, onquit() enacts and tries to quit a game you haven't joined. Works fine when refreshing in a lobby. - don't know why onquit triggers but the session values are different and so it can't find a matching player row since it is a new id.
 - When a host quits, it redirects everyone else even when changing page by clicking on the navbar. I think because it yeilds from the same page it doesn't count as an unload which is currently uses. This doesn't trigger quit chase the ace and so it won't delete the db value in both room and player which is a problem.
+  - Might be a problem with having the socket initiated in the game.js. Not sure.
