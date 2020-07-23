@@ -36,7 +36,6 @@ class HostPage extends Phaser.Scene {
         this.passwordInput = this.addInputElementToDom(inputAttributes);
         this.add.dom(500, 250, this.passwordInput);
 
-
         var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px"};
         var options = ["1","2","3","4","5","6","7","8","9","10"];
         this.livesInput = this.addDropDownElementToDom(dropDownAttributes, options);

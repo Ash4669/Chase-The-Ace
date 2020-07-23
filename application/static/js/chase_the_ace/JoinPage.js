@@ -3,6 +3,8 @@ class JoinPage extends Phaser.Scene {
     gameDoesNotExistText;
     gameAlreadyStartedText;
     incorrectPasswordText;
+    joinInput;
+    passwordInput;
 
     constructor()
     {
@@ -34,10 +36,12 @@ class JoinPage extends Phaser.Scene {
 
         // Creating and attaching an input field onto the dom.
         var roomNumberAttributes = {"type":"text", "id":"join-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Room Number Here"}
-        this.addInputElementToDom(roomNumberAttributes, 500, 250);
+        this.joinInput = this.addInputElementToDom(roomNumberAttributes);
+        this.add.dom(500, 250, this.joinInput);
 
         var passwordAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "style":"font-size:32px", "placeholder":"Enter Password (Optional)"}
-        this.addInputElementToDom(passwordAttributes, 500, 325);
+        this.passwordInput = this.addInputElementToDom(passwordAttributes);
+        this.add.dom(500, 325, this.passwordInput);
 
         // Triggering server response to someone joining the game.
         socket.on("game doesn't exist", function()
@@ -56,17 +60,15 @@ class JoinPage extends Phaser.Scene {
         })
     }
 
-    addInputElementToDom(attributes, x, y)
+    addInputElementToDom(attributes)
     {
-        var element = document.createElement("INPUT");
+        var element = document.createElement("input");
         for (var i = 0; i < Object.keys(attributes).length; i++)
         {
-            element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i])
+            element.setAttribute(Object.keys(attributes)[i], Object.values(attributes)[i]);
         }
         document.getElementById("gameCanvas").appendChild(element);
-
-        // Attaching dom element to phaser.
-        var domElement = this.add.dom(x, y, element);
+        return element
     }
 
     addFadeAndDeleteText(element, text)

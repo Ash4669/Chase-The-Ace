@@ -478,11 +478,12 @@ class GamePage extends Phaser.Scene {
             socket.emit('reveal king')
         }
     }
+
+    quit()
+    {
+        socket.emit('quit chase the ace');
+    }
+
+    onunload = this.quit();
 }
 
-window.onunload = quit;
-
-function quit()
-{
-    socket.emit('quit chase the ace');
-}

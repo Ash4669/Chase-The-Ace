@@ -31,7 +31,7 @@ def onJoin():
     gamePassword = dbUtils.getRoom(roomId).password
     password = session.get('ChaseTheAcePassword')
 
-    if gamePassword is not None and password != gamePassword:
+    if gamePassword != "" and password != gamePassword:
         emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_index')})
 
     else:
