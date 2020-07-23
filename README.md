@@ -36,7 +36,7 @@
 > Functionality left to implement
 >> High priority
 - Need to add in that when all players have same cards and all in game still have lives != 1, then they lose a life. Only skip round if the players all have 1 life because that will end in a draw.
-- When a host quits the game (happens eventually), delete the room record out of the room db.
+- When a host quits the game (happens eventually), delete the room record out of the room db. - Need to fix bug before possible.
 
 >> Medium Priority
 - Display the dealer for all people to see on the right?
