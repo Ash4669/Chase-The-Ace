@@ -52,9 +52,6 @@
 - Add message and redirect for those trying to join a game that doesn't exist from the URL.
 - Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
 - Maybe change display to have it across the top.
-- Give options to choose the card they want to cut to? A button from 1 to 52 - len(players) for them to choose their card? Think of ways to do this. May just be creating 52 - players of card displays on the screen and they choose one, it then finds which one of the array it was, gets the array number and send that to the serve and they get the relevant card.
-Or add a randomiser before pulling off the card. (Not difficult to display 52 cards and then the ith one they choose is the value sent back to the database and pop off that value.)
-
 
 > Testing notes
 - Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.

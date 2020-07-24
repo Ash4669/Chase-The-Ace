@@ -14,6 +14,7 @@ class GamePage extends Phaser.Scene {
     // Player Names
     playerNames = new Array();
     playerNamesDisplays = new Array();
+    fullDeckDisplays = new Array();
 
     // Player Lives
     maxPlayerLives;
@@ -298,6 +299,18 @@ class GamePage extends Phaser.Scene {
                 gamePage.onRevealKingButtonClicked();
             }
         })
+
+        this.input.on('gameobjectdown', function (pointer, gameObject) {
+            if (this.fullDeckDisplays.includes(gameObject))
+            {
+                socket.emit('cut card', gameObject.getData('index'))
+                for (var i = 0; i < this.fullDeckDisplays.length; i++)
+                {
+                    this.fullDeckDisplays[i].destroy();
+                }
+            }
+
+        }, this);
     }
 
     displayStartButton(game)
@@ -386,23 +399,26 @@ class GamePage extends Phaser.Scene {
 
     displayStickButton()
     {
-        this.stickButton = this.add.image(215, 450, "stickButton").setOrigin(0, 0);
-        this.stickButton.setDisplaySize(200, 100);
-        this.stickButton.setInteractive().on('pointerdown', () => this.onStickButtonClicked());
+        this.stickButton = this.add.image(215, 450, "stickButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onStickButtonClicked());
     }
 
     displayTradeButton()
     {
-        this.tradeButton = this.add.image(465, 450, "tradeButton").setOrigin(0, 0);
-        this.tradeButton.setDisplaySize(200, 100);
-        this.tradeButton.setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
+        this.tradeButton = this.add.image(465, 450, "tradeButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onTradeButtonClicked());
     }
 
     displayCutButton()
     {
-        this.cutButton = this.add.image(465, 450, "cutButton").setOrigin(0, 0);
-        this.cutButton.setDisplaySize(200, 100);
-        this.cutButton.setInteractive().on('pointerdown', () => this.onCutButtonClicked());
+        this.cutButton = this.add.image(465, 450, "cutButton")
+        .setOrigin(0, 0)
+        .setDisplaySize(200, 100)
+        .setInteractive().on('pointerdown', () => this.onCutButtonClicked());
     }
 
     onStickButtonClicked()
@@ -430,7 +446,16 @@ class GamePage extends Phaser.Scene {
     {
         this.stickButton.destroy();
         this.cutButton.destroy();
-        socket.emit('cut card');
+
+        for (var i = 0; i < 52 - this.playerNames.length; i++)
+        {
+            this.fullDeckDisplays[i] = this.add.image(50 + (i * 15), 430, "greenBack")
+            .setOrigin(0, 0)
+            .setDisplaySize(100, 160)
+            .setInteractive();
+            this.fullDeckDisplays[i].setDataEnabled()
+            this.fullDeckDisplays[i].data.set('index', i.toString());
+        }
     }
 
     deleteAllPlayerCards()

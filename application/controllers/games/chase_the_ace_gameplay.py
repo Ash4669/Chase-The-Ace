@@ -182,12 +182,12 @@ def tradeCard():
     handleKingAndGiveChoice(roomId)
 
 @socketio.on('cut card')
-def cutCard():
+def cutCard(cardIndex):
 
     roomId = session.get('roomId')
 
     # Cut the deck for another card.
-    Action.cutTheDeck(roomId)
+    Action.cutTheDeck(roomId, cardIndex)
 
     # Increments the player too match stick card functionality to line up ending the round regardless of choice.
     Action.updateCurrentPlayer(roomId, previousPlayer='player')
