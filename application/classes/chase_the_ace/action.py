@@ -179,7 +179,15 @@ class Action:
                 allEqual = False
                 break
 
-        # If the game is not a draw then calculate the loser/s
+        if allEqual:
+            for i in range(len(playerList)):
+                player = playerList[i]
+                if not player.outOfGame:
+                    if player.lives != 1:
+                        allEqual = False
+                        break
+
+        # If the game is not a draw or the players have more than one life each then calculate the loser/s
         if not allEqual:
             # Subtracting a life off of all players with lowest cards.
             for playerId, cardValue in idsAndCards.items():

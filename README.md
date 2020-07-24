@@ -35,7 +35,6 @@
 
 > Functionality left to implement
 >> High priority
-- Need to add in that when all players have same cards and all in game still have lives != 1, then they lose a life. Only skip round if the players all have 1 life because that will end in a draw.
 - When a host quits the game (happens eventually), delete the room record out of the room db. - Need to fix bug before possible.
 
 >> Medium Priority
@@ -44,6 +43,9 @@
 - Once a king is flipped, the previous person doesn't have the trade option anymore. 
 - Have it so if a player is not authenticated (not logged in and so missing a name), they have a text box pop up where they enter their name, store it in the session and on clicking confirmation for name, send redirect from there. Use this for both start and joining a game. If they do have a name, give them the option but autofill it with their name stored in the session. Should be easy enough to implement. Send it in the socket. 
 - Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
+- Give players ability to start a new game in the same lobby.
+- If someone joins mid game then it breaks the game. This only happens with games without a password who join from the URL. If I check if the game is locked at the same time if the game has a password on GamePage, this will stop this issue from happening.
+
 
 >> Lower Priority
 - When the host quits a game, have a popup and on clicking 'ok' then redirect.
