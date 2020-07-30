@@ -134,8 +134,6 @@ class Action:
             player = playerList[i]
 
             if player.generatedPlayerId == room.dealerPlayerId:
-                print(cardIndex)
-                print(currentDeck)
                 player.card = currentDeck.pop(int(cardIndex))
                 break
 
