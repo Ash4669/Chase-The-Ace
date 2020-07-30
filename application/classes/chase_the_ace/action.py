@@ -121,7 +121,7 @@ class Action:
         # Commit changes
         db.session.commit()
 
-    def cutTheDeck(roomId):
+    def cutTheDeck(roomId, cardIndex):
         # Retrieving the list of players and the room data.
         playerList = dbUtils.getPlayerList(roomId)
         room = dbUtils.getRoom(roomId)
@@ -134,7 +134,7 @@ class Action:
             player = playerList[i]
 
             if player.generatedPlayerId == room.dealerPlayerId:
-                player.card = currentDeck.pop(0)
+                player.card = currentDeck.pop(int(cardIndex))
                 break
 
         # Commit changes
