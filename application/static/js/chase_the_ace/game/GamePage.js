@@ -309,7 +309,6 @@ class GamePage extends Phaser.Scene {
                     this.fullDeckDisplays[i].destroy();
                 }
             }
-
         }, this);
     }
 
@@ -447,7 +446,7 @@ class GamePage extends Phaser.Scene {
         this.stickButton.destroy();
         this.cutButton.destroy();
 
-        for (var i = 0; i < 52 - this.playerNames.length; i++)
+        for (var i = 0; i < (52 - this.playerNames.length); i++)
         {
             this.fullDeckDisplays[i] = this.add.image(50 + (i * 15), 430, "greenBack")
             .setOrigin(0, 0)
