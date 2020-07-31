@@ -35,6 +35,7 @@
 
 > Functionality left to implement
 >> High priority
+- Need a chat mechanism on the gamepages.
 - When a host quits the game (happens eventually), delete the room record out of the room db. - Need to fix bug before possible.
 
 >> Medium Priority
