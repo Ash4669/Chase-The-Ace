@@ -126,13 +126,6 @@ class GamePage extends Phaser.Scene {
             gamePage.playerId = response;
         })
 
-        // Letting other plays know when someone else has joined the game.
-        socket.on('joined chase the ace announcement', function(response)
-        {
-            /* Need to have popup for a few seconds and destroy it. */
-            console.log(response);
-        })
-
         // Updating the player list of the game when people join or quit the game.
         socket.on('update chase the ace playerList', function(response)
         {
