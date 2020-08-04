@@ -1,0 +1,7 @@
+.chatCentre
+{
+    height: 150px;
+    width: 500px;
+    overflow: auto;
+    border-style: double;
+}

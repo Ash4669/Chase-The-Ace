@@ -1,15 +1,17 @@
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='css/chat.css') }}">
+
 <div class="chatContainer">
     <div class="chatHeader">
         <h3>Chat</h3>
     </div>
-    <div class="chatContainer" id="chatContainer">
+    <div class="chatCentre" id="chatCentre">
     </div>
     <div class="chatBottom">
-        <form action="#" onsubmit="sendMessage();return false">
+        <form action="#" id = "chatForm" onsubmit="sendMessage();return false">
             <input name="message" type="text" id="chatMessage" size="63"/>
             <button name="submit" type="submit" id="submitMessage">Send</button>
         </form>
     </div>
 </div>
 
-<script type='text/javascript' src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script type='text/javascript' src="{{ url_for('static', filename='js/utils/chat.js') }}"></script>
