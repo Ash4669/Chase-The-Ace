@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
 {% block head %}
-{% include "games/chase_the_ace/head/indexHead.html" %}
+    {% include "games/gamesHead.html" %}
 {% endblock %}
 
 {% block content %}
 <div class="">
   <a href="{{url_for('main.play')}}">Back</a>
-  <h1>Chase The Ace</h1>
-  <h2>{{id}}</h2>
+</div>
+<div class="game-header">
+    <h1>Chase The Ace</h1>
 </div>
 <div id="gameCanvas"></div>
 

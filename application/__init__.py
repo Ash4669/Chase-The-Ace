@@ -17,11 +17,6 @@ login_manager = LoginManager()
 
 from . import models
 
-# Game sockets import game mechanics and socketio listeners.
-from .controllers.games import chase_the_ace_gameplay
-from .controllers.games import chase_the_ace_redirects
-
-
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = config.get('SQLALCHEMY','secret_key')
@@ -50,9 +45,12 @@ def registerBlueprints(app):
     from .controllers.main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    # blueprint for chase_the_ace parts of app
+    # blueprint for chase_the_ace parts of app, Game sockets import game mechanics and socketio listeners.
     from .controllers.games.chase_the_ace import chase_the_ace as chase_the_ace_blueprint
+    from .controllers.games import chase_the_ace_gameplay
+    from .controllers.games import chase_the_ace_redirects
     app.register_blueprint(chase_the_ace_blueprint)
+
 
     # blueprint for shed parts of app
     from .controllers.games.shed import shed as shed_blueprint
