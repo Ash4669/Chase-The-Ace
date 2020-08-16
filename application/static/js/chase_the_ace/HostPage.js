@@ -34,14 +34,16 @@ class HostPage extends Phaser.Scene {
         var inputAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "size":"27", "style":"font-size:32px",
          "placeholder":"Set Room Password (optional)", "maxlength":"40"};
         this.passwordInput = this.addInputElementToDom(inputAttributes);
-        this.add.dom(500, 250, this.passwordInput);
+        this.add.dom(game.canvas.width/2, game.canvas.height/2 - 50, this.passwordInput).setOrigin(0, 0);
 
         var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px"};
         var options = ["1","2","3","4","5","6","7","8","9","10"];
         this.livesInput = this.addDropDownElementToDom(dropDownAttributes, options);
-        this.add.dom(540, 328, this.livesInput);
+        this.add.dom(game.canvas.width/2, game.canvas.height/2 + 50, this.livesInput)
+        .setOrigin(0, 0);
 
-        var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'});
+        var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'})
+        .setOrigin(0, 0);
     }
 
     addInputElementToDom(attributes)

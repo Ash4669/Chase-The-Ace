@@ -1,44 +1,51 @@
 body {
-  padding: 0px;
-  margin: 0px;
-  color: black;
-  background-color: white;
+    padding: 0px;
+    margin: 0px;
+    color: black;
+    background-color: white;
+}
+h1
+{
+    margin: 0px;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 .main {
-  padding-top: 80px;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    padding-top: 40px;
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+.main-container
+{
+    text-align: center;
+    margin: 0 auto;
 }
 .nav-bar{
-display: inline-block;
-width: 100%;
-background-color: #006699;
+    display: inline-block;
+    width: 100%;
+    background-color: #006699;
 }
 .logo{
-  float: left;
-  padding: 15px 30px;
-  padding-left: 150px;
-  color: white;
-  font-size: 20px;
-  font-family: arial;
+    float: left;
+    padding: 15px 30px;
+    padding-left: 150px;
+    color: white;
+    font-size: 20px;
+    font-family: arial;
 }
 .links {
-  float: right;
-  padding-right: 150px;
+    float: right;
+    padding-right: 150px;
 }
 .links > a {
-  display: inline-block;
-  color: white;
-  font-size: 20px;
-  font-family: arial;
-  text-decoration: none;
-  padding: 15px 30px;
+    display: inline-block;
+    color: white;
+    font-size: 20px;
+    font-family: arial;
+    text-decoration: none;
+    padding: 15px 30px;
 }
 .links > a:hover {
-  color: ;
-  text-decoration: underline;
-  background-color: ;
+    text-decoration: underline;
 }
