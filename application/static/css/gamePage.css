@@ -23,5 +23,10 @@
 {
     padding: 0;
     margin: auto;
-    display: block;
+}
+#canvasWrapper
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
