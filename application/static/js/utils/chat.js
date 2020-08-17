@@ -28,7 +28,6 @@ function sendMessage()
     socket.emit("send chat message", message);
     element.value='';
     messageSent = true;
-    return false;
 }
 
 function attachMessage(elementId, message)
