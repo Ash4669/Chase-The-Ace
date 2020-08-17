@@ -1,0 +1,31 @@
+.chatContainer
+{
+    background-color: lightblue;
+    height: 600px;
+    width: 205px;
+    margin: 0px;
+    padding: 0px;
+}
+.chatHeader
+{
+    height: 10%;
+}
+.chatHeader > h3
+{
+    padding: 10px 20px;
+    margin: 0px;
+}
+
+.chatCentre
+{
+    height: 80%;
+    background-color: lightgreen;
+}
+.chatBottom
+{
+    height: 10%;
+}
+.chatMessage
+{
+    padding: 5px 10px 0px 10px;
+}

@@ -49,6 +49,7 @@ def registerBlueprints(app):
     from .controllers.games.chaseTheAce import chase_the_ace as chase_the_ace_blueprint
     from .controllers.games import chaseTheAceGameplay
     from .controllers.games import chaseTheAceRedirects
+    from .controllers import chat
     app.register_blueprint(chase_the_ace_blueprint)
 
     # blueprint for shed parts of app

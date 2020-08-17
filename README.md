@@ -1,6 +1,5 @@
 # To do
 - Use Ionic framework to get the game onto mobile for the app store.
-- SignalR for game chat?
 - Set up email confirmation later on.
 - Add matchmaking system where it can get a game_id that is created but game not ready yet and people can join (do public and private games) (Public games are without signing in. Private is with signing in.) Add in private tickbox to not allow others to join.
 
@@ -49,7 +48,6 @@
 #### Chase the ace
 ### High priority
 - Change code to emit to users specfically, not all the same data and then sort it out client side. It's easy to cheat. User request.sid to get socketid and send by room=request.sid (store player socket.id in the db)
-- Need a chat mechanism on the gamepages.
 - When a host quits the game (happens eventually), delete the room record out of the room db. - Need to fix bug before possible.
 
 ### Medium Priority

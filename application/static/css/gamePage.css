@@ -1,31 +1,29 @@
-.back-button
+.backButton
 {
     padding: 10px;
-    margin-left: 14%;
-    border-radius: 10%;
     background-color: lightblue;
     width: 12%;
     text-align: center;
 }
-.back-button > a
+.backButton > a
 {
     font-size: 20px;
 }
-.game-header
+.gameHeader
 {
     background-color: blue;
     padding: 10px 0px;
     margin: auto;
     display: block;
-    width: 1000px;
+    width: 1205px;
 }
-.game-canvas
+.gameCanvas
 {
-    padding: 0;
-    margin: auto;
+    margin: 4px 0px 0px 0px;
 }
 #canvasWrapper
 {
+    height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;

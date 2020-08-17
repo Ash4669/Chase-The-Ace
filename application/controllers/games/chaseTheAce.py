@@ -18,4 +18,4 @@ def chase_the_ace_instance(roomId):
 
     # Saving the game id into the session.
     session['roomId'] = roomId
-    return render_template('games/chase_the_ace/game.html', roomId = roomId)
+    return render_template('games/chase_the_ace/game.html', roomId=roomId)

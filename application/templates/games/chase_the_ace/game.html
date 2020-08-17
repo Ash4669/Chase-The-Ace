@@ -5,16 +5,23 @@
 {% endblock %}
 
 {% block content %}
-<div class="back-button">
-    <a href="{{url_for('chase_the_ace.chase_the_ace_index')}}">Back</a>
-</div>
-<div class="main-container">
-    <div class="game-header">
-        <h1>Chase The Ace</h1>
+    <div class="backButton">
+        <a href="{{url_for('chase_the_ace.chase_the_ace_index')}}">Back</a>
     </div>
-    <div id="gameCanvas" class="gameCanvas"></div>
-</div>
+    <div class="mainContainer">
+        <div class="gameHeader">
+            <h1>Chase The Ace</h1>
+        </div>
+        <div id="canvasWrapper">
+        <div id="gameCanvas" class="gameCanvas"></div>
+            {% block chat %}
+            {% include "utils/chat.html" %}
+            {% endblock %}
+        </div>
+    </div>
 
 <script type='text/javascript' src="{{ url_for('static', filename='js/chase_the_ace/game/GamePage.js') }}"></script>
 <script type='text/javascript' src="{{ url_for('static', filename='js/chase_the_ace/game/game.js') }}"></script>
+
+
 {% endblock %}
