@@ -1,0 +1,23 @@
+.chatContainer
+{
+    background-color: lightblue;
+    width: 200px;
+}
+
+.chatHeader>h3
+{
+    padding: 10px 20px;
+    margin: 0px;
+}
+
+.chatCentre
+{
+    height: 150px;
+    overflow: auto;
+    border-style: double;
+}
+
+.chatMessage
+{
+    padding: 5px 10px 0px 10px;
+}

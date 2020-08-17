@@ -20,11 +20,3 @@ var config = {
     roundPixels: true
 };
 var game = new Phaser.Game(config);
-
-// Initialisation of socket variable into the global scope.
-self.socket = io();
-
-socket.on('redirect', function (data)
-{
-    window.location = data.url;
-});
