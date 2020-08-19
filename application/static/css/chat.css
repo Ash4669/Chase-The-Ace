@@ -27,5 +27,6 @@
 }
 .chatMessage
 {
+    text-align: left;
     padding: 5px 10px 0px 10px;
 }
