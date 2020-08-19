@@ -1,0 +1,21 @@
+.gameInDevelopmentText
+{
+    color: black;
+    font-size: 32px;
+    padding: 10px 0px;
+    background: repeating-linear-gradient(
+        -45deg,
+        yellow 0px,
+        yellow 30px,
+        black 0px,
+        black 60px
+    );
+}
+.gameInDevelopmentText > h2
+{
+    display: inline;
+    padding: 0px 5px;
+    margin: 0px;
+    background: rgba(255,255,0, 0.7);
+    border-radius: 20px 0px 20px 0px;
+}

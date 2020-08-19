@@ -1,0 +1,30 @@
+.backButton
+{
+    padding: 10px;
+    background-color: lightblue;
+    width: 12%;
+    text-align: center;
+}
+.backButton > a
+{
+    font-size: 20px;
+}
+.gameHeader
+{
+    background-color: blue;
+    padding: 10px 0px;
+    margin: auto;
+    display: block;
+    width: 1205px;
+}
+.gameCanvas
+{
+    margin: 4px 0px 0px 0px;
+}
+#canvasWrapper
+{
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

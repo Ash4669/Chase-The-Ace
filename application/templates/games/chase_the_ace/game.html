@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 
 {% block head %}
-    {% include "games/chase_the_ace/head/indexHead.html" %}
+    {% include "games/gamesHead.html" %}
 {% endblock %}
 
 {% block content %}
-    <div class="">
-        <a href="{{url_for('main.play')}}">Back</a>
-        <h1>Chase The Ace</h1>
-        <h2>{{id}}</h2>
+    <div class="backButton">
+        <a href="{{url_for('chase_the_ace.chase_the_ace_index')}}">Back</a>
     </div>
-    <div id="gameCanvas"></div>
+    <div class="mainContainer">
+        <div class="gameHeader">
+            <h1>Chase The Ace</h1>
+        </div>
+        <div id="canvasWrapper">
+        <div id="gameCanvas" class="gameCanvas"></div>
+            {% block chat %}
+            {% include "utils/chat.html" %}
+            {% endblock %}
+        </div>
+    </div>
 
-    <script type='text/javascript' src="{{ url_for('static', filename='js/chase_the_ace/game/GamePage.js') }}"></script>
-    <script type='text/javascript' src="{{ url_for('static', filename='js/chase_the_ace/game/game.js') }}"></script>
+<script type='text/javascript' src="{{ url_for('static', filename='js/chase_the_ace/game/GamePage.js') }}"></script>
+<script type='text/javascript' src="{{ url_for('static', filename='js/chase_the_ace/game/game.js') }}"></script>
 
-    {% block chat %}
-    {% include "utils/chat.html" %}
-    {% endblock %}
 
 {% endblock %}

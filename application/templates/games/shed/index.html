@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
+{% block head %}
+{% include "games/gamesHead.html" %}
+{% endblock %}
+
 {% block content %}
-<h1>Shed</h1>
+<div class="backButton">
+  <a href="{{url_for('main.play')}}">Back</a>
+</div>
+<!--<div class="gameHeader">-->
+<!--    <h1>Shed</h1>-->
+<!--</div>-->
+<div class="gameInDevelopmentText">
+    <h2>Still in development. Sorry for the inconvenience</h2>
+</div>
+
 {% endblock %}
