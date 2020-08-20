@@ -3,7 +3,8 @@ import json
 
 class JsonUtils:
 
-    def jsonifyPlayerData(self, playerList, playersJson):
+    def jsonifyPlayerListData(self, playerList):
+        playerListJson = []
         for i in range(len(playerList)):
             player = playerList[i]
             playerData = \
@@ -13,4 +14,14 @@ class JsonUtils:
                  'lives': player.lives,
                  'outOfGame': player.outOfGame}
             jsonData = json.dumps(playerData)
-            playersJson.append(jsonData)
+            playerListJson.append(jsonData)
+        return playerListJson
+
+    def jsonifyPlayerData(self, player):
+        playerData = \
+            {'id': player.generatedPlayerId,
+             'name': player.name,
+             'card': player.card,
+             'lives': player.lives,
+             'outOfGame': player.outOfGame}
+        return json.dumps(playerData)

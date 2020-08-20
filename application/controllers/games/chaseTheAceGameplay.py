@@ -134,14 +134,16 @@ def startGame():
     # Dealing the cards to the players.
     Action.dealCards(roomId)
 
-    # Extracts the playerData and to send a json.
-    playerList = dbUtils.getPlayerList(roomId)
-    playersJson = []
-    jsonUtils.jsonifyPlayerData(playerList, playersJson)
-
     # Updating the player data on client side.
-    emit('update player data', playersJson, room = roomId)
-    emit('update player lives', playersJson, room = roomId)
+    playerList = dbUtils.getPlayerList(roomId)
+    for player in playerList:
+        playerJson = jsonUtils.jsonifyPlayerData(player)
+        emit('update player data', playerJson, room=player.socketId)
+
+    # Updating all players on client side.
+    playerListJson = jsonUtils.jsonifyPlayerListData(playerList)
+
+    emit('update player lives', playerListJson, room=roomId)
 
     # Updating the current player as it cannot be the dealer
     Action.updateCurrentPlayer(roomId, previousPlayer='dealer')
@@ -171,13 +173,11 @@ def tradeCard():
     # Trades cards with the next person in the game.
     Action.tradeCards(roomId)
 
-    # Prepare player data to emit it to all players.
-    playersJson = []
-    playerList = dbUtils.getPlayerList(roomId)
-    jsonUtils.jsonifyPlayerData(playerList, playersJson)
-
     # Updating the player data on client side
-    emit('update player data', playersJson, room=roomId)
+    playerList = dbUtils.getPlayerList(roomId)
+    for player in playerList:
+        playerJson = jsonUtils.jsonifyPlayerData(player)
+        emit('update player data', playerJson, room=player.socketId)
 
     # Increments the player as their choice doesn't make a change.
     Action.updateCurrentPlayer(roomId, previousPlayer='player')
@@ -195,13 +195,11 @@ def cutCard(cardIndex):
     # Increments the player too match stick card functionality to line up ending the round regardless of choice.
     Action.updateCurrentPlayer(roomId, previousPlayer='player')
 
-    # Prepare player data to emit it to all players.
-    playersJson = []
-    playerList = dbUtils.getPlayerList(roomId)
-    jsonUtils.jsonifyPlayerData(playerList, playersJson)
-
     # Updating the player data on client side
-    emit('update player data', playersJson, room=roomId)
+    playerList = dbUtils.getPlayerList(roomId)
+    for player in playerList:
+        playerJson = jsonUtils.jsonifyPlayerData(player)
+        emit('update player data', playerJson, room=player.socketId)
 
     endRound(roomId)
 
@@ -211,11 +209,10 @@ def revealKing():
     playerId = session.get('playerId')
 
     # Prepare player data to emit it to all players.
-    playersJson = []
     playerList = dbUtils.getPlayerList(roomId)
-    jsonUtils.jsonifyPlayerData(playerList, playersJson)
+    playerListJson = jsonUtils.jsonifyPlayerListData(playerList)
 
-    emit('reveal king of playerId', (playersJson, playerId), room=roomId)
+    emit('reveal king of playerId', (playerListJson, playerId), room=roomId)
 
 @socketio.on('delete all player cards')
 def deletePlayerCardsDisplay():
@@ -226,25 +223,23 @@ def deletePlayerCardsDisplay():
 
 def endRound(roomId):
     # Prepare player data to emit it to all players.
-    playersJson = []
     playerList = dbUtils.getPlayerList(roomId)
-    jsonUtils.jsonifyPlayerData(playerList, playersJson)
+    playerListJson = jsonUtils.jsonifyPlayerListData(playerList)
 
     emit("delete dealer title", room=roomId)
 
     # Revealing all the cards at the end of the round.
-    emit('reveal all cards', playersJson, room=roomId)
+    emit('reveal all cards', playerListJson, room=roomId)
 
     # Calculate the winner and adjust lives accordingly.
     Action.calculateRoundWinner(roomId)
 
     # Extracts the playerData and to send a json.
     playerList = dbUtils.getPlayerList(roomId)
-    playersJson = []
-    jsonUtils.jsonifyPlayerData(playerList, playersJson)
+    playerListJson = jsonUtils.jsonifyPlayerListData(playerList)
 
     # Update players with their live count.
-    emit('update player lives', playersJson, room=roomId)
+    emit('update player lives', playerListJson, room=roomId)
 
     # If a winner isn't set, continue, otherwise send winner to all players
     room = dbUtils.getRoom(roomId)
