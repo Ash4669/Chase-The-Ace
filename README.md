@@ -48,6 +48,9 @@
 #### Chase the ace
 ### High priority
 - Change code to emit to users specfically, not all the same data and then sort it out client side. It's easy to cheat. User request.sid to get socketid and send by room=request.sid (store player socket.id in the db)
+  - Need to fix initial sends of singular cards and data. Look how it's used on the other side.
+  - Need way to emit all player data when revealing all players cards. Look how it's done and see if anything needs changing. Might just be able to emit singular json at the right time.
+  - Need to add sid to player model and store in database. That or store it in the session. Probably the session but look at the cleanest way of doing this. Probably when they join the game.
 - When a host quits the game (happens eventually), delete the room record out of the room db. - Need to fix bug before possible.
 
 ### Medium Priority

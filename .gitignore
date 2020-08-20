@@ -1,7 +1,7 @@
 venv/
 __pycache__/
 settings.conf
-db.sqlite
+dbs/
 .pyc
 .DS_Store
 .idea/

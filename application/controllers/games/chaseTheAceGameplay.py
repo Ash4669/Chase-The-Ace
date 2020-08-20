@@ -1,5 +1,6 @@
 from flask import url_for, session
 from ... import socketio, send, emit, join_room, leave_room
+from flask import request
 import random
 from ... import models
 from ... import db
@@ -20,12 +21,14 @@ def onJoin():
 
     # Generating a player id for the player.
     session['playerId'] = generatePlayerId()
+    session['playerSockedId'] = request.sid
 
     # Pulling game id, player id and player name from session.
     roomId = session.get('roomId')
     userId = session.get('userId')
     playerId = session.get('playerId')
     playerName = session.get('userFullName')
+    socketId = session.get('playerSockedId')
     # Need a way to allow players to make up a name on the spot if they're not signed in.
 
     gamePassword = dbUtils.getRoom(roomId).password
@@ -47,7 +50,7 @@ def onJoin():
             db.session.commit()
 
         # Added new player to db.
-        newPlayer = models.Player(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName, card=None)
+        newPlayer = models.Player(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName, card=None, socketId=socketId)
         db.session.add(newPlayer)
         db.session.commit()
 
