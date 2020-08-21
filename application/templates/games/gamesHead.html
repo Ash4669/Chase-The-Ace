@@ -8,6 +8,33 @@
         window.location = data.url;
     });
 </script>
-
+<script>
+    browserName = ''
+     if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 )
+    {
+        browserName = 'Opera';
+    }
+    else if(navigator.userAgent.indexOf("Chrome") != -1 )
+    {
+        browserName = 'Chrome';
+    }
+    else if(navigator.userAgent.indexOf("Safari") != -1)
+    {
+        browserName = 'Safari';
+    }
+    else if(navigator.userAgent.indexOf("Firefox") != -1 )
+    {
+        browserName = 'Firefox';
+    }
+    else if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+    {
+        browserName = 'IE';
+    }
+    else
+    {
+        browserName = 'unknown';
+    }
+    window.browser = browserName;
+</script>
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='css/gamePage.css') }}">
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='css/gameInDevelopment.css') }}">

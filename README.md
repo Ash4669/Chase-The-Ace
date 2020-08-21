@@ -47,9 +47,11 @@
 ## Game specific functionality
 #### Chase the ace
 ### High priority
-- When a host quits the game (happens eventually), delete the room record out of the room db. - Need to fix bug before possible.
+- When a host quits the game (happens eventually), delete the room record out of the room db.
+- Need on page checks for sign up and log in.
 
 ### Medium Priority
+- Display to host that they are the host.
 - Display the dealer for all people to see on the right?
 - Displaying who's go it is on player list. (display 'Playing' when their go is triggered. After clicking something, the text is deleted.)
 - Once a king is flipped, the previous person doesn't have the trade option anymore. 
@@ -69,6 +71,4 @@
 - Look at setting the card object in the card class. Add a set method but don't use it in the main code. Just have the setting for instigating very specific scenarios.
 
 # Bugs
-- When joining or starting a game, onquit() enacts and tries to quit a game you haven't joined. Works fine when refreshing in a lobby. - don't know why onquit triggers but the session values are different and so it can't find a matching player row since it is a new id.
-- When a host quits, it redirects everyone else even when changing page by clicking on the navbar. I think because it yeilds from the same page it doesn't count as an unload which is currently uses. This doesn't trigger quit chase the ace and so it won't delete the db value in both room and player which is a problem.
-  - Might be a problem with having the socket initiated in the game.js. Not sure.
+- Firefox doesn't support the beforeunload event listerer and so preventDefault() is used in the function instead to force it to use the eventListener and trigger the unload and emit. However, they does cause them to confirm their leave which is deemed acceptable, but if they navigate anywhere via the url, the event does not get triggered and the game breaks before the client isn't deleted from the game. Also, if the user tries to leaves and chooses not to then it causes the player to delete but remain on the page. Fix is unknown at this point.
