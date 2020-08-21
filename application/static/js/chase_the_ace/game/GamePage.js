@@ -490,11 +490,14 @@ class GamePage extends Phaser.Scene {
         }
     }
 
-    quit()
-    {
-        socket.emit('quit chase the ace');
-    }
 
-    onunload = this.quit();
 }
-
+window.addEventListener("beforeunload", function(event)
+{
+    socket.emit('quit chase the ace');
+    if (window.browser == 'Firefox')
+    {
+        event.returnValue = "message";
+        return "message";
+    }
+});
