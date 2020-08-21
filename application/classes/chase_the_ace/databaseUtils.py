@@ -17,6 +17,9 @@ class DatabaseUtils():
     def getGameHostId(self, roomId):
         return self.getRoom(roomId).hostPlayerId
 
+    def getSpecificPlayerSocketId(self, roomId, playerId):
+        return self.getSpecificPlayer(roomId, playerId).socketId
+
     def getCurrentPlayerId(self, roomId):
         return self.getRoom(roomId).currentPlayerId
 

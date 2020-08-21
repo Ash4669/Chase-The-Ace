@@ -21,6 +21,7 @@ class Player(db.Model):
     card = db.Column(db.String(10))
     lives = db.Column(db.Integer)
     outOfGame = db.Column(db.Boolean)
+    socketId = db.Column(db.String(50))
 #     Need to be careful because shed players could have the same room id. Need gameType parameter.
 
 class Room(db.Model):

@@ -47,7 +47,6 @@
 ## Game specific functionality
 #### Chase the ace
 ### High priority
-- Change code to emit to users specfically, not all the same data and then sort it out client side. It's easy to cheat. User request.sid to get socketid and send by room=request.sid (store player socket.id in the db)
 - When a host quits the game (happens eventually), delete the room record out of the room db. - Need to fix bug before possible.
 
 ### Medium Priority

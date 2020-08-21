@@ -146,19 +146,13 @@ class GamePage extends Phaser.Scene {
         // Updating the player's card and displaying it.
         socket.on('update player data', function(playerJson)
         {
-            for (var i = 0; i < gamePage.playerNames.length; i++)
+            var playerData = JSON.parse(playerJson)
+            gamePage.playerCardValue = playerData.card;
+            if (playerData.card != null)
             {
-                var playerData = JSON.parse(playerJson[i])
-                if (playerData.id == gamePage.playerId)
+                if (playerData.card.includes('king') && gamePage.kingNotRevealed)
                 {
-                    gamePage.playerCardValue = playerData.card;
-                    if (playerData.card != null)
-                    {
-                        if (playerData.card.includes('king') && gamePage.kingNotRevealed)
-                        {
-                            gamePage.displayRevealKingButton();
-                        }
-                    }
+                    gamePage.displayRevealKingButton();
                 }
             }
             gamePage.updateCards();
