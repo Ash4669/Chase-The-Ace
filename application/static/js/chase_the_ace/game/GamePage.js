@@ -489,8 +489,6 @@ class GamePage extends Phaser.Scene {
             socket.emit('reveal king')
         }
     }
-
-
 }
 window.addEventListener("beforeunload", function(event)
 {
