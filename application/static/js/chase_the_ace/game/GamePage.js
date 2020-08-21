@@ -111,7 +111,7 @@ class GamePage extends Phaser.Scene {
         // Closing the game
         socket.on('close game', function(data)
         {
-            /* Create popup instead which then redirects after */
+            alert("The host has disconnected. You are being redirected to the main page.")
             window.location = data.url;
         });
 
