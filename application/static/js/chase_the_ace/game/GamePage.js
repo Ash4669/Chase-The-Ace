@@ -111,8 +111,11 @@ class GamePage extends Phaser.Scene {
         // Closing the game
         socket.on('close game', function(data)
         {
-            alert("The host has disconnected. You are being redirected to the main page.")
-            window.location = data.url;
+            if (gamePage.playerId != gamePage.hostId)
+            {
+                alert("The host has disconnected. You are being redirected to the main page.")
+                window.location = data.url;
+            }
         });
 
         socket.on('set max player lives', function(numberOfLivesSet)
