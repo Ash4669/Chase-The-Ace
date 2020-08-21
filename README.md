@@ -51,6 +51,7 @@
 - Need on page checks for sign up and log in.
 
 ### Medium Priority
+- Display to host that they are the host.
 - Display the dealer for all people to see on the right?
 - Displaying who's go it is on player list. (display 'Playing' when their go is triggered. After clicking something, the text is deleted.)
 - Once a king is flipped, the previous person doesn't have the trade option anymore. 
