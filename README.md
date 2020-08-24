@@ -47,7 +47,6 @@
 ## Game specific functionality
 #### Chase the ace
 ### High priority
-- When a host quits the game (happens eventually), delete the room record out of the room db.
 - Need on page checks for sign up and log in.
 
 ### Medium Priority

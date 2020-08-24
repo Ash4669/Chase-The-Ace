@@ -78,19 +78,17 @@ def onQuit():
 
     # Pulling game id, player id and player name from session.
     roomId = session.get('roomId')
-    userId = session.get('userId')
     playerId = session.get('playerId')
-    playerName = session.get('userFullName')
 
     hostId = dbUtils.getGameHostId(roomId)
     if playerId == hostId:
         # Emit the redirect for the client to redirect with javascript.
         emit('close game', {'url': url_for('chase_the_ace.chase_the_ace_index')}, room=roomId)
 
-    # Remove the player from playerList that matches their player id.
-    quittingPlayer = models.Player.query.filter_by(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName).one()
-    db.session.delete(quittingPlayer)
-    db.session.commit()
+        # Remove the room and player data from respective dbs.
+        models.Room.query.filter_by(roomId=roomId).delete()
+        models.Player.query.filter_by(roomId=roomId).delete()
+        db.session.commit()
 
     # Construct playerNames to send to clients.
     playerList = dbUtils.getPlayerList(roomId)
