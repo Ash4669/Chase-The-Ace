@@ -47,7 +47,6 @@
 ## Game specific functionality
 #### Chase the ace
 ### High priority
-- When a host quits the game (happens eventually), delete the room record out of the room db.
 - Need on page checks for sign up and log in.
 
 ### Medium Priority
@@ -58,12 +57,9 @@
 - Have it so if a player is not authenticated (not logged in and so missing a name), they have a text box pop up where they enter their name, store it in the session and on clicking confirmation for name, send redirect from there. Use this for both start and joining a game. If they do have a name, give them the option but autofill it with their name stored in the session. Should be easy enough to implement. Send it in the socket. 
 - Add rotating effect on card and display back of card, at 90 degrees, delete and create actual card and rotate rest of 180. Also add a sound effect in when the card reaches 90 degrees.
 - Give players ability to start a new game in the same lobby.
-- If someone joins mid game then it breaks the game. This only happens with games without a password who join from the URL. If I check if the game is locked at the same time if the game has a password on GamePage, this will stop this issue from happening.
-
 
 ### Lower Priority
-- When the host quits a game, have a popup and on clicking 'ok' then redirect.
-- Add message and redirect for those trying to join a game that doesn't exist from the URL.
+- Add message and redirect for those trying to join a game that doesn't exist from the URL. - use alert.
 - Add gameType to Player model and adjust getPlayerList and relevant methods. Needed for adding shed game. 
 - Maybe change display to have it across the top.
 
@@ -72,3 +68,4 @@
 
 # Bugs
 - Firefox doesn't support the beforeunload event listerer and so preventDefault() is used in the function instead to force it to use the eventListener and trigger the unload and emit. However, they does cause them to confirm their leave which is deemed acceptable, but if they navigate anywhere via the url, the event does not get triggered and the game breaks before the client isn't deleted from the game. Also, if the user tries to leaves and chooses not to then it causes the player to delete but remain on the page. Fix is unknown at this point.
+- Need to look at error handling. Happens when trying to retrieve db records that are already deleted. App doesn't suffer though.
