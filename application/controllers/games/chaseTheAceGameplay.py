@@ -12,13 +12,14 @@ import string
 dbUtils = DatabaseUtils()
 jsonUtils = JsonUtils()
 
+
 def generatePlayerId():
     return ''.join([random.choice(string.ascii_letters + string.digits) for n in range(32)])
+
 
 # Managing players joining the game.
 @socketio.on('join chase the ace')
 def onJoin():
-
     # Generating a player id for the player.
     session['playerId'] = generatePlayerId()
     session['playerSockedId'] = request.sid
@@ -50,7 +51,8 @@ def onJoin():
             db.session.commit()
 
         # Added new player to db.
-        newPlayer = models.Player(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName, card=None, socketId=socketId)
+        newPlayer = models.Player(userId=userId, roomId=roomId, generatedPlayerId=playerId, name=playerName, card=None,
+                                  socketId=socketId)
         db.session.add(newPlayer)
         db.session.commit()
 
@@ -73,9 +75,9 @@ def onJoin():
         # Emit to the room to update all other players of the change to the player name list.
         emit('update chase the ace playerList', playerNames, room=roomId)
 
+
 @socketio.on('quit chase the ace')
 def onQuit():
-
     # Pulling game id, player id and player name from session.
     roomId = session.get('roomId')
     playerId = session.get('playerId')
@@ -85,10 +87,15 @@ def onQuit():
         # Emit the redirect for the client to redirect with javascript.
         emit('close game', {'url': url_for('chase_the_ace.chase_the_ace_index')}, room=roomId)
 
-        # Remove the room and player data from respective dbs.
+        # Remove the room and any remaining player data from respective dbs.
         models.Room.query.filter_by(roomId=roomId).delete()
         models.Player.query.filter_by(roomId=roomId).delete()
         db.session.commit()
+
+    # Remove the player from playerList that matches their player id.
+    quittingPlayer = models.Player.query.filter_by(roomId=roomId, generatedPlayerId=playerId).one()
+    db.session.delete(quittingPlayer)
+    db.session.commit()
 
     # Construct playerNames to send to clients.
     playerList = dbUtils.getPlayerList(roomId)
@@ -105,7 +112,6 @@ def onQuit():
 
 @socketio.on('start game')
 def startGame():
-
     roomId = session.get('roomId')
 
     if dbUtils.getRoom(roomId).locked != True:
@@ -148,9 +154,9 @@ def startGame():
 
     handleKingAndGiveChoice(roomId)
 
+
 @socketio.on('stick card')
 def stickCard():
-
     roomId = session.get('roomId')
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
     dealerId = dbUtils.getDealerId(roomId)
@@ -163,9 +169,9 @@ def stickCard():
 
         handleKingAndGiveChoice(roomId)
 
+
 @socketio.on('trade card')
 def tradeCard():
-
     roomId = session.get('roomId')
 
     # Trades cards with the next person in the game.
@@ -182,9 +188,9 @@ def tradeCard():
 
     handleKingAndGiveChoice(roomId)
 
+
 @socketio.on('cut card')
 def cutCard(cardIndex):
-
     roomId = session.get('roomId')
 
     # Cut the deck for another card.
@@ -201,6 +207,7 @@ def cutCard(cardIndex):
 
     endRound(roomId)
 
+
 @socketio.on('reveal king')
 def revealKing():
     roomId = session.get('roomId')
@@ -212,12 +219,13 @@ def revealKing():
 
     emit('reveal king of playerId', (playerListJson, playerId), room=roomId)
 
+
 @socketio.on('delete all player cards')
 def deletePlayerCardsDisplay():
-
     # Get room and send update to delete the all cards from previous round displayed by the playerList
     roomId = session.get('roomId')
     emit('delete player cards', room=roomId)
+
 
 def endRound(roomId):
     # Prepare player data to emit it to all players.
@@ -256,6 +264,7 @@ def endRound(roomId):
         winningId = room.winningPlayerId
         emit('trigger winner', winningId, room=roomId)
         dbUtils.addWinToUser(winningId)
+
 
 def handleKingAndGiveChoice(roomId):
     # Giving the current player the choice.
