@@ -1,1 +1,1 @@
-web: gunicorn application:'create_app()' --preload -b :$PORT
+web: gunicorn application:'create_app()' --preload -b 127.0.0.1:8000
