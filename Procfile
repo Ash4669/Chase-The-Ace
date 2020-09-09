@@ -1,1 +1,1 @@
-web: gunicorn application:'create_app()' --preload
+web: gunicorn application:'create_app()' --preload -b :$PORT
