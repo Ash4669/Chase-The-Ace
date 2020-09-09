@@ -2,7 +2,7 @@ venv/
 .env
 __pycache__/
 settings.conf
-dbs/
+DBCommands
 .pyc
 .DS_Store
 .idea/
