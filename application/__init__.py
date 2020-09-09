@@ -11,13 +11,13 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 config = configparser.ConfigParser()
 config.read("settings.conf")
 
+# init SQLAlchemy so we can use it later
+db = SQLAlchemy()
+socketio = SocketIO()
+login_manager = LoginManager()
 from . import models
 
 def create_app():
-    # init SQLAlchemy so we can use it later
-    db = SQLAlchemy()
-    socketio = SocketIO()
-    login_manager = LoginManager()
 
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
