@@ -1,1 +1,1 @@
-web: gunicorn 0.0.0.0:5000 application:'create_app()' --preload -b
+web: gunicorn application:'create_app()' --preload -b 0.0.0.0:5000
