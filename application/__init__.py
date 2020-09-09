@@ -6,6 +6,7 @@ from flask_login import LoginManager
 import configparser
 from flask_session import Session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
+import os
 
 config = configparser.ConfigParser()
 config.read("settings.conf")
@@ -19,8 +20,8 @@ from . import models
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = config.get('SQLALCHEMY','secret_key')
-    app.config['SQLALCHEMY_DATABASE_URI'] = config.get('SQLALCHEMY','sqlalchemy_database_uri')
+    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SESSION_TYPE'] = 'filesystem'
     app.url_map.strict_slashes = False
