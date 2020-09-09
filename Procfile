@@ -1,1 +1,1 @@
-web: gunicorn application:'create_app()' --preload -b $HOST:$PORT -k gevent
+web: gunicorn application:'create_app()' --preload -b $HOST:$PORT -k eventlet
