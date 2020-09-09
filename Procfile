@@ -1,1 +1,1 @@
-web: gunicorn application:'create_app()' --preload -b $HOST:$PORT -k gevent -w 1
+web: gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 application:'create_app()' --preload -b $HOST:$PORT
