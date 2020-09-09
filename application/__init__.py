@@ -28,7 +28,7 @@ def create_app():
 
     db.init_app(app)
     Session(app)
-    socketio.init_app(app, manage_session=False)
+    socketio.init_app(app, manage_session=False, async_mode='eventlet', async_handlers=True)
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
