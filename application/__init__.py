@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
+import os
 from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import configparser
 from flask_session import Session
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
-import os
 
 config = configparser.ConfigParser()
 config.read("settings.conf")
