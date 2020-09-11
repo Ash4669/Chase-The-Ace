@@ -20,6 +20,7 @@
 {
     height: 80%;
     background-color: lightgreen;
+    overflow: auto;
 }
 .chatBottom
 {
