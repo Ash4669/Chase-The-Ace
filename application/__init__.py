@@ -22,7 +22,7 @@ def create_app():
     app = Flask(__name__)
     if os.environ['FLASK_ENV'] == 'production':
         app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
     else:
         app.config['SECRET_KEY'] = config.get('SQLALCHEMY', 'secret_key')
         app.config['SQLALCHEMY_DATABASE_URI'] = config.get('SQLALCHEMY', 'sqlalchemy_database_uri')
