@@ -20,7 +20,7 @@ from . import models
 def create_app():
 
     app = Flask(__name__)
-    if os.environ['FLASK_ENV'] == 'prod':
+    if os.environ['FLASK_ENV'] == 'production':
         app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
     else:
