@@ -20,15 +20,20 @@ from . import models
 def create_app():
 
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
+    if os.environ['FLASK_ENV'] == 'prod':
+        app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
+    else:
+        app.config['SECRET_KEY'] = config.get('SQLALCHEMY', 'secret_key')
+        app.config['SQLALCHEMY_DATABASE_URI'] = config.get('SQLALCHEMY', 'sqlalchemy_database_uri')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SESSION_TYPE'] = 'filesystem'
     app.url_map.strict_slashes = False
 
     db.init_app(app)
     Session(app)
-    socketio.init_app(app, manage_session=False, async_mode='eventlet', async_handlers=True)
+    socketio.init_app(app, manage_session=False)
+    # socketio.init_app(app, manage_session=False, async_mode='eventlet', async_handlers=True)
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
