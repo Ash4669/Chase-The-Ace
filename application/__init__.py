@@ -32,10 +32,10 @@ def create_app():
 
     db.init_app(app)
     Session(app)
-    if os.environ['FLASK_ENV'] == 'production':
-        socketio.init_app(app, manage_session=False, async_mode='eventlet', async_handlers=True)
-    else:
-        socketio.init_app(app, manage_session=False)
+    # if os.environ['FLASK_ENV'] == 'production':
+    #     socketio.init_app(app, manage_session=False, async_mode='eventlet', async_handlers=True)
+    # else:
+    socketio.init_app(app, manage_session=False)
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
