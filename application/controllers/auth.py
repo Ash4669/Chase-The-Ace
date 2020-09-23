@@ -36,40 +36,43 @@ def signup_post():
     firstName = request.form.get('firstName')
     lastName = request.form.get('lastName')
 
-    user = models.User.query.filter_by(email = email).first()
+    user = models.User.query.filter_by(email=email).first()
 
     if user:
         flash('Email address already exists')
         return redirect(url_for('auth.signup'))
 
-    newUser = models.User(email = email, username = username, password = generate_password_hash(password, method='sha256'), firstName = firstName, lastName = lastName, chaseTheAceWins = 0)
+    newUser = models.User(email=email, username=username, password=generate_password_hash(password, method='sha256'), firstName=firstName, lastName=lastName, chaseTheAceWins=0)
 
     db.session.add(newUser)
     db.session.commit()
 
-    return redirect(url_for('auth.login'))
+    loginUserAndSetNameAndId(user, False)
+
+    return redirect(url_for('main.profile'))
 
 @auth.route('/login', methods=['POST'])
 def login_post():
 
     email = request.form.get('email')
     password = request.form.get('password')
-    username = request.form.get('username')
-    remember = True if request.form.get('remember') else False
-    # Investigate above remember to see if it works. Also look at remembering credentials, not keeping thme signed in. Put two separate checkboxes?
+    keepMeSignedIn = True if request.form.get('keepMeSignedIn') else False
 
-    user = models.User.query.filter_by(email = email).first()
+    user = models.User.query.filter_by(email=email).first()
+    user2 = models.User.query.filter_by(username=email).first()
 
-    if user:
-        if check_password_hash(user.password, password):
-            login_user(user, remember = remember)
-            session['userFullName'] = current_user.firstName + ' ' + current_user.lastName
-            session['userId'] = current_user.id
+    if user or user2:
+        if check_password_hash(user.password, password) or check_password_hash(user2.password, password):
+            loginUserAndSetNameAndId(user, keepMeSignedIn)
             return redirect(url_for('main.profile'))
         else:
-            flash('Incorrect password')
+            flash('Username, Email or Password Incorrect')
             return redirect(url_for('auth.login'))
     else:
-        flash('Account with this email does not exist')
+        flash('Username, Email or Password Incorrect')
         return redirect(url_for('auth.login'))
-    # refactor to include username or password. Logic should be easy.
+
+def loginUserAndSetNameAndId(user, remember):
+    login_user(user, remember=remember)
+    session['userFullName'] = current_user.firstName + ' ' + current_user.lastName
+    session['userId'] = current_user.id
