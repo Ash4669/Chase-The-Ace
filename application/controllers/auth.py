@@ -62,7 +62,7 @@ def login_post():
     user2 = models.User.query.filter_by(username=email).first()
 
     if user or user2:
-        if check_password_hash(user.password, password) or check_password_hash(user2.password, password):
+        if check_password_hash(user.password | user2.password, password):
             loginUserAndSetNameAndId(user, keepMeSignedIn)
             return redirect(url_for('main.profile'))
         else:
