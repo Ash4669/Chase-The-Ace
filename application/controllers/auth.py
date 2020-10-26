@@ -54,22 +54,25 @@ def signup_post():
 @auth.route('/login', methods=['POST'])
 def login_post():
 
-    email = request.form.get('email')
+    usernameOrEmail = request.form.get('email')
     password = request.form.get('password')
     keepMeSignedIn = True if request.form.get('keepMeSignedIn') else False
 
-    user = models.User.query.filter_by(email=email).first()
-    user2 = models.User.query.filter_by(username=email).first()
+    user = models.User.query.filter_by(email=usernameOrEmail).first()
+    user2 = models.User.query.filter_by(username=usernameOrEmail).first()
+
+    # Error: if it matched one, it doesn't match the other and so the user or user2 is of type None because none are
+    # found. Because of this pulling password throws the error.
 
     if user or user2:
-        if check_password_hash(user.password | user2.password, password):
+        if check_password_hash(user.password, password) | check_password_hash(user2.password, password):
             loginUserAndSetNameAndId(user, keepMeSignedIn)
             return redirect(url_for('main.profile'))
         else:
-            flash('Username, Email or Password Incorrect')
+            flash('Username, email or password is incorrect')
             return redirect(url_for('auth.login'))
     else:
-        flash('Username, Email or Password Incorrect')
+        flash('Username, email or password is incorrect')
         return redirect(url_for('auth.login'))
 
 def loginUserAndSetNameAndId(user, remember):
