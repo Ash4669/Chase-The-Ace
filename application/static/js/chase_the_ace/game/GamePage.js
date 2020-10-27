@@ -312,14 +312,18 @@ class GamePage extends Phaser.Scene {
             gamePage.tradeButton.destroy();
         })
 
+        socket.on('destroy cut deck', function()
+        {
+            for (var i = 0; i < gamePage.fullDeckDisplays.length; i++)
+            {
+                gamePage.fullDeckDisplays[i].destroy();
+            }
+        })
+
         this.input.on('gameobjectdown', function (pointer, gameObject) {
             if (this.fullDeckDisplays.includes(gameObject))
             {
                 socket.emit('cut card', gameObject.getData('index'))
-                for (var i = 0; i < this.fullDeckDisplays.length; i++)
-                {
-                    this.fullDeckDisplays[i].destroy();
-                }
             }
         }, this);
     }
