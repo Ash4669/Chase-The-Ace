@@ -67,7 +67,7 @@ def registerBlueprints(app):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return models.User.query.get(int(user_id))
+    return models.Users.query.get(int(user_id))
 
 @socketio.on('connect')
 def handle_my_connect_event():

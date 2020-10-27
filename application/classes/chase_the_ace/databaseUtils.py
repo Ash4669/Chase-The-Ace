@@ -32,7 +32,7 @@ class DatabaseUtils():
     # Make more generic later when new games are added.
     def addWinToUser(self, winningPlayerId):
         userId = models.Player.query.filter_by(generatedPlayerId=winningPlayerId).first().userId
-        user = models.User.query.filter_by(id=userId).first()
+        user = models.Users.query.filter_by(id=userId).first()
         user.chaseTheAceWins += 1
         db.session.commit()
 

@@ -15,7 +15,7 @@ def index():
 @login_required
 def profile():
     userId = session.get('userId')
-    chaseTheAceWins = models.User.query.filter_by(id=userId).first().chaseTheAceWins
+    chaseTheAceWins = models.Users.query.filter_by(id=userId).first().chaseTheAceWins
     return render_template('home/profile.html', name=current_user.firstName, chaseTheAceWins=chaseTheAceWins)
 
 @main.route('/play')
