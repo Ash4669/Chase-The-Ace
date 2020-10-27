@@ -18,7 +18,7 @@ class Player(db.Model):
     roomId = db.Column(db.Integer)
     generatedPlayerId = db.Column(db.String(100), unique=True)
     name = db.Column(db.String(100))
-    card = db.Column(db.String(10))
+    card = db.Column(db.String(20))
     lives = db.Column(db.Integer)
     outOfGame = db.Column(db.Boolean)
     socketId = db.Column(db.String(50))
