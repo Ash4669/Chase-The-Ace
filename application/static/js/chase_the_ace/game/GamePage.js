@@ -173,6 +173,9 @@ class GamePage extends Phaser.Scene {
                 }
             }
             gamePage.updateLives();
+            if (typeof gamePage.startButton != "undefined") {
+                gamePage.startButton.destroy();
+            }
         })
 
         // Displaying the correct game buttons for the player.
@@ -311,7 +314,6 @@ class GamePage extends Phaser.Scene {
 
     onStartButtonClicked(game)
     {
-        this.startButton.destroy();
         socket.emit('delete all player cards');
         socket.emit('start game');
         if (this.gameStarted == false)
@@ -493,6 +495,7 @@ class GamePage extends Phaser.Scene {
         }
     }
 }
+
 window.addEventListener("beforeunload", function(event)
 {
     socket.emit('quit chase the ace');
