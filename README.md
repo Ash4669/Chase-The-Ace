@@ -47,9 +47,8 @@
 ## Game specific functionality
 #### Chase the ace
 ### High priority
-- Need to integrate an external database to use instead of a file because it changes each resets to empty each time the website spins up.
 - Need on page checks for sign up and log in.
-- Need way of having dealer tell players they arecutting
+- Need way of having dealer tell players they are cutting
 - Need displays for everyone's lives. Maybe a number and a heart by their name.
 
 ### Medium Priority
