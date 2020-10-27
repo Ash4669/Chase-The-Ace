@@ -159,7 +159,10 @@ def startGame():
 def stickCard():
     roomId = session.get('roomId')
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+    currentPlayer = dbUtils.getSpecificPlayer(roomId, currentPlayerId)
     dealerId = dbUtils.getDealerId(roomId)
+
+    emit('destroy stick button', room=currentPlayer.socketId)
 
     if currentPlayerId == dealerId:
         endRound(roomId)
@@ -173,6 +176,10 @@ def stickCard():
 @socketio.on('trade card')
 def tradeCard():
     roomId = session.get('roomId')
+    currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+    currentPlayer = dbUtils.getSpecificPlayer(roomId, currentPlayerId)
+
+    emit('destroy trade button', room=currentPlayer.socketId)
 
     # Trades cards with the next person in the game.
     Action.tradeCards(roomId)

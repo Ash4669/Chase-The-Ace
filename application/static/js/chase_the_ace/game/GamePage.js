@@ -293,6 +293,25 @@ class GamePage extends Phaser.Scene {
             }
         })
 
+        socket.on('destroy stick button', function()
+        {
+            gamePage.stickButton.destroy();
+            if (gamePage.playerId == gamePage.dealerId)
+            {
+                gamePage.cutButton.destroy();
+            }
+            else
+            {
+                gamePage.tradeButton.destroy();
+            }
+        })
+
+        socket.on('destroy trade button', function()
+        {
+            gamePage.stickButton.destroy();
+            gamePage.tradeButton.destroy();
+        })
+
         this.input.on('gameobjectdown', function (pointer, gameObject) {
             if (this.fullDeckDisplays.includes(gameObject))
             {
@@ -414,22 +433,11 @@ class GamePage extends Phaser.Scene {
 
     onStickButtonClicked()
     {
-        this.stickButton.destroy();
-        if (this.playerId == this.dealerId)
-        {
-            this.cutButton.destroy();
-        }
-        else
-        {
-            this.tradeButton.destroy();
-        }
         socket.emit('stick card')
     }
 
     onTradeButtonClicked()
     {
-        this.stickButton.destroy();
-        this.tradeButton.destroy();
         socket.emit('trade card');
     }
 
