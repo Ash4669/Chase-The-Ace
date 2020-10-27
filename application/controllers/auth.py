@@ -36,13 +36,13 @@ def signup_post():
     firstName = request.form.get('firstName')
     lastName = request.form.get('lastName')
 
-    user = models.User.query.filter_by(email = email).first()
+    user = models.Users.query.filter_by(email = email).first()
 
     if user:
         flash('Email address already exists')
         return redirect(url_for('auth.signup'))
 
-    newUser = models.User(email = email, username = username, password = generate_password_hash(password, method='sha256'), firstName = firstName, lastName = lastName, chaseTheAceWins = 0)
+    newUser = models.Users(email = email, username = username, password = generate_password_hash(password, method='sha256'), firstName = firstName, lastName = lastName, chaseTheAceWins = 0)
 
     db.session.add(newUser)
     db.session.commit()
@@ -58,7 +58,7 @@ def login_post():
     remember = True if request.form.get('remember') else False
     # Investigate above remember to see if it works. Also look at remembering credentials, not keeping thme signed in. Put two separate checkboxes?
 
-    user = models.User.query.filter_by(email = email).first()
+    user = models.Users.query.filter_by(email = email).first()
 
     if user:
         if check_password_hash(user.password, password):
