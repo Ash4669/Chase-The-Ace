@@ -8,7 +8,7 @@ class DatabaseUtils():
         return models.Room.query.filter_by(roomId=roomId, gameType='chase_the_ace').first()
 
     def getPlayerList(self, roomId):
-        return models.Player.query.filter_by(roomId=roomId).all()
+        return models.Player.query.filter_by(roomId=roomId).order_by(models.Player.id.asc()).all()
     #     Need to be careful because shed players could have the same room id. Need gameType parameter. Or make roomId very unique.
 
     def getSpecificPlayer(self, roomId, playerId):
@@ -32,7 +32,7 @@ class DatabaseUtils():
     # Make more generic later when new games are added.
     def addWinToUser(self, winningPlayerId):
         userId = models.Player.query.filter_by(generatedPlayerId=winningPlayerId).first().userId
-        user = models.User.query.filter_by(id=userId).first()
+        user = models.Users.query.filter_by(id=userId).first()
         user.chaseTheAceWins += 1
         db.session.commit()
 

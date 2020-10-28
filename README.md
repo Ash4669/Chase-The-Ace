@@ -47,9 +47,8 @@
 ## Game specific functionality
 #### Chase the ace
 ### High Priority
-- Need to integrate an external database to use instead of a file because it changes each resets to empty each time the website spins up.
 - Need on page checks for sign up and log in.
-- Need way of having dealer tell players they arecutting
+- Need way of having dealer tell players they are cutting
 - Need displays for everyone's lives. Maybe a number and a heart by their name.
 
 ### Medium Priority
@@ -72,3 +71,5 @@
 # Bugs
 - Firefox doesn't support the beforeunload event listener and so preventDefault() is used in the function instead to force it to use the eventListener and trigger the unload and emit. However, they does cause them to confirm their leave which is deemed acceptable, but if they navigate anywhere via the url, the event does not get triggered and the game breaks before the client isn't deleted from the game. Also, if the user tries to leaves and chooses not to then it causes the player to delete but remain on the page. Fix is unknown at this point.
 - Need to look at error handling. Happens when trying to retrieve db records that are already deleted. App doesn't suffer though.
+- Look at fixing disconnection
+- look at fixing people disconnecting from the game. Breaks in  dealing cards when it wants to commit the db changes.

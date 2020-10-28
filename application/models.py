@@ -3,7 +3,7 @@
 from flask_login import UserMixin
 from . import db
 
-class User(UserMixin, db.Model):
+class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     username = db.Column(db.String(50), unique=True)
@@ -18,7 +18,7 @@ class Player(db.Model):
     roomId = db.Column(db.Integer)
     generatedPlayerId = db.Column(db.String(100), unique=True)
     name = db.Column(db.String(100))
-    card = db.Column(db.String(10))
+    card = db.Column(db.String(20))
     lives = db.Column(db.Integer)
     outOfGame = db.Column(db.Boolean)
     socketId = db.Column(db.String(50))
