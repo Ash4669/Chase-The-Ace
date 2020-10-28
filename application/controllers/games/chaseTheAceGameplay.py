@@ -159,7 +159,11 @@ def startGame():
 def stickCard():
     roomId = session.get('roomId')
     currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+    currentPlayer = dbUtils.getSpecificPlayer(roomId, currentPlayerId)
     dealerId = dbUtils.getDealerId(roomId)
+
+    # Destroying the stick button object after server has received the stick card event.
+    emit('destroy stick button', room=currentPlayer.socketId)
 
     if currentPlayerId == dealerId:
         endRound(roomId)
@@ -173,6 +177,11 @@ def stickCard():
 @socketio.on('trade card')
 def tradeCard():
     roomId = session.get('roomId')
+    currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+    currentPlayer = dbUtils.getSpecificPlayer(roomId, currentPlayerId)
+
+    # Destroying the trade button object after server has received the trade card event.
+    emit('destroy trade button', room=currentPlayer.socketId)
 
     # Trades cards with the next person in the game.
     Action.tradeCards(roomId)
@@ -192,6 +201,11 @@ def tradeCard():
 @socketio.on('cut card')
 def cutCard(cardIndex):
     roomId = session.get('roomId')
+    currentPlayerId = dbUtils.getCurrentPlayerId(roomId)
+    currentPlayer = dbUtils.getSpecificPlayer(roomId, currentPlayerId)
+
+    # Destroying the full deck card objects after server has received the cut card event.
+    emit('destroy cut deck', room=currentPlayer.socketId)
 
     # Cut the deck for another card.
     Action.cutTheDeck(roomId, cardIndex)

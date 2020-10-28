@@ -46,7 +46,7 @@
 
 ## Game specific functionality
 #### Chase the ace
-### High priority
+### High Priority
 - Need on page checks for sign up and log in.
 - Need way of having dealer tell players they are cutting
 - Need displays for everyone's lives. Maybe a number and a heart by their name.
