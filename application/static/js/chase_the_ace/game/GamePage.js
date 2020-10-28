@@ -256,6 +256,7 @@ class GamePage extends Phaser.Scene {
             }
         })
 
+        // Triggers action for when other player has a king (alerts them with text).
         socket.on('next player has a king', function()
         {
             gamePage.nextPlayerHasKingText = gamePage.add.text(360, 80, 'Other player has a king!');
@@ -273,6 +274,7 @@ class GamePage extends Phaser.Scene {
             });
         })
 
+        // Reveals the players king all players to see for those who have kings.
         socket.on('reveal king of playerId', function(playerData, playerId)
         {
             for (var i = 0; i < gamePage.playerNames.length; i++)
@@ -285,6 +287,7 @@ class GamePage extends Phaser.Scene {
             }
         })
 
+        // Deletes the reveal king button once their king has been revealed, through player button or trade reaction.
         socket.on('delete reveal button for player', function(currentPlayerId)
         {
             if (currentPlayerId == gamePage.playerId)
@@ -293,6 +296,7 @@ class GamePage extends Phaser.Scene {
             }
         })
 
+        // Destroys stick button only after server receives stick event and triggers deletion.
         socket.on('destroy stick button', function()
         {
             gamePage.stickButton.destroy();
@@ -306,12 +310,14 @@ class GamePage extends Phaser.Scene {
             }
         })
 
+        // Destroys trade button only after server receives trade event and triggers deletion.
         socket.on('destroy trade button', function()
         {
             gamePage.stickButton.destroy();
             gamePage.tradeButton.destroy();
         })
 
+        // Destroys deck only after server receives cut deck and triggers deletion.
         socket.on('destroy cut deck', function()
         {
             for (var i = 0; i < gamePage.fullDeckDisplays.length; i++)
@@ -320,6 +326,7 @@ class GamePage extends Phaser.Scene {
             }
         })
 
+        // When a player clicks a card from deck, triggers event with i'th card index.
         this.input.on('gameobjectdown', function (pointer, gameObject) {
             if (this.fullDeckDisplays.includes(gameObject))
             {
