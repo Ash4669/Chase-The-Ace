@@ -47,6 +47,7 @@
 ## Game specific functionality
 #### Chase the ace
 ### High Priority
+- When they aren't signed in, they can still add a name and play, just add if logged in then +1 to score but otherwise ignore.
 - Need on page checks for sign up and log in.
 - Need way of having dealer tell players they are cutting
 - Need displays for everyone's lives. Maybe a number and a heart by their name.

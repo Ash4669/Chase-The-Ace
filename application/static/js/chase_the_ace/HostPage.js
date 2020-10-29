@@ -2,6 +2,7 @@ class HostPage extends Phaser.Scene {
 
     gameDoesNotExistText;
     gameAlreadyStartedText;
+    nameInput;
     passwordInput;
     livesInput;
 
@@ -16,6 +17,9 @@ class HostPage extends Phaser.Scene {
     }
     create()
     {
+        // Storing GamePage this variable for methods to call to access class variables and methods.
+        const gamePage = this;
+
         var backgroundImage = this.add.image(0, 0, "casinoRoom")
         .setOrigin(0,0)
         .setDisplaySize(1000, 600);
@@ -31,9 +35,14 @@ class HostPage extends Phaser.Scene {
         .setInteractive().on('pointerdown', () => this.onHostButtonClicked());
 
         // Creating and attaching an input field onto the dom.
-        var inputAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "size":"27", "style":"font-size:32px",
+        var nameInputAttributes = {"type":"text", "id":"name-input", "zIndex":"0", "size":"27", "style":"font-size:32px",
+         "placeholder":"Enter name", "value":window.name, "maxlength":"40"};
+        this.nameInput = this.addInputElementToDom(nameInputAttributes);
+        this.add.dom(500, 172, this.nameInput);
+
+        var passwordInputAttributes = {"type":"text", "id":"password-input", "zIndex":"0", "size":"27", "style":"font-size:32px",
          "placeholder":"Set Room Password (optional)", "maxlength":"40"};
-        this.passwordInput = this.addInputElementToDom(inputAttributes);
+        this.passwordInput = this.addInputElementToDom(passwordInputAttributes);
         this.add.dom(500, 250, this.passwordInput);
 
         var dropDownAttributes = {"id":"lives-input", "style":"font-size:20px"};
@@ -42,6 +51,11 @@ class HostPage extends Phaser.Scene {
         this.add.dom(540, 328, this.livesInput);
 
         var livesText = this.add.text(360, 313, "lives:", {fontSize: '32px'});
+
+        socket.on("no name entered", function()
+        {
+            gamePage.addFadeAndDeleteText(gamePage.gameDoesNotExistText, 'No player name entered!')
+        });
     }
 
     addInputElementToDom(attributes)
@@ -53,6 +67,26 @@ class HostPage extends Phaser.Scene {
         }
         document.getElementById("gameCanvas").appendChild(element);
         return element
+    }
+
+    addFadeAndDeleteText(element, text)
+    {
+        try
+        {
+            element.destroy();
+        }
+        catch (e)
+        {} // Used for when the player repeatedly clicks the join button.
+
+        element = this.add.text(280, 100, text, {fontSize: '32px'});
+        this.add.tween(
+        {
+            targets: element,
+            ease: 'Sine.easeInOut',
+            duration: 1500,
+            delay: 1000,
+            alpha: 0,
+        });
     }
 
     addDropDownElementToDom(attributes, optionValues)
@@ -81,10 +115,11 @@ class HostPage extends Phaser.Scene {
 
     onHostButtonClicked()
     {
+        let name = document.getElementById("name-input").value;
         let password = document.getElementById("password-input").value;
         let livesElement = document.getElementById("lives-input");
         let lives = livesElement.options[livesElement.selectedIndex].value;
-        socket.emit('host game send', password, lives);
+        socket.emit('host game send', name, password, lives);
     }
 
     onBackButtonClicked()

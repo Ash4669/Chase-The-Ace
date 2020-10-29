@@ -1,5 +1,5 @@
 from flask import url_for, session
-from ... import socketio, send, emit
+from ... import socketio, emit
 from ... import models
 from ... import db
 import random
@@ -12,26 +12,31 @@ def generateRoomId():
 
 # Initialisation of the game room.
 @socketio.on('host game send')
-def generateAndHostRedirect(password, lives):
+def generateAndHostRedirect(name, password, lives):
 
-    # Stores password set by host in session to check host against own password.
+    # Stores name and password set by host in session to check host against own password.
+    session['userFullName'] = name
     session['ChaseTheAcePassword'] = password
 
-    roomId = generateRoomId()
-
-    # Checking to see if room exists, and if so, generate a new id and retry.
-    room = dbUtils.getRoom(roomId)
-    while room is not None:
+    print(name)
+    if name is "":
+        emit("no name entered")
+    else:
         roomId = generateRoomId()
+
+        # Checking to see if room exists, and if so, generate a new id and retry.
         room = dbUtils.getRoom(roomId)
+        while room is not None:
+            roomId = generateRoomId()
+            room = dbUtils.getRoom(roomId)
 
-    # Instantiate the Room with the room id as game id and store it within the database.
-    newGame = models.Room(roomId=roomId, password=password, gameType='chase_the_ace', numberOfLivesSet=lives, currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
-    db.session.add(newGame)
-    db.session.commit()
+        # Instantiate the Room with the room id as game id and store it within the database.
+        newGame = models.Room(roomId=roomId, password=password, gameType='chase_the_ace', numberOfLivesSet=lives, currentPlayerId=None, hostPlayerId=None, winningPlayerId=None)
+        db.session.add(newGame)
+        db.session.commit()
 
-    # Emit the redirect for the client to redirect with javascript.
-    emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId=roomId)})
+        # Emit the redirect for the client to redirect with javascript.
+        emit('redirect', {'url': url_for('chase_the_ace.chase_the_ace_instance', roomId=roomId)})
 
 
 # Join an already initialised game room.
